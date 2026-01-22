@@ -1,0 +1,79 @@
+/* =========================================================
+   Minimal tweaks v2:
+   - Watermark background
+   - Transparent header (shows background)
+   - Transparent left sidebar background
+   File: docs/stylesheets/extra.css
+   Requires: docs/assets/bg-clouds.png
+   ========================================================= */
+
+/* --- Base + subtle watermark background --- */
+body {
+  background: #f5f8fd; /* neutral base */
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("../assets-old/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.02;          /* very subtle */
+  filter: blur(1px);
+  transform: scale(1.02);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* --- Header: semi-transparent so background shows through --- */
+.md-header {
+  background: rgba(255, 255, 255, 0.70); /* more transparent */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+  box-shadow: 0 4px 14px rgba(16, 24, 40, 0.05);
+    color: rgb(29, 37, 104);
+
+}
+
+.md-header__title,
+.md-header__topic {
+  font-weight: 600;
+}
+
+/* Search box slightly translucent too */
+.md-search__form {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+/* --- Left navigation (sidebar) background: transparent --- */
+/* This removes the "white panel" effect behind 'Deliverable D6.2 Wiki' */
+.md-sidebar--primary .md-sidebar__scrollwrap,
+.md-sidebar--primary .md-sidebar__inner {
+  background: transparent !important;
+}
+
+/* Make nav items readable on translucent background */
+.md-nav__title,
+.md-nav__link {
+  background: transparent;
+}
+
+/* Optional: on hover/active add a very subtle highlight for readability */
+.md-nav__link:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+}
+
+.md-nav__link--active {
+  background: rgba(11, 59, 120, 0.14);
+  border-radius: 8px;
+}
+
+.md-sidebar__inner {
+  background: transparent;
+}
