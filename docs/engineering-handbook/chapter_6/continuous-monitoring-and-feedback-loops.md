@@ -94,7 +94,7 @@ In microservices architectures, a single user request may touch multiple service
 
 A complete monitoring setup integrates logs, metrics, and traces.
 
-![Pull request workflow](../internal-assets/monit-stack.svg)
+![Pull request workflow](../../internal-assets/monit-stack.svg)
 
 #### Component Roles
 

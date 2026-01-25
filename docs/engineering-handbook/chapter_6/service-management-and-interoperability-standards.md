@@ -166,7 +166,7 @@ For complex workflows and loosely coupled systems, event-driven architecture pro
 
 Services publish events to topics; interested services subscribe.
 
-![Publish-subscribe pattern](../internal-assets/pub-sub.svg)
+![Publish-subscribe pattern](../../internal-assets/pub-sub.svg)
 
 **When to use:**
 
@@ -180,7 +180,7 @@ Services publish events to topics; interested services subscribe.
 
 Work items are placed in queues and processed by workers.
 
-![Message queue pattern](../internal-assets/msg-que.svg)
+![Message queue pattern](../../internal-assets/msg-que.svg)
 
 **When to use:**
 

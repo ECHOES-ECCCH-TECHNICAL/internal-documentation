@@ -23,7 +23,7 @@ The PR workflow should follow these stages:
 6. **Approval** when criteria are met
 7. **Merge** into `develop` or `main`
 
-![Pull request workflow](../internal-assets/pr-diagram.svg)
+![Pull request workflow](../../internal-assets/pr-diagram.svg)
 
 ### Review Checklist
 
