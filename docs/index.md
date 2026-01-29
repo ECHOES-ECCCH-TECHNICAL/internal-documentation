@@ -3,9 +3,6 @@
 This site is the **living engineering handbook** for ECHOES / CH Cloud technical implementation.  
 It complements the **normative requirements** defined in the official deliverables (e.g., D6.2). Where the deliverable defines *what must be true*, this handbook focuses on *how to implement it consistently* across partners and environments (examples, patterns, checklists, templates, and operational guidance).
 
-!!! note "Normative boundary"
-The deliverables (PDF) remain the **authoritative** source for requirements and compliance.  
-This handbook provides **maintained, non-normative** implementation guidance and references.
 
 ## How to use this handbook
 
@@ -43,6 +40,7 @@ How interoperability is measured, monitored, and tracked (KPIs, semantic monitor
 ## Contributing and maintenance
 
 This handbook is expected to evolve. Partners should:
+
 - contribute implementation patterns that worked in real deployments,
 - document pitfalls and “known-good” configurations,
 - keep examples aligned with current requirements and tooling.
