@@ -1,4 +1,4 @@
-# Compliance, audits & onboarding (D6.2 Chapter 10)
+# Compliance, audits and onboarding
 
 This page combines compliance audits, onboarding operations, exceptions/waivers, and record-keeping in one place.
 

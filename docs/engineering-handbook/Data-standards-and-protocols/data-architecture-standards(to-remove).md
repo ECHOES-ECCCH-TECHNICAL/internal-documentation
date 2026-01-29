@@ -1,4 +1,4 @@
-# Data architecture – standards and formats (from D6.2 §3.1)
+# Data architecture- standards and formats
 
 This page provides a technical overview of data standards and formats widely used in cultural heritage, digital humanities, and research infrastructures. It is intended as a **living reference** to support onboarding and integration in the ECHOES / CH Cloud.
 

@@ -1,4 +1,4 @@
-# Storage patterns and access-policy alignment (Living Documentation for D6.2 Chapter 8 §8.2.3)
+# Storage patterns and access-policy alignment
 
 This page provides implementation guidance for storage that supports CH data types (large binaries, derived artefacts, semantic files) while satisfying node security and policy requirements.
 

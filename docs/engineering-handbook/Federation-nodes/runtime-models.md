@@ -1,4 +1,4 @@
-# Node runtime models and reference patterns (Living Documentation for D6.2 Chapter 8 §8.2.2)
+# Node runtime models and reference patterns
 
 This page provides **implementation guidance** for node execution models that satisfy the node requirements in the deliverable.
 It is **non-binding**: the normative requirements remain the NODE-* statements in D6.2 Chapter 8.
