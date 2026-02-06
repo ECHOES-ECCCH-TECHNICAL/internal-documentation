@@ -1,7 +1,7 @@
 # KPI Catalogue
 
 This page defines the **living KPI catalogue** used by ECHOES to evaluate and monitor interoperability across CH Cloud resources.
-It complements **D6.2 Evaluation and monitoring interoperability Chapter ** by providing a practical, operator-friendly set of indicators and worked examples that can be maintained and evolved without expanding the deliverable.
+It complements **D6.2 Evaluation and monitoring interoperability Chapter** by providing a practical, operator-friendly set of indicators and worked examples that can be maintained and evolved without expanding the deliverable.
 
 KPIs are derived from interoperability obligations (documentation and evidence, API contracts and behaviour, security/AAI integration, metadata quality, semantic conformance, operations and governance). They are used for:
 

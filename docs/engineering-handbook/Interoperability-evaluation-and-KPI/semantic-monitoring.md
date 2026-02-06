@@ -1,11 +1,12 @@
 # Semantic Monitoring
 
 This page provides **non-binding** operational guidance for semantic monitoring of CH Cloud resources.
-It complements the semantic monitoring section in **D6.2 Semantic Monitoring Chapter ** by describing practical routines for detecting drift and integrity failures in semantic assets.
+It complements the semantic monitoring section in **D6.2 Semantic Monitoring Chapter** by describing practical routines for detecting drift and integrity failures in semantic assets.
 
 ## Scope
 
 Semantic monitoring applies when a resource uses or exposes semantic representations, including:
+
 - JSON-LD metadata and contexts (L2+)
 - controlled vocabularies and thesauri (typically SKOS) (L2+)
 - mappings and alignments between semantic artefacts (L2/L3)
@@ -16,6 +17,7 @@ Semantic monitoring applies when a resource uses or exposes semantic representat
 ## Relationship to KPIs
 
 This page operationalises the semantic KPI set defined in `kpis.md`:
+
 - **KPI-SEM-01** — JSON-LD validity (context resolvability; deterministic expansion)
 - **KPI-SEM-02** — Vocabulary linkage (resolvable controlled terms; mapping checks where applicable)
 - **KPI-SEM-03** — RDF graph availability (where RDF is declared)
@@ -83,6 +85,7 @@ The signals below strengthen early detection **beyond** the mandatory baseline d
 
 ### 2) Change-triggered suite 
 Run the baseline suite after:
+
 - vocabulary releases
 - context changes
 - mapping updates
@@ -110,6 +113,7 @@ A semantic monitoring run should produce stable artefacts suitable for audit and
 ## Tooling (examples)
 
 Any tooling is acceptable if it produces reproducible outputs. Common options:
+
 - JSON-LD processing: JSON-LD processors used in CI pipelines
 - SHACL: pySHACL / Jena SHACL / TopBraid
 - RDF/SPARQL checks: RDFLib / Jena / endpoint sentinel query jobs
