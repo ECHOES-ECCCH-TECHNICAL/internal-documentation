@@ -1,149 +1,138 @@
-# KPI Catalogue 
+# KPI Catalogue
 
-This page contains the **Living Documentation** version of the KPI catalogue and worked examples referenced from **Core Conformance KPI definitions**.
+This page defines the **living KPI catalogue** used by ECHOES to evaluate and monitor interoperability across CH Cloud resources.
+It complements **D6.2 Evaluation and monitoring interoperability Chapter ** by providing a practical, operator-friendly set of indicators and worked examples that can be maintained and evolved without expanding the deliverable.
+
+KPIs are derived from interoperability obligations (documentation and evidence, API contracts and behaviour, security/AAI integration, metadata quality, semantic conformance, operations and governance). They are used for:
+
+- **Onboarding evaluation** (initial level assignment at L1/L2/L3)
+- **Continuous monitoring** (detection of drift and regressions after onboarding)
+- **Evidence-based reassessment** (when releases, policies, or dependencies change)
+
+## How to use this page
+
+1. **Identify resource type(s)** (dataset, API/service, workflow, semantic artefact).
+2. **Select applicable KPIs** using the “Applies” and “Level” columns below.
+3. **Collect evidence** (automated test output where possible; otherwise documented manual checks).
+4. **Assign / confirm the interoperability level** based on KPI results and the level-gating rules.
+5. **Re-evaluate** on change events (release, schema/profile updates, policy updates, dependency upgrades, persistent failures).
 
 
-##  Core Conformance KPI Definitions
+## KPI semantics
 
-The KPIs below are derived from interoperability obligations in D6.2 (documentation, API contracts, security/AAI integration, metadata quality, semantic conformance) and are intended for onboarding evaluation and continuous monitoring. KPI selection, thresholds, and cadence are maintained via the project validation governance process.
+### Status values
+- **PASS**: requirement intent satisfied and evidence is recorded.
+- **FAIL**: requirement intent not satisfied (or evidence shows non-conformance).
+- **N/A**: KPI not applicable to this resource (document why).
+- **UNKNOWN**: evaluation not possible due to missing evidence (treated as FAIL for level gating).
 
-### Documentation and Specification KPIs
+### Criticality classes
+- **BLOCKING (onboarding)**: failing this KPI prevents onboarding of the resource into the federation (or triggers immediate suspension where relevant).
+- **Blocking (level assignment)**: failing this KPI prevents assignment at the claimed level (e.g., L2/L3), but may allow L1 where applicable.
+- **Mandatory**: required when applicable for the stated level/type.
+- **Recommended**: strengthens robustness and drift detection; should be implemented where feasible.
 
-| KPI ID | KPI Name | Definition | Applies | Level |
-|---|---|---|---|---|
-| KPI-DOC-01 | Documentation completeness | Required provider documentation artefacts are present (D6.2 §5.7) | All resource types | L1+ |
-| KPI-DOC-02 | Machine-readable API spec | OpenAPI 3.x is provided and syntactically valid | APIs/services | L2+ |
-| KPI-DOC-03 | Machine-readable schemas | JSON Schema / XSD / SHACL artefacts are present where applicable | Datasets/APIs/Semantic | L2+, L3 |
+### Evidence rule (non-negotiable)
+A KPI MUST NOT be marked PASS without evidence. If level-required evidence is missing, the resource is **capped at L1** until the missing evidence is provided and validated.
 
-**Measurement rule:** A KPI in this category is evaluated as **PASS/FAIL**.
+## Evaluation and monitoring lifecycle
+
+- **Onboarding**: run the applicable KPI suite and publish a conformance report (summary + evidence links).
+- **Routine monitoring**: run operational/security checks continuously; run conformance drift checks on schedule (e.g., nightly/weekly).
+- **Change-triggered revalidation**: re-run the KPI suite after releases, schema/profile changes, policy changes, or dependency upgrades.
+- **Incident-driven reassessment**: repeated failures (availability, auth failures, semantic failures) trigger escalation and potential downgrade.
+
+## KPI catalogue
+
+
+### Documentation and specification KPIs
+
+| KPI ID | KPI Name | Definition | Applies | Level | Criticality | Typical evidence |
+|---|---|---|---|---|---|---|
+| KPI-DOC-01 | Documentation completeness | Required provider artefacts are present (service/dataset description, ownership/contact, access model, versioning, user-facing notes) | All resource types | L1+ | Mandatory | published docs; onboarding package; links to specifications |
+| KPI-DOC-02 | Machine-readable API specification | OpenAPI 3.x is provided and syntactically valid | APIs/services | L2+ | Mandatory | OpenAPI file + validator output |
+| KPI-DOC-03 | Machine-readable schemas/shapes | JSON Schema / XSD / SHACL artefacts are present where applicable and reachable | Datasets/APIs/Semantic | L2+ (when applicable) | Mandatory (when applicable) | schema/shapes artefacts + validation output |
+
+**Measurement guidance:** Documentation/specification KPIs are typically **PASS/FAIL** .
 
 ### Security and AAI KPIs
 
-| KPI ID | KPI Name | Definition | Applies | Level |
-|---|---|---|---|---|
-| KPI-SEC-01 | TLS enforcement | All endpoints use HTTPS with valid certificates | All network services | L1+ |
-| KPI-SEC-02 | Federated authentication | EGI Check-in authentication works for protected services | Restricted services | L2+ |
-| KPI-SEC-03 | Token validation correctness | Issuer/audience/signature/expiry are validated | Restricted services | L2+ |
-| KPI-SEC-04 | Authorisation enforcement | Access control decisions are consistent across endpoints | Restricted resources | L2+ |
+| KPI ID | KPI Name | Definition | Applies | Level | Criticality | Typical evidence |
+|---|---|---|---|---|---|---|
+| KPI-SEC-01 | TLS enforcement | All externally reachable endpoints use HTTPS with valid certificates | All network services | L1+ | **BLOCKING (onboarding)** | TLS scan output; curl/openssl evidence; certificate lifecycle statement |
+| KPI-SEC-02 | Federated authentication | Federated authentication works for protected services (project AAI: **EGI Check-in**) | Restricted services | L2+ | Blocking (level assignment) | successful OIDC flow traces; test user authentication logs |
+| KPI-SEC-03 | Token validation correctness | Issuer/audience/signature/expiry are validated consistently | Restricted services | L2+ | Blocking (level assignment) | negative/positive token tests; config evidence; bounded skew statement |
+| KPI-SEC-04 | Authorisation enforcement | Access control decisions are consistent across endpoints and fail closed | Restricted resources | L2+ | Blocking (level assignment) | authz tests; policy enforcement point statement; denied-by-default evidence |
 
-**Measurement rule:** Failure of **KPI-SEC-01** blocks onboarding. Failure of **KPI-SEC-02–04** blocks L2/L3 assignment.
+**Measurement guidance:** KPI-SEC-01 blocks onboarding. KPI-SEC-02–04 block **L2/L3 assignment** for protected resources.
 
-### API Behaviour KPIs
+### API behaviour KPIs
 
-| KPI ID | KPI Name | Definition | Applies | Level |
-|---|---|---|---|---|
-| KPI-API-01 | Endpoint availability | API responds correctly over a defined sampling period | APIs/services | L1+ |
-| KPI-API-02 | Predictable error handling | Errors return deterministic codes + machine-readable error IDs | APIs/services | L2+ |
-| KPI-API-03 | Pagination and filtering | Collection endpoints support bounded results and filters | APIs/services | L2+ |
-| KPI-API-04 | Versioning discipline | API versions are explicit; breaking changes create new major versions | APIs/services | L2+ |
+| KPI ID | KPI Name | Definition | Applies | Level | Criticality | Typical evidence |
+|---|---|---|---|---|---|---|
+| KPI-API-01 | Endpoint availability | API responds correctly over a defined sampling period | APIs/services | L1+ | Mandatory | uptime/availability report; synthetic probe results |
+| KPI-API-02 | Predictable error handling | Errors return deterministic status codes + machine-readable error identifiers | APIs/services | L2+ | Mandatory | contract tests; error payload samples; negative test output |
+| KPI-API-03 | Pagination and filtering | Collection endpoints support bounded results and basic filtering | APIs/services | L2+ | Mandatory | conformance tests; OpenAPI evidence; sample calls |
+| KPI-API-04 | Versioning discipline | Versions are explicit; breaking changes create a new major version and are announced | APIs/services | L2+ | Mandatory | changelog; versioned endpoints; deprecation notice evidence |
 
-**Measurement rule:** **KPI-API-01** is measured quantitatively (availability %). Others are **PASS/FAIL** based on tests.
+**Measurement guidance:** KPI-API-01 is quantitative; KPI-API-02–04 are typically PASS/FAIL from conformance tests.
 
-### Data and Metadata Quality KPIs
+### Data and metadata quality KPIs
 
-| KPI ID | KPI Name | Definition | Applies | Level |
-|---|---|---|---|---|
-| KPI-DATA-01 | Identifier stability | Persistent identifiers remain stable across releases | Datasets/APIs | L1+ |
-| KPI-DATA-02 | Schema conformance | Payloads conform to declared schema/profile | Datasets/APIs | L2+ |
-| KPI-DATA-03 | Rights metadata presence | Licence/reuse conditions are present and unambiguous | All resources | L1+ |
-| KPI-DATA-04 | Provenance separation | Derived/enriched data distinguishable from source | Datasets/workflows | L2+, L3 |
+| KPI ID | KPI Name | Definition | Applies | Level | Criticality | Typical evidence |
+|---|---|---|---|---|---|---|
+| KPI-DATA-01 | Identifier stability | Persistent identifiers remain stable across releases (no silent replacement) | Datasets/APIs | L1+ | Mandatory | identifier policy; diff reports; persistent URI checks |
+| KPI-DATA-02 | Schema/profile conformance | Payloads conform to the declared schema/profile | Datasets/APIs | L2+ | Mandatory | validator output; sample payloads; CI test output |
+| KPI-DATA-03 | Rights metadata presence | Licence/reuse conditions are present and unambiguous | All resources | L1+ | **BLOCKING (onboarding)** | metadata fields; licence URL; rights statement |
+| KPI-DATA-04 | Provenance separation | Derived/enriched data are distinguishable from source | Datasets/workflows | L2+ (when applicable) | Mandatory (when applicable) | provenance documentation; workflow outputs; PROV references |
 
-### Semantic Integration KPIs (L2/L3)
+### Semantic integration KPIs (L2/L3)
 
-| KPI ID | KPI Name | Definition | Applies | Level |
-|---|---|---|---|---|
-| KPI-SEM-01 | JSON-LD validity | JSON-LD expands correctly and contexts resolve | Datasets/APIs | L2+ |
-| KPI-SEM-02 | Vocabulary linkage | Controlled terms use resolvable identifiers | Datasets/Semantic | L2+, L3 |
-| KPI-SEM-03 | RDF graph availability | RDF representations are available and linkable | Datasets/APIs | L3 |
-| KPI-SEM-04 | Constraint validation | SHACL validation passes for declared shapes | Datasets/Semantic | L3 |
+| KPI ID | KPI Name | Definition | Applies | Level | Criticality | Typical evidence |
+|---|---|---|---|---|---|---|
+| KPI-SEM-01 | JSON-LD validity | JSON-LD expands correctly; contexts resolve; terms map to stable IRIs | Datasets/APIs | L2+ (when JSON-LD is used) | Mandatory (when applicable) | context resolvability report; expansion determinism report |
+| KPI-SEM-02 | Vocabulary linkage | Controlled terms use resolvable identifiers; vocabulary versioning is explicit | Datasets/Semantic | L2+ (when used) | Mandatory (when applicable) | URI checks; vocabulary lint report; mapping checks |
+| KPI-SEM-03 | RDF graph availability | RDF representations are available and linkable where declared | Datasets/APIs | L3 (when declared) | Mandatory (when applicable) | RDF endpoint checks; graph availability evidence |
+| KPI-SEM-04 | Constraint validation | SHACL validation passes for declared shapes | Datasets/Semantic | L3 (when declared) | Mandatory (when applicable) | SHACL validation report; reproducible run evidence |
 
+> **Implementation guidance:** see `semantic-monitoring.md` for non-binding operational routines aligned with KPI-SEM-*.
 
-## Operational KPIs (Runtime and Federation Readiness)
+### Operational KPIs
 
-Operational KPIs measure whether a resource remains reliably usable in federated environments.
+| KPI ID | KPI Name | Definition | Applies | Level | Criticality | Typical evidence |
+|---|---|---|---|---|---|---|
+| KPI-OPS-01 | Health endpoints | `/health` and `/ready` expose deterministic status | Services | L2+ | Mandatory | probe results; endpoint definitions; alert rules |
+| KPI-OPS-02 | Response time | Latency remains within declared thresholds (where thresholds exist) | APIs/services | L2+ | Mandatory (where thresholds exist) | p95 latency series; SLO statement; incident history |
+| KPI-OPS-03 | Error rate | Error rate remains within declared thresholds (where thresholds exist) | APIs/services | L2+ | Mandatory (where thresholds exist) | 4xx/5xx rate metrics; alerts; ticket summaries |
+| KPI-OPS-04 | Dependency resilience | Timeouts/retries prevent cascading failures | Services/workflows | L2+ | Recommended | retry policy; circuit breaker config; failure-injection evidence |
 
-| KPI ID | KPI Name | Definition | Applies | Level |
-|---|---|---|---|---|
-| KPI-OPS-01 | Health endpoint | `/health` and `/ready` expose deterministic status | Services | L2+ |
-| KPI-OPS-02 | Mean response time | API latency remains within declared thresholds | APIs/services | L2+ |
-| KPI-OPS-03 | Error rate | Error rate remains within declared thresholds | APIs/services | L2+ |
-| KPI-OPS-04 | Dependency resilience | Timeouts/retries prevent cascading failures | Services/workflows | L2, L3 |
+### Governance KPIs
 
-**Measurement rule:** Operational KPIs are measured over defined intervals (e.g., rolling window) and reported as **quantitative indicators**.
+| KPI ID | KPI Name | Definition | Applies | Level | Criticality | Typical evidence |
+|---|---|---|---|---|---|---|
+| KPI-GOV-01 | Ownership declared | Owner and steward are explicitly defined and reachable | All resources | L1+ | Mandatory | owner/steward metadata; escalation contact |
+| KPI-GOV-02 | Policy enforcement consistency | Declared access policy matches technical enforcement | Restricted resources | L2+ | Mandatory | policy statement; authz tests; enforcement evidence |
+| KPI-GOV-03 | Change transparency | Breaking changes are announced, versioned, and traceable | All resources | L2+ | Mandatory | changelog; release notes; deprecation notices |
 
+## Level assignment and scoring 
 
+1. **Blocking KPIs:** If a blocking KPI fails, the resource SHALL NOT be onboarded (or SHALL be downgraded), as applicable.
+2. **Highest achievable level:** The assignable level is the highest level for which all **mandatory applicable KPIs** pass.
+3. **Evidence gate:** Missing evidence caps the resource at **L1** until evidence is provided and validated.
+4. **Drift detection:** re-evaluate KPIs after releases, schema/profile changes, policy changes, dependency upgrades, or persistent monitoring failures.
 
-## Governance KPIs (Access and Reuse Consistency)
+## Worked evaluation scenarios
 
-Governance KPIs assess whether declared policies match runtime behaviour.
+### A) Dataset with open access (target L2)
+- Expected PASS at minimum: KPI-DOC-01, KPI-DATA-03, KPI-DATA-02, KPI-SEC-01.
+- If JSON-LD is used: KPI-SEM-01 applies.
+- Outcome: L2 is assignable if all L2-mandatory applicable KPIs pass with evidence.
 
-| KPI ID | KPI Name | Definition | Applies | Level |
-|---|---|---|---|---|
-| KPI-GOV-01 | Ownership declared | Owner and steward are explicitly defined | All resources | L1+ |
-| KPI-GOV-02 | Policy enforcement consistency | Access policy matches technical enforcement | Restricted resources | L2+ |
-| KPI-GOV-03 | Change transparency | Breaking changes announced and versioned | All resources | L2+ |
+### B) Restricted API service (target L2)
+- Expected PASS at minimum: KPI-SEC-01, KPI-SEC-02, KPI-SEC-03, KPI-SEC-04, KPI-API-02.
+- Outcome: failure of any KPI-SEC-02–04 prevents L2 assignment for this protected service.
 
+### C) Semantic artefact / knowledge model (target L3)
+- Expected PASS where declared: KPI-DOC-03, KPI-SEM-03, KPI-SEM-04.
+- Outcome: L3 is assignable only if declared RDF/SHACL assets are stable, accessible, and validate reproducibly.
 
-## KPI Thresholds and Scoring Rules (mandatory, for reference)
-
-Interoperability scoring follows these rules:
-
-1. **Blocking KPIs:** If a blocking KPI fails, the resource must not be onboarded (or is downgraded).
-    - Blocking KPIs include (at minimum): TLS enforcement, authentication correctness for protected resources, absence of licence metadata.
-2. **Level assignment:** The highest level assignable is the highest level for which all mandatory KPIs pass.
-3. **Evidence requirement:** No KPI may be counted as PASS without evidence.
-4. **Drift detection:** KPIs are re-evaluated when:
-    - a new version is released,
-    - schemas or policies change,
-    - dependencies change materially,
-    - persistent validation failures occur.
-
-
-## Worked Evaluation Scenarios
-
-These examples illustrate application of the framework.
-
-### Example A: Dataset with open access (target L2)
-
-- Provider supplies JSON-LD metadata and declares licence.
-- Validation checks:
-    - KPI-DOC-01 PASS (docs present)
-    - KPI-SEM-01 PASS (JSON-LD expands)
-    - KPI-DATA-02 PASS (schema conformance)
-    - KPI-SEC-01 PASS (TLS)
-    - KPI-GOV-01 PASS (ownership declared)
-- Result: dataset qualifies for L2 if all L2-mandatory items pass.
-
-### Example B: Restricted API service (target L2)
-
-- Provider integrates authentication with EGI Check-in.
-- Validation checks:
-    - KPI-SEC-02 PASS (EGI Check-in flow works)
-    - KPI-SEC-03 PASS (token validation correct)
-    - KPI-SEC-04 PASS (authorisation enforced)
-    - KPI-API-02 PASS (error format deterministic)
-- Result: service qualifies for L2; failure in any security KPI blocks L2.
-
-### Example C: Semantic artefact (target L3)
-
-- Provider supplies OWL ontology and SHACL shapes.
-- Validation checks:
-    - KPI-SEM-03 PASS (RDF accessible)
-    - KPI-SEM-04 PASS (SHACL validation passes)
-    - KPI-DOC-03 PASS (machine-readable schemas/shapes present)
-- Result: semantic artefact qualifies for L3 if all mandatory L3 KPIs pass.
-
-
-
-## Outputs of the Evaluation Framework (mandatory, for reference)
-
-The evaluation process produces:
-- level assignment (L1/L2/L3),
-- conformance report listing KPI results and evidence,
-- remediation guidance for failed checks,
-- periodic monitoring records for drift over time.
-
-These outputs feed:
-- validation and conformance testing (D6.2 §12),
-- interoperability maturity assessment (D6.2 §7.4),
-- governance and compliance audits.
