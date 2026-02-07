@@ -1,74 +1,80 @@
 # Deployment Validation and Versioning
 
-## Test automation for deployment validation
+Before a release is promoted to production, it should pass automated deployment validation that confirms the service works in a production‑like environment with real configuration and dependencies.
 
-Before a release is promoted to production, it should pass automated deployment validation tests that confirm it works in a production-like environment with real dependencies and configuration.
+This page provides:
 
-### What deployment validation confirms
+- a reference deployment validation suite structure
+- guidance on semantic versioning
+- rules for immutable artefacts and traceability
 
-| Validation question | Examples of evidence |
+## 1) What deployment validation confirms
+
+| Validation question | Typical evidence |
 |---|---|
-| Can the service start in the target environment? | Successful startup; readiness probe passes |
-| Is configuration complete and correct? | Required env vars/secrets present; config schema checks |
-| Can the service connect to dependencies? | DB/queue/cache connectivity checks; timeouts within limits |
-| Does authn/authz work end-to-end? | Token validation against real IdP; role-based access checks |
-| Does it respond correctly to real requests? | Key endpoints return expected status codes and payload shapes |
+| Can the service start in the target environment | startup succeeds; readiness passes |
+| Is configuration complete and correct | env and secrets present; config schema checks |
+| Can the service connect to dependencies | DB, queue, cache connectivity tests |
+| Does authentication and authorisation work end to end | token validation; protected routes enforced |
+| Does it respond correctly to real requests | key endpoints return expected codes and shapes |
 
-### Recommended validation test types
+## 2) Recommended validation test types
 
-| Test type | Purpose | Typical examples | Notes |
+| Test type | Purpose | Examples | Notes |
 |---|---|---|---|
-| **Health checks** | Confirm service is running and responsive | Liveness/readiness endpoints; basic HTTP 200 | Keep lightweight; avoid external dependencies |
-| **Smoke tests** | Verify essential workflows quickly | Minimal CRUD path; search returns results; auth validates tokens | Breadth over depth; use controlled test data |
-| **Dependency integration checks** | Confirm connectivity/compatibility | DB migrations; queue publish/consume; external API reachability | Catches network/config issues mocks miss |
-| **Security & compliance checks** | Ensure controls apply in deployed environment | HTTPS enforced; auth required; security headers; audit logging | Focused on deployment-relevant controls |
+| Health checks | confirm service is alive and ready | liveness and readiness endpoints | lightweight, deterministic |
+| Smoke tests | verify essential workflows | minimal CRUD; search returns results; auth flow works | breadth over depth |
+| Dependency checks | validate integration points | migrations; publish and consume; external API reachability | catches config and network issues |
+| Security checks | ensure controls apply in deployment | HTTPS enforced; auth required; headers; audit logging | deployment relevant controls only |
 
-### Design principles for validation tests
+## 3) Design principles for validation tests
 
 | Principle | Guideline |
 |---|---|
-| **Speed** | Complete in minutes to avoid blocking delivery |
-| **Reliability** | Deterministic; flaky tests fixed or quarantined |
-| **Clear failures** | Errors identify failing check, endpoint, and relevant dependency/config |
-| **Automation and gating** | Run automatically in pipeline; failures block promotion |
+| Speed | complete in minutes to avoid blocking delivery |
+| Reliability | deterministic; flaky checks fixed or quarantined |
+| Actionable failures | identify failing check, endpoint, dependency, or config |
+| Gating | run automatically; failures block promotion |
+| Evidence | retain outputs as CI artefacts for traceability |
 
-### Pipeline integration
+## 4) Pipeline integration
 
-Deployment validation should be integrated into your CI/CD pipeline with the following practices:
+- run validation automatically after staging deploy
+- use results as a promotion gate to production
+- retain results as CI artefacts or dashboards
+- notify on failure with links to logs, reports, and deployed version metadata
 
-- **Run automatically** after deployment to test/staging environments
-- **Act as a promotion gate** to prevent faulty releases from reaching production
-- **Retain results** as CI artifacts/dashboards for historical tracking
-- **Notify on failures** with links to logs, test reports, and deployed version metadata
+## 5) Semantic versioning and immutable artefacts
 
+### Semantic versioning
 
+Use `MAJOR.MINOR.PATCH`:
 
-## Semantic versioning and immutable artifacts
+- MAJOR: breaking changes, consumer action required
+- MINOR: backward compatible features
+- PATCH: backward compatible fixes
 
-All deployable components should follow Semantic Versioning (SemVer) to make compatibility expectations explicit (e.g., `v2.1.0` indicates major/minor/patch semantics).
+Version changes should align with interface behaviour and contracts, APIs, events, and schemas.
 
-### Immutable artifacts
+### Immutable artefacts
 
-Released artifacts should be **immutable**:
+Released artefacts must be immutable:
 
-- Once built and tagged, they must not change
-- If a rebuild is required, publish a new version tag
-- Never modify existing releases in place
+- once built and tagged, they must not change
+- if a rebuild is required, publish a new version tag
+- never overwrite existing releases in registries
 
-### Versioning best practices
+Recommended practices:
 
-- **Tag releases in Git** (e.g., `git tag v2.1.0`) for traceability
-- **Expose version information** via `/version` endpoint or `version.txt` file
-- **Keep the same version** across all artifacts (image, docs, API spec)
-- **Generate changelogs** from commit metadata (e.g., Conventional Commits + changelog tooling)
-- **Never delete or overwrite** published artifacts
+- tag releases in Git, for example `vX.Y.Z`, for traceability
+- expose deployed version, `/version` endpoint or equivalent
+- keep the same version across artefacts, image, docs, API spec
+- publish changelogs and migration notes for breaking changes
 
-### Examples: Interpreting SemVer changes
+## 6) Evidence artefacts to retain
 
-| Change type | Example | Expected impact |
-|---|---|---|
-| Patch (`x.y.Z`) | Bug fix, no API change | Safe upgrade, low integration risk |
-| Minor (`x.Y.0`) | Backward-compatible feature | Upgrade expected to work without client changes |
-| Major (`X.0.0`) | Breaking API / behavior change | Requires consumer review and planned migration |
-
-Where possible, document breaking changes explicitly in the changelog and (for APIs) reflect them in the OpenAPI/AsyncAPI schema.
+- CI job summaries and logs, build, test, validate
+- validation reports, health, smoke, security
+- artefact digests and tags deployed to each environment
+- changelog or release notes and migration guidance
+- configuration validation outputs, where applicable

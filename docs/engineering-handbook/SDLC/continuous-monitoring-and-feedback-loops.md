@@ -1,285 +1,111 @@
 # Continuous Monitoring and Feedback Loops
 
-Once software is deployed, continuous monitoring ensures it remains healthy, performs well, and meets user needs. This page covers observability, real-time feedback mechanisms, and ongoing maintenance strategies.
+Once software is deployed, continuous monitoring ensures it remains healthy, performs well, and meets user needs. In the CH Cloud, monitoring also supports **federation readiness**: validators and evaluation teams need consistent signals across providers.
 
+This page covers observability (logs/metrics/traces), operational feedback loops, and evaluation integration patterns that align with the consortium’s monitoring and evaluation approach.
 
-## Implementing Telemetry and Observability
 
-Observability means understanding what is happening inside your systems based on external outputs. The three pillars of observability work together to provide complete system insight.
+## Observability baseline (logs, metrics, traces)
 
-### The Three Pillars of Observability
+Observability relies on three complementary pillars:
 
-| Pillar | Purpose | What It Provides |
-|--------|---------|------------------|
-| **Logs** | Detailed records of discrete events | Context for debugging specific issues |
-| **Metrics** | Numerical measurements over time | Trends, patterns, and anomaly detection |
-| **Traces** | Request flows through distributed systems | End-to-end visibility of request paths |
+| Pillar | Purpose | What it provides |
+|---|---|---|
+| Logs | event records | debugging context |
+| Metrics | numeric time series | trends and alerting |
+| Traces | request flows | cross-service latency and root cause |
 
-#### Why All Three Matter
+Recommended practice:
+- use **structured logging** (JSON) with standard fields
+- define a minimum metrics set (latency, errors, throughput, uptime)
+- adopt distributed tracing where systems are distributed or highly integrated
 
-- **Logs** explain what happened (and often why)
-- **Metrics** quantify how much/how often and support alerting
-- **Traces** show where time is spent and how requests propagate
 
-Together, they enable faster incident diagnosis and performance optimization.
+## Standard fields (recommended)
 
-### Structured Logging
+### Logs
+Include (as applicable):
+- timestamp, severity, service name, environment
+- request/correlation id
+- operation name (endpoint, job id, workflow step)
+- outcome (success/failure + error code)
 
-Structured logging uses a consistent, machine-parsable format (commonly JSON) rather than free-form text. This improves automated processing and cross-service correlation.
+Avoid logging personal data; prefer pseudonymous identifiers when needed.
 
-| Benefit | Practical Outcome |
-|---------|-------------------|
-| **Searchability** | Query by fields (e.g., `request_id`, `user_id`, `error_code`) |
-| **Aggregation** | Produce statistics across events (error rates, top endpoints) |
-| **Correlation** | Link related events across services via correlation IDs |
-| **Automation** | Trigger alerts on patterns and support routing/triage |
+### Metrics
+Prefer consistent naming and semantics across services (helps federation-level dashboards). Typical baseline metrics:
+- response time (p95)
+- throughput
+- error rate (4xx/5xx split)
+- uptime/availability
+- auth success rate (for protected services)
 
-#### Recommended Key Practices
+### Traces
+- propagate correlation/trace IDs across service boundaries
+- sample errors at 100%; sample normal requests at an agreed rate
 
-- **Include standard fields**: Timestamp, severity, service, environment, `request_id` (or equivalent)
-- **Add domain fields** where relevant (e.g., `object_id`, `collection`, `user_id`), avoiding sensitive data
-- **Use consistent field names** across services to support unified queries and dashboards
-- **Propagate correlation IDs** across service boundaries to enable end-to-end tracing
+OpenTelemetry is a common standard approach; when supported, expose telemetry in OTLP or an agreed format.
 
-### Metrics Collection
 
-Metrics track numerical values over time, enabling trend analysis and alerting.
+## Evaluation readiness (feedback + analytics integration)
 
-#### Essential Metric Types
+For tools and applications that participate in user-facing evaluation, implement **two complementary mechanisms**:
 
-| Metric Type | Example | Use Case |
-|-------------|---------|----------|
-| **Counters** | Total API requests | Track cumulative events |
-| **Gauges** | Active user sessions | Monitor current state |
-| **Histograms** | Request duration distribution | Understand performance percentiles |
-| **Summaries** | Request size quantiles | Statistical analysis |
+### 1) In-app feedback trigger (user feedback mechanism)
+Recommended pattern:
+- visible UI entry point (e.g., “Feedback”, “Rate this tool”)
+- modular interaction: quick review (e.g., 5-star) → optional deeper questionnaire
+- informed consent notice before capture (purpose, retention, pseudonymous identifiers)
 
-#### Common Monitoring Patterns
+Identity handling:
+- authenticated users: pass OIDC `sub` (pseudonymous subject identifier)
+- guest users: submissions are anonymous
 
-- **RED method**: Rate, Errors, Duration (for services)
-- **USE method**: Utilization, Saturation, Errors (for resources)
-- **Four Golden Signals**: Latency, traffic, errors, saturation
+### 2) Passive telemetry access (observability endpoint / query access)
+Provide a standardized way for authorised analytics collectors to retrieve:
+- logs/metrics/traces or the agreed subset required for ecosystem monitoring
+- mandatory baseline signals (performance, reliability, adoption/usage, security/governance)
 
-!!! tip "Standard Formats"
-Prometheus format is widely adopted and supported by visualization tools like Grafana. Standard formats enable tool interoperability and reduce lock-in.
+If telemetry is already exposed via an agreed standard interface (e.g., OpenTelemetry), it is typically sufficient to grant query access rather than duplicating streams.
 
-### Distributed Tracing
 
-In microservices architectures, a single user request may touch multiple services. Distributed tracing tracks the entire request flow.
+## Alerting and incident feedback loops
 
-#### What Traces Reveal
+Use alerting rules that map to user impact:
+- elevated 5xx rates
+- increased latency (p95/p99)
+- auth failures spikes
+- dependency failures (DB/queue/storage)
 
-- Which services were involved in a request
-- How long each service took to respond
-- Where bottlenecks occur
-- Which service failed in an error scenario
+Operational feedback loop:
+1. detect (alert)
+2. triage (logs/traces)
+3. mitigate (rollback / feature flag / capacity)
+4. remediate (fix + release)
+5. learn (post-incident note; update monitors/tests)
 
-#### Key Concepts
 
-- **Span**: A single operation within a trace (e.g., database query, API call)
-- **Trace**: Collection of spans representing a complete request flow
-- **Context propagation**: Passing trace IDs across service boundaries
+## Deployment feedback mechanisms (recommended)
 
-#### Implementation Considerations
+### Canary releases
+- deploy to a small traffic segment
+- monitor error/latency signals
+- expand gradually or rollback quickly
 
-- **Add minimal overhead** — Tracing should not significantly slow down services
-- **Sample strategically** — Trace all errors; sample normal requests
-- **Standardize on trace format** — OpenTelemetry is a common cross-stack standard
+### Feature flags
+Use flags to decouple deployment from activation and enable fast rollback of features without redeploying.
 
-### Monitoring Stack Architecture
 
-A complete monitoring setup integrates logs, metrics, and traces.
+## Evidence artefacts (what to keep)
 
-![Pull request workflow](../../internal-assets/monit-stack.svg)
-
-#### Component Roles
-
-- **Log aggregation** (Loki / Elasticsearch): Centralize and search logs
-- **Metrics storage** (Prometheus): Time-series storage for metrics
-- **Trace storage** (Jaeger / Tempo): Store and query distributed traces
-- **Visualization** (Grafana): Unified dashboards for telemetry
-- **Alerting** (Alertmanager): Route alerts based on conditions and rules
-
-!!! tip "Integrated Monitoring"
-Problems are easier to diagnose when you can correlate metrics spikes with specific log entries and trace the affected requests end-to-end.
-
----
-
-## Real-Time Feedback Mechanisms
-
-Real-time feedback during deployments helps catch issues before they affect all users.
-
-### Canary Releases
-
-Deploy new versions to a small subset of users first, monitoring closely before full rollout.
-```
-[Load Balancer]
-├─ 95% traffic → [Version 2.0] (stable)
-└─ 5% traffic → [Version 2.1] (canary)
-```
-
-#### Canary Deployment Monitoring
-
-| Metric | Acceptable Range | Action if Exceeded |
-|--------|------------------|-------------------|
-| Error rate | < 1% increase | Immediate rollback |
-| Response time | < 10% increase | Investigate; possible rollback |
-| Resource usage | < 20% increase | Monitor; adjust capacity |
-| User behavior anomalies | No significant change | Investigate unexpected patterns |
-
-#### Rollout Strategy (Example)
-
-1. Deploy to 5% of traffic
-2. Monitor for 15–30 minutes
-3. If stable, increase to 25%
-4. Continue monitoring, increase to 50%
-5. Complete rollout to 100%
-
-!!! tip "Why Canary Releases Work"
-Issues affect only a small fraction of users initially, minimizing impact while providing real-world validation.
-
-### Automated Rollback Triggers
-
-Define conditions that trigger automatic rollback without human intervention.
-
-#### Common Trigger Conditions
-
-- Error rate exceeds threshold (e.g., 5% of requests)
-- Response time increases beyond acceptable limit (e.g., p95 > 2 seconds)
-- Critical health check failures
-- Resource exhaustion (CPU > 90%, memory > 95%)
-
-#### Benefits
-
-- **Immediate response** to problems (no waiting for human detection)
-- **Reduced MTTR** (mean time to recovery)
-- **Protection** from prolonged degraded user experience
-- **24/7 operation** outside business hours
-
-#### Implementation Considerations
-
-- Set thresholds carefully to avoid false positives
-- Ensure rollback is well-tested
-- Log all automated rollbacks for post-mortem analysis
-- Alert humans even when automatic rollback succeeds
-
-### Feature Flags
-
-Feature flags enable/disable functionality without redeployment, decoupling deployment from feature activation.
-
-#### Use Cases
-
-| Scenario | Benefit |
-|----------|---------|
-| Testing in production | Limited exposure to real users |
-| Quick rollback | Toggle flag instead of redeploying |
-| A/B testing | Different features for different user segments |
-| Gradual rollouts | Increase feature exposure progressively |
-| Kill switches | Disable problematic features instantly |
-
-#### Implementation Patterns
-
-- **Simple boolean flags** for on/off features
-- **Percentage-based rollouts** (e.g., show to 20% of users)
-- **User segment targeting** (e.g., beta testers)
-- **Time-based flags** (activate at specific times)
-
-!!! tip "Deployment vs. Activation"
-Traditional deployments couple code shipping with feature activation. Feature flags allow shipping code safely, then enabling features gradually (or disabling instantly if issues appear).
-
----
-
-## Handling Service Updates and Ongoing Maintenance
-
-Services require continuous care beyond initial deployment, including updates, migrations, deprecation, and end-of-life management.
-
-### Update Strategies
-
-#### Zero-Downtime Updates (for Critical Services)
-
-| Technique | How It Works | Best For |
-|-----------|--------------|----------|
-| **Rolling updates** | Replace instances gradually, one at a time | Stateless services |
-| **Blue-green deployment** | Two identical environments; switch traffic instantly | Mission-critical services needing instant rollback |
-| **Database migrations** | Backward-compatible changes in multiple steps | Schema changes that must remain compatible |
-
-#### Maintenance Windows (for Complex Updates)
-
-Best practices for scheduled maintenance:
-
-- **Schedule during lowest-usage periods** (analyze traffic patterns first)
-- **Announce well in advance** (minimum 1 week for minor; 1 month for major)
-- **Provide status updates** during maintenance
-- **Have a tested rollback plan** ready
-- **Communicate completion** and any residual issues
-
-### API Deprecation Process
-
-When deprecating APIs or features, follow a phased approach respecting user needs.
-
-| Phase | Timeline | Actions |
-|-------|----------|---------|
-| **Phase 1: Announce deprecation** | 3–6 months before removal | Deprecation notice in docs; optionally headers in responses; direct notifications to known users; explain alternatives |
-| **Phase 2: Provide migration guidance** | During deprecation | Examples, migration tooling if possible, dedicated support |
-| **Phase 3: Sunset period** | Final 1–2 months | Deprecation warnings; track usage; assist remaining users |
-| **Phase 4: Final removal** | After deadline | Remove only after announced deadline; return clear errors pointing to alternatives; retain explanatory documentation |
-
-### Dependency Updates
-
-Regular dependency updates are essential for security, stability, and performance.
-
-#### Update Strategy by Severity
-
-| Update Type | Timeline | Approach |
-|-------------|----------|----------|
-| **Security patches** | Apply immediately (within 24–48 hours) | Test quickly; deploy urgently |
-| **Minor updates** | Review and apply monthly | Batch updates; test normally |
-| **Major updates** | Plan carefully; test thoroughly | Dedicated effort; extensive testing |
-
-#### Automation Tools
-
-Examples: Dependabot, Renovate, Snyk
-
-#### Best Practices
-
-- Enable automated PRs but require review before merging
-- Test dependency updates in staging before production
-- Group related updates together
-- Monitor after deployment for unexpected issues
-- Keep dependencies current to avoid large, risky upgrades
-
-### Monitoring Technical Debt
-
-Technical debt should be managed as part of Continual Service Improvement (CSI) to protect service reliability, maintainability, and delivery velocity. Debt items should be visible, owned, and periodically reviewed.
-
-#### What to Track
-
-| Category | Examples |
-|----------|----------|
-| **Refactoring needs** | Complex modules, duplicated code, architectural drift |
-| **Outdated dependencies** | EOL components, delayed upgrades, known vulnerabilities |
-| **Test coverage gaps** | Missing critical-path tests, flaky tests |
-| **Performance bottlenecks** | Slow queries, scaling constraints |
-| **Documentation/ops gaps** | Missing runbooks, unclear procedures, outdated docs |
-
-#### Prioritization Criteria
-
-| Criterion | Guiding Question |
-|-----------|------------------|
-| **Impact** | What degrades or breaks if not fixed? |
-| **Effort** | How long/complex is the fix? |
-| **Risk** | How likely it causes incidents/security issues? |
-| **Dependencies** | Does it block or slow other planned work? |
-
-#### Technical Debt Register
-
-Maintain a Technical Debt Register (CSI backlog) and review it regularly in planning.
-
-**Minimum expectations:**
-
-| Requirement | Minimum Expectation |
-|-------------|---------------------|
-| **Visibility** | Central list in the issue tracker (tag/label: `tech-debt`) |
-| **Ownership** | Each item has an accountable owner |
-| **Review cadence** | Reviewed each sprint or monthly (team standard) |
-| **Capacity allocation** | Reserve dedicated time (e.g., ~20% of sprint capacity) for debt reduction |
+- dashboards or metric snapshots (baseline)
+- alert definitions and escalation path
+- example logs/trace correlation showing cross-service debugging
+- evaluation integration evidence (feedback trigger + telemetry query access) where applicable
+
+
+## Related pages
+- [Testing](testing.md)
+- [CI/CD](CICD.md)
+- [Security](security.md)
+- [KPIs](kpis.md)

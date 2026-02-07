@@ -1,110 +1,103 @@
-# OWL (Web Ontology Language)
+# OWL
 
-OWL is a W3C standard for creating **formal ontologies**: conceptual models that define classes, properties, and logical relationships in a machine-interpretable way. OWL is more expressive than SKOS and can capture complex domain semantics and constraints.
+OWL is a W3C standard for creating **formal ontologies**: schema‑level models that define classes, properties, and logical relationships in a machine‑interpretable way.
+OWL is more expressive than SKOS and supports automated reasoning, which can be valuable for advanced semantic integration and consistency checking.
 
-Cultural heritage data frequently involves:
-- events located in time and space,
-- objects created through processes involving multiple actors,
-- materials and techniques,
-- detailed provenance and ownership chains.
+In CH Cloud contexts, OWL is most relevant for higher‑maturity interoperability: knowledge models, ontology alignment, and formal semantic profiles (including CIDOC CRM patterns and extensions).
 
-OWL enables precise modelling of these relationships and supports **automated reasoning** (inferring new facts from existing assertions).
+This page provides **practical, non‑normative** guidance for using OWL in interoperable semantic assets.
 
+## What OWL is good for
 
+Use OWL when you need:
 
-## When to use OWL
+- a shared semantic backbone or alignment to a domain ontology (for example CIDOC CRM patterns),
+- explicit modelling of complex relationships (events, production processes, provenance, actors),
+- reusable ontologies that multiple providers can extend consistently,
+- reasoning‑enabled use cases (classification, consistency checking, inference),
+- formal constraints at the schema level, often combined with SHACL for operational validation.
 
-Use OWL when formal semantics and reuse across systems are required:
+## When OWL is not the best choice
 
-- Schema-level alignment is needed (e.g., mapping to or extending CIDOC CRM).
-- You need to express complex constraints (e.g., “a production event must have at least one actor”).
-- Automated reasoning provides value (e.g., inferring indirect relationships, class membership, property chains).
-- You are building ontologies intended to be shared, extended, and reused across projects.
-- Integration requires nuanced semantic distinctions beyond taxonomies.
+OWL is often unnecessary when:
 
-## When not to use OWL
+- you only need controlled terms and labels (SKOS is simpler),
+- you need quick discovery metadata without rich semantics (DCAT, DC, DCTERMS may suffice),
+- no reasoning or ontology tooling will be used and there is no conversion plan,
+- performance constraints make reasoning impractical.
 
-OWL may be unnecessary or impractical in these cases:
+A common pattern is:
 
-- Only simple metadata lists or flat taxonomies are needed (e.g., Dublin Core may suffice).
-- Systems will not run ontology-aware tooling (no reasoning, no semantic infrastructure) and no conversion pathway is planned.
-- Performance constraints make reasoning overhead unacceptable.
-- The data and use cases do not benefit from formal semantics.
+- use OWL for schema‑level definitions
+- use RDF for instance data
+- validate instance conformance with SHACL
 
+## OWL 2 profiles
 
-## Relevance to Cultural Heritage (CH Cloud)
+OWL defines profiles that trade expressiveness for performance.
 
-- Highly relevant for **advanced interoperability (Level 3)** and work involving **Heritage Digital Twins (HDTs)** and semantic modelling.
-- **CIDOC CRM**, a primary cultural heritage ontology referenced in the project, is expressed using **OWL/RDFS** patterns.
-- Partners defining CH Cloud semantic models and profiles typically rely on OWL as a representation language.
-
-
-## Technical considerations
-
-### OWL 2 profiles
-
-OWL 2 defines profiles with different expressiveness/performance trade-offs:
-
-| Profile | Typical strength | Typical use |
+| Profile | Strength | Typical use |
 |---|---|---|
-| **EL** | Efficient reasoning over large class hierarchies | Biomedical-style ontologies; scalable classification |
-| **QL** | Query answering over large datasets | Ontology-based data access (OBDA) patterns |
-| **RL** | Rule-friendly subset | Rule engines; scalable reasoning with forward-chaining |
+| OWL 2 EL | Scalable classification over large hierarchies | Large taxonomies and biomedical‑style structures |
+| OWL 2 QL | Query answering over large datasets | OBDA patterns |
+| OWL 2 RL | Rule‑friendly subset | Rule engines and forward chaining |
 
-### Core constructs
+Choose profiles only if you have a concrete performance or tooling need.
+Otherwise, keep modelling conservative and validate operationally with SHACL.
 
-| Construct | Meaning | Example use |
-|---|---|---|
-| `owl:Class` | Types of things | `crm:E22_Human-Made_Object` |
-| `owl:ObjectProperty` | Relationships between things | production → produced object |
-| `owl:DatatypeProperty` | Attributes with literal values | titles, dates, identifiers |
-| `owl:equivalentClass` | Class alignment across ontologies | mapping two class definitions |
-| Restrictions | Constraints (cardinality, values, etc.) | “at least 1 actor” |
+## Governance and versioning
 
-### Reasoning
+Ontology governance is critical.
 
-Reasoners can infer implicit relationships and classifications. Common tools include:
-- HermiT
-- Pellet
-- ELK
+Recommended rules:
 
-### Validation
+- publish an ontology IRI (stable) and a distinct version IRI per release
+- pin and document imports (avoid unpinned “latest” imports where possible)
+- publish change notes and a deprecation policy
+- keep editorial responsibility explicit (owner, steward, contact)
+- avoid silent semantic shifts (meaning changes without a version bump)
 
-OWL alone is not always sufficient for operational validation. In practice:
-- OWL is often combined with **SHACL** (constraint validation), and/or
-- custom rules for domain-specific checks.
+## Reasoning vs validation
 
-### Learning curve
+Reasoning and validation solve different problems.
 
-OWL has a steeper learning curve than SKOS/RDF and typically requires familiarity with description logics and ontology engineering patterns.
+- reasoning can infer additional facts and detect logical inconsistencies, depending on axioms
+- SHACL provides operational constraint validation (cardinality, required properties, datatype constraints, closed shapes)
 
+Operational best practice:
 
+- keep reasoning optional and clearly declared
+- use SHACL for repeatable conformance checks and evidence generation
+- if reasoning is used, document the reasoner and profile, and define what constitutes a blocking inconsistency
 
-## Example: CIDOC CRM in OWL/RDFS style 
-A simplified example of defining a production event and its relationship to produced objects:
+## Minimal example
 
 ```turtle
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-crm:E12_Production rdf:type owl:Class ;
-  rdfs:subClassOf crm:E11_Modification ;
-  rdfs:label "Production"@en ;
-  rdfs:comment "This class comprises activities that bring into existence new physical objects."@en .
+crm:E12_Production a owl:Class ;
+  rdfs:label "Production"@en .
 
-crm:P108_has_produced rdf:type owl:ObjectProperty ;
+crm:P108_has_produced a owl:ObjectProperty ;
   rdfs:domain crm:E12_Production ;
-  rdfs:range crm:E24_Physical_Human-Made_Thing .
+  rdfs:range  crm:E24_Physical_Human-Made_Thing .
 ```
 
-From such schema-level definitions (and additional axioms, where present), reasoning engines can infer class membership and relationship implications, supporting richer interoperability across datasets.
+## Common pitfalls
 
+| Pitfall | Why it hurts | Better pattern |
+|---|---|---|
+| Ontology imports float to “latest” | Upstream drift breaks validation | Pin versions or mirror imports |
+| No clear version IRI policy | Hard to reproduce results | Publish stable ontology IRI plus version IRIs |
+| Using OWL for simple label lists | Unnecessary complexity | Use SKOS for controlled vocabularies |
+| Treating OWL axioms as operational constraints | OWL is not SHACL | Use SHACL for operational validation |
+| Publishing ontologies without change notes | Consumers can’t adapt | Publish release notes and deprecation guidance |
 
-## References (informative)
+## References
 
-- OWL 2 Web Ontology Language Document Overview (W3C): https://www.w3.org/TR/owl2-overview/
+- OWL 2 Overview (W3C): https://www.w3.org/TR/owl2-overview/
 - OWL 2 Profiles (W3C): https://www.w3.org/TR/owl2-profiles/
 - RDFS (W3C): https://www.w3.org/TR/rdf-schema/
 - SHACL (W3C): https://www.w3.org/TR/shacl/

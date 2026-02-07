@@ -1,107 +1,110 @@
-# SKOS (Simple Knowledge Organization System)
+# SKOS
 
-SKOS is a W3C standard for representing **controlled vocabularies**, thesauri, taxonomies, and classification schemes as linked data. It provides a simple, consistent way to publish terminology systems on the web and link them across institutions.
+SKOS is a W3C standard for representing controlled vocabularies, thesauri, taxonomies, and classification schemes as linked data.
+It provides a shared pattern for publishing terminology systems on the web and mapping them across institutions.
 
-Cultural heritage institutions rely on controlled vocabularies for:
-- subjects,
-- object types,
-- materials,
-- techniques,
-- periods, etc.
+In CH Cloud contexts, SKOS is a primary mechanism for terminology alignment and multilingual discovery across providers.
 
-SKOS makes these vocabularies shareable and interoperable: terms can be linked across languages, mapped between vocabulary systems, and reused consistently in metadata. For example, concepts in the Getty Art & Architecture Thesaurus (AAT) can be mapped to equivalent concepts in national or institutional vocabularies.
+This page provides **practical, non‑normative** guidance for using SKOS in interoperable metadata pipelines.
 
+## What SKOS is good for
 
-## When to use SKOS
+Use SKOS when you need:
 
-Use SKOS when you need to publish, consume, or align **terminology systems**:
+- controlled vocabularies for subjects, object types, materials, techniques, periods, and similar
+- multilingual labels for concepts (language‑tagged strings)
+- stable, dereferenceable identifiers for terms
+- mappings between vocabularies (crosswalks)
+- predictable structures for faceted search and browse interfaces
 
-- Publishing or consuming controlled vocabularies and thesauri.
-- Providing subject classifications, material terms, or technique terms.
-- Enabling multilingual access (SKOS supports multiple labels per concept).
-- Mapping between different terminology systems (crosswalks).
-- Supporting faceted search and browse interfaces.
+## When SKOS is not the right tool
 
-## When not to use SKOS
+SKOS is not ideal when:
 
-SKOS may not be the right tool in these cases:
+- you need formal ontological constraints and reasoning (use OWL and domain ontologies)
+- you are modelling instance data (objects, events) rather than concept schemes
+- your vocabulary is an unstable internal list that changes daily without governance (stabilise first)
 
-- Complex logical constraints or automated inference are required.
-- Full ontological modelling is needed with rich domain semantics (use OWL/domain ontologies).
-- Frequently changing internal lists are not yet curated and stable.
-- Modelling data instances (actual objects/events) — use RDF with domain ontologies (e.g., CIDOC CRM) for instances; SKOS is for *concept schemes*.
+## Core modelling building blocks
 
-
-## Relevance to Cultural Heritage (CH Cloud)
-
-- Critical for **Level 2** semantic alignment.
-- Enables terminology unification and multilingual discovery across CH providers.
-- Many CH actors already publish SKOS vocabularies (e.g., Getty AAT, Iconclass, national subject headings).
-
-
-## Technical considerations
-
-### Core classes and properties
-
-| Term | Meaning |
+| SKOS term | Meaning |
 |---|---|
-| `skos:Concept` | A concept (term) in a controlled vocabulary |
-| `skos:ConceptScheme` | A vocabulary or classification scheme |
-| `skos:prefLabel` | Preferred label (typically one per language) |
-| `skos:altLabel` | Alternative labels and synonyms |
+| `skos:Concept` | A concept in a vocabulary |
+| `skos:ConceptScheme` | The vocabulary or scheme itself |
+| `skos:prefLabel` | Preferred label, typically one per language |
+| `skos:altLabel` | Alternative labels or synonyms |
 | `skos:broader` / `skos:narrower` | Hierarchical relations |
-| `skos:related` | Associative relation (non-hierarchical) |
-| `skos:exactMatch` / `skos:closeMatch` | Cross-vocabulary mappings |
+| `skos:related` | Associative relation |
+| `skos:exactMatch`, `skos:closeMatch` | Mappings across vocabularies |
 
-### Best practices
+## Governance: versioning and stability
 
-- Assign each concept a **stable, dereferenceable URI**.
-- Maintain **one `skos:prefLabel` per language** per concept.
-- Use `skos:altLabel` for synonyms, spelling variants, and near-equivalent labels.
-- Document the vocabulary scope, versioning, and governance (who maintains it, update policy).
+Vocabulary governance is often the deciding factor for interoperability success.
 
-### Validation
+Recommended rules:
 
-Validate SKOS consistency using:
-- SKOS integrity constraints, and/or
-- SHACL shapes (e.g., enforce “max one `skos:prefLabel` per language”).
+- mint stable, dereferenceable URIs for concepts and for the concept scheme
+- publish a version identifier and change notes for each release
+- do not reuse concept URIs for different meanings
+- if a term is retired, publish deprecation or tombstone behaviour rather than silently removing it
+- document who maintains the vocabulary and how updates are proposed
 
-### Publishing options
+## Validation and integrity checks
 
-SKOS vocabularies can be published:
-- via SPARQL endpoints,
-- as RDF dumps (Turtle / RDF/XML / JSON-LD),
-- as downloadable files with documentation and version tags.
+Common SKOS integrity checks include:
 
+- at most one `skos:prefLabel` per language per concept
+- valid BCP47 language tags
+- no unintended cycles in broader or narrower hierarchies where the hierarchy is intended to be acyclic
+- mapping target resolvability when `exactMatch` and `closeMatch` are used
+- scheme membership completeness (concepts belong to the expected scheme)
 
-## Example: Concept with multilingual labels and hierarchy
+These checks can be implemented via:
 
-The Getty AAT contains a concept for “watercolor painting”:
+- SHACL shapes
+- dedicated SKOS integrity scripts
+- CI linting pipelines with archived reports
+
+## Publishing patterns
+
+Typical publication options:
+
+- RDF dumps (Turtle, JSON‑LD) per version
+- SPARQL endpoint where query services are required
+- dereferenceable concept URIs (HTML and RDF via content negotiation)
+- documentation describing scope, editorial rules, and examples
+
+## Minimal example
 
 ```turtle
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix aat:  <http://vocab.getty.edu/aat/> .
 
-aat:300078925 a skos:Concept ;
+<https://vocab.example.org/aat/300078925> a skos:Concept ;
   skos:prefLabel "watercolor painting"@en ;
   skos:prefLabel "Aquarellmalerei"@de ;
-  skos:prefLabel "aquarelle"@fr ;
-  skos:broader aat:300054216 ;   # painting (image making)
-  skos:narrower aat:300404620 .  # botanical watercolors
+  skos:altLabel "watercolour painting"@en ;
+  skos:broader <https://vocab.example.org/aat/300054216> .
 ```
 
-A Polish archive could link its local concept “akwarela” to the AAT concept using `skos:exactMatch`, enabling cross-collection search using shared semantics:
+Example mapping to an external vocabulary concept:
 
 ```turtle
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-
 <https://archive.example.org/vocab/materials/akwarela> a skos:Concept ;
   skos:prefLabel "akwarela"@pl ;
   skos:exactMatch <http://vocab.getty.edu/aat/300078925> .
 ```
 
-## References (informative)
+## Common pitfalls
+
+| Pitfall | Why it hurts | Better pattern |
+|---|---|---|
+| Multiple `prefLabel` values in the same language | Breaks UI expectations | Enforce one prefLabel per language |
+| Unversioned vocabulary changes | Drift and inconsistent mappings | Version releases and publish change notes |
+| Non‑resolvable mapping targets | Mappings become meaningless | Validate dereferenceability or maintain stable dumps |
+| Mixing instance data with vocabulary concepts | Semantic confusion | Keep SKOS for concepts; use RDF and ontologies for instances |
+
+## References
 
 - SKOS Reference (W3C): https://www.w3.org/TR/skos-reference/
 - SKOS Primer (W3C): https://www.w3.org/TR/skos-primer/
-- Getty AAT (vocabulary): https://www.getty.edu/research/tools/vocabularies/aat/
+- Getty AAT: https://www.getty.edu/research/tools/vocabularies/aat/

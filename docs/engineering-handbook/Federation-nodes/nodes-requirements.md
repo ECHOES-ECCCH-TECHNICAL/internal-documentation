@@ -1,75 +1,120 @@
 # Federation and Node Requirements
 
+This page provides **operator and validator guidance** for CH Cloud federation nodes.
+
+The **normative** baseline is the D6.2 node requirement set and the associated security and monitoring constraints referenced by those requirements.
+
+## Scope and roles
+
+Node types are non‑exclusive:
+
+- compute
+- data
+- service
+- integration
+- control‑plane participant
+
+Responsibility model, to be documented per node and hosted resource:
+
+- Node Operator: platform availability and security
+- Service Provider: service behaviour and contract conformance
+- Data Provider: metadata, provenance, access policy for datasets and artefacts
+- Federation Operator: federation registries, trust anchors, monitoring integration
+
+An incident and escalation contact must be published, aligned with `REQ-MON-001`.
 
 ## How to use this page
 
-- **Providers/operators**: use the *Node onboarding evidence package* checklist and the per-requirement guidance below.
-- **Validators**: use the validation steps to produce consistent conformance reports (Chapter 9 format).
-- **Governance/operators**: use the revalidation triggers to prevent interoperability drift (REQ-MON-011 discipline).
+- Providers and operators: use the Node onboard evidence package checklist and the per‑requirement guidance below.
+- Validators: use the validation classes and evidence expectations to produce consistent conformance reports, see D6.2 Validation and Conformance Testing reporting format.
+- Governance and operators: use revalidation triggers to prevent interoperability drift, aligned with `REQ-MON-011`.
+
+## Requirement interpretation for validators
+
+- Blocking: explicitly marked. Failure blocks onboarding at any level.
+- Mandatory: baseline compliance for applicable scope.
+- Recommended: best practice. Failure is a warning unless governance makes it gating.
+- Evidence missing for a mandatory requirement is treated as failure.
 
 ## Validation classes
 
-- **Static**: review submitted artefacts (policies, diagrams, configs, release notes).
-- **Dynamic**: runtime checks against deployed endpoints (e.g., TLS, auth flows, error handling).
-- **Operational**: monitoring-backed checks over time (availability, alerts, log/metric pipelines).
-- **Manual/Process**: governance controls and change triggers that must exist and be auditable.
+- Static: artefact review, policies, diagrams, configs, release notes
+- Dynamic: runtime checks against deployed endpoints, TLS, auth flows, negative tests
+- Operational: monitoring‑backed checks over time, availability, alerts, log and metric pipelines
+- Manual or Process: governance controls and change triggers that must exist and be auditable
 
-## Node onboarding evidence package (examples)
+## Node onboard evidence package, minimum
 
-Operators should submit evidence as **versioned artefacts** (or stable links), e.g.:
+Operators shall provide, or provide stable links to, the minimum evidence below.
 
-- `node-profile.yml` (roles, endpoints, contacts, runtime model)
-- `security-posture.md` (TLS termination, admin exposure statement, secrets mechanism)
-- `aai-enforcement.md` (token validation config, PEP location, fail-closed statement)
-- `monitoring-coverage.md` (dashboards, alerts, health probes, log/metric paths)
-- `backup-restore.md` (for stateful services)
+1. Node roles and types, responsibility statement, and escalation contact, aligned with `REQ-MON-001`.
+2. Ingress endpoints and DNS and TLS approach, including certificate lifecycle and renewal mechanism.
+3. Admin‑surface exposure statement, management UIs and APIs restricted, and network segmentation summary.
+4. Runtime model or models used, containers, VM, hybrid, and isolation and quota controls, including GPU scheduling if applicable.
+5. Storage interfaces used for datasets and artefacts, access‑policy enforcement approach, and backup and restore, where stateful.
+6. Registry and discovery integration method and a drift‑control statement, runtime versus registry consistency.
+7. For restricted services: AAI and token validation configuration and policy enforcement point declaration, `SEC-07`, `SEC-09`, `SEC-11`.
+8. Monitoring coverage summary, availability and platform signals, health and readiness probing for hosted services, and revalidation trigger process, aligned with `REQ-MON-011`.
 
-## Per-requirement operational guidance
+Suggested packaging, example filenames:
 
-The table below lists suggested validation approaches and example evidence for each NODE-* requirement.
+- `node-profile.yml` roles, endpoints, contacts, runtime model
+- `security-posture.md` TLS, admin restriction, secrets mechanism
+- `aai-enforcement.md` token validation config, PEP location, fail‑closed statement
+- `registry-integration.md` publishing method plus runtime versus registry drift controls
+- `monitoring-coverage.md` dashboards, alerts, health probes, log and metric paths
+- `backup-restore.md` for stateful services
 
-| ID | Suggested validation | Example evidence / checks |
-|---|---|---|
-| NODE-NET-01 | Operational | Provide endpoint inventory + DNS ownership statement; monitor synthetic checks (HTTP/TCP) and record uptime/SLA history. |
-| NODE-NET-02 | Dynamic | Run TLS scan (protocols/ciphers), verify HTTPS redirect, check cert chain and renewal; keep scan output as evidence. |
-| NODE-NET-03 | Operational + Static | Network diagram showing public ingress vs internal network vs admin; verify admin UIs are not publicly reachable. |
-| NODE-NET-04 | Operational | Egress allowlist policy; confirm outbound to IdP/AAI endpoints, registries, monitoring exporters; keep firewall/proxy rules. |
-| NODE-CMP-01 | Operational | Quota config (K8s quotas/limits or VM quotas), namespace/project boundaries; GPU scheduling policy if relevant. |
-| NODE-CMP-02 | Operational | NTP/chrony config; demonstrate bounded drift; note skew tolerance used for token validation. |
-| NODE-STO-01 | Operational | Describe object storage interface, retention and lifecycle rules; show endpoint or access method (S3 API, gateway). |
-| NODE-STO-02 | Dynamic + Operational | Access-control tests for public vs restricted objects; demonstrate least-privilege IAM policy and deny-by-default for restricted data. |
-| NODE-STO-03 | Static + Operational | Backup policy + restore test record; define RPO/RTO for stateful services; evidence of periodic restore drills. |
-| NODE-REG-01 | Static + Operational | Show how metadata is published (catalogue API/harvester feed) and how updates are propagated; include registry entries. |
-| NODE-REG-02 | Operational | Runtime vs registry reconciliation checks; show drift detection and revalidation trigger path (REQ-MON-011). |
-| NODE-SYNC-01 | Static | Document consistency model (strong/eventual) + max propagation delay; show where it is configured/monitored. |
-| NODE-SYNC-02 | Operational | Release policy: immutable artefacts; use versioned buckets/tags; show that published specs/shapes are not overwritten. |
-| NODE-SYNC-03 | Operational | Cache TTL/invalidation rules; demonstrate that updated metadata/policies propagate within bounded time. |
-| NODE-AAI-01 | Dynamic | Token validation tests: signature, issuer, audience, expiry; include negative tests (wrong issuer/audience/expired) and clock-skew handling. |
-| NODE-AAI-02 | Dynamic + Operational | Declare the Policy Enforcement Point (ingress/service); demonstrate authz enforcement and fail-closed behaviour on policy evaluation failure. |
-| NODE-SEC-01 | Static + Operational | Secrets mechanism (vault/K8s secrets) with RBAC; evidence of rotation policy; show no secrets in logs or configs. |
-| NODE-SEC-02 | Operational | Verify admin endpoints are restricted (VPN, private network, IP allowlist); include periodic exposure review output. |
-| NODE-MON-01 | Operational | Monitoring dashboards/alerts for ingress + storage/platform; define alert thresholds and escalation path. |
-| NODE-MON-02 | Static | Incident process + contact; on-call rota or service desk path; include expected response windows. |
-| NODE-MON-03 | Operational | Health/readiness probe config; alert history for sustained failures; link to SLO/SLA if defined. |
-| NODE-MON-04 | Operational | Log/metric pipeline description; redaction rules; demonstrate token/secret scrubbing; retention and access controls. |
-| NODE-MON-05 | Manual/Process | Change trigger policy (ingress/TLS/AAI/runtime upgrades) and evidence of revalidation runs after changes. |
+A fill‑in template is provided in `conformance-evidence.md`.
 
-## Reference patterns 
+## Per‑requirement operational guidance
 
-The CH Cloud federation does not mandate a single stack. Typical implementations include:
+The table below lists validation approaches and example evidence for each `NODE-*` requirement, aligned with D6.2 Table 7.1.
 
-- **Containerised services**: Kubernetes/OpenShift with ingress controller + certificate automation.
-- **VM-based execution**: OpenStack/VMs for specialised environments where needed.
-- **Object storage**: S3-compatible storage (e.g., Ceph gateway) for large binaries and workflow outputs.
-- **AAI integration**: OIDC-based authentication with consistent token validation and authorisation enforcement.
-- **Monitoring**: a standard monitoring/alerting path that supports revalidation triggers and auditability.
+| ID | Requirement summary | Level | Criticality | Typical validation | Example evidence and checks |
+|---|---|:---:|---|---|---|
+| NODE-NET-01 | Stable DNS and routing for published endpoints | L1+ | Mandatory | Operational | Endpoint inventory plus DNS ownership and lifecycle; synthetic checks (HTTP or TCP) and uptime record. |
+| NODE-NET-02 | **BLOCKING** HTTPS and TLS enforced for externally reachable endpoints (`SEC-01`) | L1+ | Mandatory | Dynamic | TLS scan output; HTTPS‑only behaviour; certificate chain and renewal automation evidence. |
+| NODE-NET-03 | Network separation; admin surfaces not publicly exposed by default | L1+ | Mandatory | Static and Operational | Network diagram showing public ingress versus internal versus admin; evidence admin UIs and APIs restricted. |
+| NODE-NET-04 | Outbound connectivity for token validation, registries, monitoring export | L2+ | Mandatory | Operational | Egress allowlist or proxy rules; reachability tests to IdP and AAI, registries, monitoring endpoints. |
+| NODE-CMP-01 | Isolation boundaries and multi‑tenant quotas (CPU, RAM, GPU) | L2+ | Mandatory | Operational | Kubernetes quotas and limits or VM quotas; namespace or project boundaries; GPU scheduling policy if relevant. |
+| NODE-CMP-02 | Accurate time synchronisation (for example NTP) | L2+ | Mandatory | Operational | NTP or chrony config; measured drift bounds; skew tolerance used for token validation. |
+| NODE-STO-01 | Object storage for large assets and workflow outputs (S3 recommended) | L2+ | Recommended | Operational | Storage interface description (S3, Ceph, other), retention and lifecycle rules; endpoint and access method. |
+| NODE-STO-02 | Storage exposure enforces declared access policy (public only if declared; restricted requires authN and authZ) | L1+ | Mandatory | Dynamic and Operational | Public versus restricted access tests; deny‑by‑default for restricted; least‑privilege IAM policy. |
+| NODE-STO-03 | Backup and restore for stateful services aligned with criticality | L2+ where stateful | Mandatory | Static and Operational | Backup policy; restore test records; RPO and RTO targets; evidence of periodic restore drills. |
+| NODE-REG-01 | Publish and maintain machine‑readable resource metadata into federation discovery | L1+ | Mandatory | Static and Operational | Publishing method (catalogue feed or API); registry entries; update procedure and ownership. |
+| NODE-REG-02 | Deployed endpoint and version matches registry; drift triggers revalidation (`REQ-MON-011`) | L2+ | Mandatory | Operational | Runtime versus registry reconciliation checks; drift detection evidence; revalidation run records. |
+| NODE-SYNC-01 | Replication: declare consistency model and propagation delays | L2+ where replicated | Mandatory | Static | Consistency model documentation, strong or eventual, plus maximum delay; where configured and monitored. |
+| NODE-SYNC-02 | Do not overwrite immutable versions; version and supersession explicit | L2+ | Mandatory | Operational | Release policy; versioned artefacts and specs and shapes; proof of no overwrite; explicit supersession links. |
+| NODE-SYNC-03 | Cache TTL and invalidation prevents prolonged staleness (metadata and policy decisions) | L2+ | Recommended | Operational | Cache TTL and invalidation config; tests showing updates propagate within bounded time. |
+| NODE-AAI-01 | **BLOCKING** Token validation consistent with `SEC-07` (issuer, audience, signature, lifetime) with bounded skew | L2+ | Mandatory | Dynamic | Positive and negative token validation tests; clock‑skew handling; documented issuer and audience configuration. |
+| NODE-AAI-02 | **BLOCKING** Declare PEP; enforce authZ consistently (`SEC-09`) and fail closed (`SEC-11`) | L2+ | Mandatory | Dynamic and Operational | PEP location; authorisation tests; fail‑closed evidence when policy evaluation fails or is unavailable. |
+| NODE-SEC-01 | Secrets mechanism with controlled access (`SEC-18`) | L2+ | Mandatory | Static and Operational | Vault or Kubernetes secrets approach plus RBAC; rotation policy; evidence secrets not in logs or configs. |
+| NODE-SEC-02 | **BLOCKING** Admin UIs and APIs restricted; not publicly exposed | L1+ | Mandatory | Operational | Proof admin endpoints are behind VPN, private network, or IP allowlist; periodic exposure review output. |
+| NODE-MON-01 | Monitor ingress availability plus platform and storage health relevant to hosted resources | L2+ | Mandatory | Operational | Dashboards and alerts for ingress plus platform and storage; thresholds and escalation. |
+| NODE-MON-02 | Incident process and escalation contact aligned with `REQ-MON-001` | L1+ | Mandatory | Static | Incident process documentation; on‑call rota or service desk path; contact point in published node info. |
+| NODE-MON-03 | Probe service health and readiness and alert on sustained failures (`REQ-API-016`, `REQ-API-017`, `REQ-DEP-010`) | L2+ | Mandatory | Operational | Health and readiness probe config; alert history; SLO and SLA references where defined. |
+| NODE-MON-04 | Standard path for structured logs and basic metrics; protect against secret and token leakage | L2+ | Recommended | Operational | Log and metric pipeline description; redaction rules; retention and access controls; sample redacted logs. |
+| NODE-MON-05 | Trigger revalidation on platform changes (ingress, TLS, AAI, runtime upgrades) | L2+ | Mandatory | Manual or Process | Change trigger policy; evidence of revalidation runs after relevant changes; audit trail. |
 
-## Revalidation triggers 
+## Reference patterns
+
+The CH Cloud federation does not mandate a single stack.
+Typical implementations include:
+
+- containerised services: Kubernetes or OpenShift with ingress controller plus certificate automation
+- VM‑based execution: OpenStack and VMs for specialised environments where needed
+- object storage: S3‑compatible storage (for example Ceph gateway) for large binaries and workflow outputs
+- AAI integration: OIDC‑based authentication with consistent token validation and authorisation enforcement
+- monitoring: a standard monitoring and alerting path supporting revalidation triggers and auditability
+
+## Revalidation triggers
 
 Revalidation should be triggered at minimum when any of the following changes occur:
 
-- Ingress/routing or DNS changes impacting exposed endpoints
-- TLS termination changes, certificate chain changes, or new reverse proxy/gateway deployment
-- Identity integration changes (IdP, issuer, audience, signing keys, token formats)
-- Runtime upgrades that may affect API behaviour, error model, pagination, or health endpoints
-- Persistent changes in monitoring signals (availability errors, repeated 5xx, auth failures)
+- ingress and routing or DNS changes impacting exposed endpoints
+- TLS termination changes, certificate chain changes, or new reverse proxy or gateway deployment
+- identity integration changes, IdP, issuer, audience, signing keys, token formats
+- registry and discovery integration changes or changes affecting runtime versus registry consistency
+- runtime upgrades that may affect API behaviour, error model, pagination, or health endpoints
+- persistent changes in monitoring signals, availability errors, repeated 5xx, auth failures

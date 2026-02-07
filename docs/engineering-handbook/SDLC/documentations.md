@@ -1,109 +1,66 @@
-# Software Documentation  and Codification
+# Software Documentation and Codification
 
-ECHOES is developed in a multi-partner environment with mixed technical backgrounds. To support maintainability, reuse, and safe collaboration, documentation must be clear, accurate, and kept up to date.
-
-This document defines the expected scope and approach for documenting ECHOES software components, especially APIs and services and for codifying infrastructure and operational processes in version-controlled artifacts.
+High-quality documentation is essential in a multi-partner ecosystem: it reduces onboarding friction, enables interoperability, and provides an auditable record of interfaces, behaviours, and operational expectations.
 
 
-##  Documenting APIs and Services
+## Documentation principles
 
-Every software component, API, or tool developed within ECHOES must include accurate, current documentation describing its purpose, usage, and integration patterns. High-quality documentation supports multiple audiences:
+- **Docs live with the code** (same repo, versioned with releases)
+- **Docs are reviewed** (PR/MR process, quality gates where practical)
+- **Docs are runnable** (examples can be executed; commands are current)
+- **Docs match reality** (avoid drift via automation and release checklists)
+- **Docs serve multiple audiences** (developers, operators, validators)
 
-- Developers integrating the API or service
-- Operators deploying and monitoring it
-- Maintainers debugging incidents and upgrading dependencies
-- Stakeholders assessing capabilities, scope, and constraints
 
-###  Minimum Documentation Set
+## Minimum documentation set (per component)
 
-Each component should provide, at minimum, the following content.
-
-| Topic | Required content | Typical location |
+| Topic | What to document | Typical location |
 |---|---|---|
-| Purpose and scope | Problem statement, intended use cases, non-goals | `README.md`, `/docs/overview.md` |
-| Installation and deployment | Prerequisites, dependencies, configuration, deployment steps | `README.md`, `/docs/deploy.md` |
-| Usage | Interfaces, inputs/outputs, examples, common workflows | `README.md`, `/docs/usage.md` |
-| Extension and contribution | Dev workflow, conventions, testing, contribution rules | `CONTRIBUTING.md`, `/docs/dev.md` |
+| Purpose and scope | intended use, non-goals, users | `README.md` or `docs/overview.md` |
+| Install/deploy | prerequisites, configuration, env vars | `docs/deploy.md` |
+| Usage | endpoints/inputs/outputs, examples | `docs/usage.md` |
+| Contribution | dev workflow, branching, tests | `CONTRIBUTING.md` |
+| Operations | health/readiness, logging, alerts | `docs/ops.md` |
+| Security | auth model, secrets handling | `SECURITY.md` or `docs/security.md` |
+| Changelog | release notes, migrations | `CHANGELOG.md` / Releases |
 
-Documentation should function as the primary entry point for onboarding new developers or institutions adopting the component.
 
-### Machine-Readable API Specifications
+## Machine-readable interface specifications (recommended)
 
-For APIs, standardized machine-readable specifications are strongly recommended because they enable automation, validation, and consistent client generation.
+Machine-readable specs enable validation, client generation, and drift detection.
 
-| API style | Preferred specification format | Primary artifact |
-|---|---|---|
-| REST | OpenAPI (Swagger) | `openapi.yaml` / `openapi.json` |
-| GraphQL | Schema (SDL) + introspection | `schema.graphql` |
-| gRPC | Protocol Buffers | `*.proto` |
-| Event-driven / messaging | AsyncAPI | `asyncapi.yaml` / `asyncapi.json` |
-
-#### Why machine-readable specifications matter
-
-| Capability | Benefit |
+| Interface style | Preferred spec |
 |---|---|
-| Client generation | SDKs, typed clients, and stubs can be generated reliably |
-| Interactive exploration | Enables tools such as Swagger UI, Postman, GraphQL Playground |
-| Contract validation | Specifications become testable contracts; drift is detectable |
-| Consistency | Single source of truth reduces ambiguity and miscommunication |
-| Contract testing and mocking | Supports consumer-driven contract tests and mocks |
-| Governance | Enables automated checks for breaking changes and style compliance |
+| REST | OpenAPI |
+| GraphQL | SDL schema + introspection |
+| gRPC | Protocol Buffers |
+| Events/messaging | AsyncAPI (or versioned schema registry) |
 
-### Documentation Lives with the Code
-
-Documentation must be maintained in the same repository as the component it describes and versioned with releases. This ensures:
-
-- documentation matches the deployed version
-- documentation changes are reviewable in pull requests
-- documentation evolves with implementation changes
-- reduced drift between system behavior and written guidance
-- users can access documentation that matches the version they run
-
-Recommended documentation frameworks include **MkDocs**, **Sphinx**, and **Docusaurus**, depending on the target audience and ecosystem.
-
-### Workflow Documentation for Non-Trivial Behavior
-
-For complex workflows (e.g., metadata harvesting, validation pipelines, transformations), documentation should:
-
-- include diagrams where they materially improve comprehension (architecture, sequence, flow)
-- use direct and practical language, supported by concrete examples
-- optimize for first-time onboarding without sacrificing depth
-- explain rationale (the “why”), not only procedure (the “how”)
-- provide troubleshooting guidance (symptoms, causes, corrective actions)
-- be maintained as part of normal development (not treated as optional)
-
-### API Documentation Content Model
-
-Comprehensive API documentation should cover the elements below.
-
-| Element | Description | Value to users |
-|---|---|---|
-| Overview | Purpose, target users, scope, non-goals | Helps determine relevance quickly |
-| Getting started | Minimal viable example and setup | Reduces time-to-first-call |
-| Authentication | Auth method, credential lifecycle, authorization model | Enables secure integration |
-| Endpoints | Endpoint list and behavioral descriptions | Primary reference surface |
-| Request/response examples | Concrete examples for common scenarios | Reduces trial-and-error |
-| Error model | Error codes, semantics, handling patterns | Enables robust client behavior |
-| Constraints | Rate limits, pagination, filtering, payload limits | Prevents common integration failures |
-| Versioning | API version strategy and compatibility notes | Supports upgrades and maintenance |
-| Changelog | Changes between versions, especially breaking changes | Enables upgrade planning |
-| Data models | Schemas and field descriptions | Clarifies expected structures |
-| Code samples | Working examples in key languages | Accelerates adoption |
-| Use cases | Common scenarios and recommended approaches | Promotes best-practice usage |
+Recommended practice:
+- treat the spec as the **contract**
+- validate it in CI
+- version it with the component release
 
 
-### Documentation Tooling Recommendations
+## Documentation for non-trivial workflows
 
-Select tools aligned with the component’s ecosystem and documentation needs.
+For pipelines and workflows, include:
+- sequence/flow diagram when it improves comprehension
+- assumptions and constraints (time limits, batch sizes, retry behaviour)
+- failure modes and remediation guidance
+- versioning policy and backward compatibility notes
 
-| Tool | Best for | Primary format | Key strengths |
-|---|---|---|---|
-| OpenAPI/Swagger | REST APIs | YAML / JSON | Interactive UI, validation, client generation |
-| Sphinx | Python-centric technical docs | reStructuredText / Markdown | Docstring integration, extensibility |
-| MkDocs | General project documentation | Markdown | Simple authoring, fast builds |
-| Docusaurus | Versioned project sites | Markdown / React | Versioning, i18n, search |
-| Read the Docs | Hosting and automated builds | Multiple | CI integration, version management |
-| GitBook | Collaborative user-facing docs | Markdown | Collaboration features, integrations |
-| Redoc | OpenAPI rendering | OpenAPI spec | Clean presentation for API references |
 
----
+## Quality checks (lightweight and practical)
+
+Suggested gates (optional but valuable):
+- link check (no broken internal links)
+- OpenAPI/AsyncAPI validation
+- code examples tested in CI (where feasible)
+- “docs updated” checklist item for breaking changes
+
+
+## Related pages
+- [Testing](testing.md)
+- [CI/CD](CICD.md)
+- [Service management and interoperability standards](service-management-and-interoperability-standards.md)

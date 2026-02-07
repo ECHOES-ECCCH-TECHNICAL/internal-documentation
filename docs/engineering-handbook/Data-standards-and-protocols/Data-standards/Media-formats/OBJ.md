@@ -1,31 +1,61 @@
-# OBJ (Wavefront Object)
+# OBJ
 
-OBJ is a simple, widely supported ASCII format for polygonal 3D meshes. It is broadly compatible with 3D modelling and visualization tools and is often used as a legacy exchange format.
+OBJ is a simple, widely supported ASCII format for polygonal 3D meshes.
+It is commonly used as a compatibility exchange format across many tools, but it is not optimised for modern web delivery.
+
+This page provides practical, non‑normative guidance for handling OBJ assets in CH Cloud workflows.
 
 ## When to use OBJ
 
-- Basic 3D mesh exports.
-- Broad tool compatibility is required.
-- Level 1 or Level 2 ingestion where the primary need is geometry interchange.
+- basic mesh interchange where broad tool compatibility is required
+- legacy export and import workflows where a provider cannot produce glTF or GLB yet
+- ingestion pipelines where OBJ is an intermediate step before normalisation
 
 ## When not to use OBJ
 
-- When semantic information must accompany geometry (materials, annotations, provenance) without a sidecar mechanism.
-- Point clouds or highly detailed scientific scans.
-- When compact binary packaging and modern runtime efficiency are required.
+- when you need compact packaging and efficient runtime delivery (prefer GLB)
+- when you require rich semantics to travel with geometry without a sidecar mechanism
+- for point clouds or measurement‑grade scan sources
 
+## Interoperability considerations
 
-## Relevance to Cultural Heritage (CH Cloud)
+### Materials and external files
 
-- Suitable as a compatibility format for 3D assets.
-- Requires sidecar metadata (RDF, JSON-LD, XML) to provide semantic context.
+OBJ commonly relies on a companion MTL file and external texture files.
+Publish:
 
-## Technical considerations
+- a complete package (OBJ, MTL, textures)
+- a manifest of included files
+- checksums for integrity
 
-- Often paired with an `.mtl` file for material definitions.
-- No native semantic annotations or rich metadata model.
-- Coordinate system, unit scale, and orientation must be documented explicitly.
+### Units, orientation, and coordinate conventions
 
-## References (informative)
+OBJ has no universal convention for units or orientation.
+Document:
 
-- OBJ file format (overview): https://en.wikipedia.org/wiki/Wavefront_.obj_file
+- units (m, cm, mm)
+- coordinate system orientation (Y‑up, Z‑up)
+- whether coordinates are local or georeferenced, and which CRS applies
+
+### Sidecar metadata
+
+OBJ has no standard embedded metadata model.
+Provide descriptive, rights, and provenance metadata via:
+
+- repository record fields, and or
+- sidecar JSON or JSON‑LD linked to the asset identifier
+
+### Recommended modernisation path
+
+Where feasible, publish GLB as the preferred delivery derivative and retain OBJ as a compatibility export.
+
+## Validation checks
+
+- confirm that mesh and textures load correctly in a reference tool
+- confirm unit scale and orientation against a known reference asset
+- confirm the package is complete (no missing textures)
+- record provenance: source asset id plus conversion parameters
+
+## References
+
+- OBJ overview: https://en.wikipedia.org/wiki/Wavefront_.obj_file

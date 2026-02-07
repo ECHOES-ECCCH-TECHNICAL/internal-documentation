@@ -1,50 +1,101 @@
-# DCAT (Data Catalog Vocabulary)
+# DCAT
 
-DCAT is a W3C vocabulary for describing datasets, data services, and distributions in catalogues. It describes a dataset’s **existence, access points, formats, and basic properties** (not the internal content of the dataset).
+DCAT is a W3C RDF vocabulary for describing **datasets**, **data services**, and **distributions** in catalogues.
+It is designed for catalogue interoperability: discovery, harvesting, and re‑exposure of dataset and service records across portals.
+DCAT describes what a dataset or service is and how it can be accessed.
+It does **not** replace domain models used to describe cultural heritage items.
 
-DCAT is widely used for open data portals and interoperable dataset catalogues. It enables:
-- exchange of catalogue records between portals,
-- harvesting and re-exposure of catalogue entries,
-- consistent discovery of datasets and services.
+This page provides practical, non‑normative guidance for using DCAT in CH Cloud catalogue layers and for interoperability with wider European catalogue ecosystems.
 
+## What DCAT is good for
 
-## When to use DCAT
+Use DCAT when you need:
 
-- Describing datasets, APIs, and data services in a catalogue.
-- When CH Cloud needs to expose or ingest dataset descriptions compatible with other portals and EOSC-related infrastructures.
-- Level 1 and Level 2 onboarding workflows where datasets/services must be registered in a central catalogue.
+- a catalogue layer that lists datasets and services consistently across providers
+- interoperability with external portals, including EOSC‑like catalogue ecosystems
+- machine‑readable descriptions of access endpoints, formats, licences, and basic provenance
+- harvesting and re‑syndication workflows (catalogue to portal to aggregator)
 
-## When not to use DCAT
+## When DCAT is not the right tool
 
-- Detailed object-level or item-level description (individual artworks/documents).
-- As a replacement for domain models like CIDOC CRM or EDM.
-- Internal technical logs or private operational configuration content.
+Avoid using DCAT as the primary model when you need:
 
+- object or item‑level cultural heritage semantics (events, actors, provenance chains)
+- rich, domain‑specific modelling (use CIDOC CRM, EDM, domain ontologies, and related models)
+- internal operational logs or private configuration (DCAT is a public‑facing catalogue model)
 
-## Relevance to Cultural Heritage (CH Cloud)
+## Core modelling concepts
 
-- Natural choice for a dataset catalogue layer and interoperability with wider European data catalogue ecosystems.
-- DCAT profiles can harmonize how datasets and services are exposed to external platforms.
+DCAT is typically used with these classes:
 
+- `dcat:Dataset` as a dataset (conceptual resource)
+- `dcat:Distribution` as an accessible form of the dataset (download, API, dump)
+- `dcat:DataService` as a service that provides access to data (API endpoints, query services)
 
-## Technical considerations
+Practical rule:
 
-### Core classes
-- `dcat:Dataset` — a dataset as a conceptual entity
-- `dcat:Distribution` — an accessible form of the dataset (file, API, etc.)
-- `dcat:DataService` — a service that provides access to data
+- if you publish an API, model it as a `dcat:DataService` and link it to the dataset or datasets it serves
+- if you publish a file download, model it as a `dcat:Distribution`
 
-### Serializations
-- RDF/Turtle
-- JSON-LD
+## Profiles and interoperability baselines
 
-### Validation and profiles
-- SHACL shapes can define DCAT application profiles (required fields, constraints).
-- In EU contexts, **DCAT-AP** is a common profile baseline.
+### DCAT‑AP
 
+In EU contexts, DCAT‑AP is a common application profile that constrains DCAT for cross‑portal exchange (mandatory fields, recommended properties, controlled value spaces).
+If your catalogue content is intended for broad EU interoperability, adopting DCAT‑AP, or mapping to it, reduces friction.
 
-## References (informative)
+### Validation
+
+Treat the chosen profile as a contract:
+
+- validate catalogue records using SHACL shapes (recommended)
+- version the shapes or profile and publish change notes to avoid silent drift
+
+## Recommended provider checklist
+
+### 1) Stable identifiers
+
+- use stable HTTPS URIs for dataset and service identifiers
+- avoid reusing identifiers for different resources
+- if a record is replaced, publish a supersession relationship rather than silently overwriting
+
+### 2) Access points are explicit
+
+- for each dataset, list the available distributions (downloads, dumps, derived packages)
+- for each service or API, provide an explicit endpoint URL, protocol, and where relevant a machine‑readable contract link (for example OpenAPI)
+
+### 3) Rights and licensing are machine‑readable
+
+- publish licences as standard URIs where possible
+- keep rights statements consistent across dataset and distributions (avoid contradictions)
+
+### 4) Restricted access is described without leaking sensitive detail
+
+If a dataset or service is restricted:
+
+- describe the access model at a high level (restricted, authenticated)
+- provide enough metadata for validators and integrators to understand expected behaviour
+- avoid embedding secrets or internal‑only operational details in catalogue records
+
+### 5) Version and change transparency
+
+For evolving datasets and services:
+
+- publish a version identifier, or immutable release id
+- provide a changelog or release notes link
+- keep old versions traceable where required by policy
+
+## Common pitfalls
+
+| Pitfall | Why it hurts interoperability | Better pattern |
+|---|---|---|
+| Only a dataset title and URL | Not enough for harvesting and discovery | Add distribution and service structure plus licence and contact |
+| Unstable access URLs | Breaks portals and harvesters | Use versioned URLs or stable redirects with a documented policy |
+| Free‑text licence | Cannot be processed reliably | Use a licence URI (CC, ODC, and similar) |
+| Mixing item‑level and dataset‑level modelling | Confuses consumers | Use DCAT for dataset and service; use domain models for items |
+
+## References
 
 - DCAT v3 (W3C Recommendation): https://www.w3.org/TR/vocab-dcat-3/
-- DCAT-AP (EU profile): https://semiceu.github.io/DCAT-AP/releases/
+- DCAT‑AP (SEMIC): https://semiceu.github.io/DCAT-AP/releases/
 - SHACL (W3C): https://www.w3.org/TR/shacl/

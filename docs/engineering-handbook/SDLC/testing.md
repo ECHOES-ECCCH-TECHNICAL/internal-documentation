@@ -1,188 +1,109 @@
-## Unit, Integration, and End-to-End Testing
+# Testing
 
-Automated testing helps catch issues early and enables safer changes over time. Testing provides confidence that code works as intended, reduces regression bugs, and serves as living documentation of system behavior. The ECHOES project recommends three complementary tiers of tests: unit, integration, and end-to-end (E2E).
+Automated testing enables safer change, faster iteration, and higher confidence in interoperability across partners
+. In a federated environment, tests are not only for correctness they are **evidence**
+that interfaces, security, and behavioural contracts remain stable across releases.
 
-All tests should run automatically in the CI/CD pipeline where feasible, with results reported in an accessible way (e.g., CI summaries, dashboards, or reporting tools such as ReportPortal). This automation ensures consistent quality checks without requiring manual intervention.
+This page describes a pragmatic test strategy suitable for services, APIs, workflows, and web applications delivered into the CH Cloud.
 
-### Test Tiers Overview
 
-Each tier of testing serves a distinct purpose and has different characteristics:
+## Scope and audience
 
-| Tier | Purpose | Typical Scope | Environment | Typical Tools |
-|------|---------|---------------|-------------|---------------|
-| **Unit** | Validate small, isolated logic units | Functions, classes, modules | Local development + CI | pytest (Python), JUnit (Java), Jest (JavaScript) |
-| **Integration** | Verify component interactions and interfaces | APIs, databases, message queues, file I/O | CI + ephemeral environments | pytest + Docker, Robot Framework, contract tests, Testcontainers |
-| **E2E** | Validate complete user workflows end-to-end | UI + backend + integrations | Staging or near-production environment | Playwright, Cypress, Robot Framework, Selenium |
+Applies to:
+- APIs and services (REST, GraphQL, messaging/event consumers)
+- workflow components (pipelines, converters, enrichers)
+- web applications and UIs
+- infrastructure glue code where failures affect availability or security
 
-### Recommended Expectations Per Tier
-Understanding what each tier should and shouldn't do helps maintain an effective test suite:
+Audience:
+- developers (component owners)
+- validators/reviewers (onboarding evidence)
+- operators (release gates and regression control)
 
-| Tier | Should Be | Should Avoid | Key Checks |
-|------|-----------|--------------|------------|
-| **Unit** | Fast (milliseconds), deterministic, isolated; uses mocking/stubbing for dependencies | External dependencies (database, network, filesystem); complex test setup | Normal and edge cases; clear naming; stable assertions; boundary conditions |
-| **Integration** | Covers interfaces and configuration; uses realistic dependencies (often containerized) | Excessive UI coverage; flakiness without stabilization; overly broad scope | API contracts, database migrations, authentication flows, configuration correctness, data persistence |
-| **E2E** | Focused on critical user journeys; runs against a deployed system; validates cross-component behavior | Large, brittle test suites; duplicating unit/integration assertions; testing every edge case | Workflow success, cross-component behavior, basic UI accessibility, critical business processes |
 
-### Test Strategy Details
+## Test tiers (recommended baseline)
 
-#### Unit Tests
+| Tier | What it proves | Typical scope | Where it runs | Common tools |
+|---|---|---|---|---|
+| **Unit** | local logic is correct | functions/classes/modules | local + CI | pytest, JUnit, Jest |
+| **Integration** | components work together | API ↔ DB, queue, storage, auth flows | CI + ephemeral env | Testcontainers, pytest+Docker, Robot Framework, contract tests |
+| **E2E** | critical user journeys work | UI + backend + external integrations | staging / near‑prod | Playwright, Cypress, Robot Framework |
 
-Unit tests form the foundation of your testing strategy. They should:
+### Expectations by tier
 
-- **Run fast** (milliseconds per test) to provide immediate feedback during development
-- **Be deterministic** with no random failures or dependencies on external state
-- **Test one thing** at a time with clear focus on specific functionality
-- **Use mocks and stubs** to isolate the code under test from dependencies
-- **Cover edge cases** including error conditions, boundary values, and null inputs
-
-**Good unit test characteristics:**
-- Clear test names that describe what is being tested and expected outcome
-- Arrange-Act-Assert structure for readability
-- No side effects or shared state between tests
-- Fast execution (entire suite runs in seconds, not minutes)
-
-#### Integration Tests
-
-Integration tests verify that components work together correctly. They should:
-
-- **Test real integrations** with databases, message queues, APIs, and file systems
-- **Use containerization** (e.g., Docker, Testcontainers) for reproducible test environments
-- **Validate contracts** between services and APIs
-- **Check configuration** to ensure components are wired correctly
-- **Test data flow** across boundaries and layers
-
-**Good integration test characteristics:**
-- Isolated test environments that don't interfere with each other
-- Realistic data scenarios that mirror production usage
-- Clear setup and teardown to ensure clean state
-- Focused scope (not full E2E workflows)
-
-#### End-to-End Tests
-
-E2E tests validate complete user workflows from the user interface through the full stack. They should:
-
-- **Focus on critical paths** that represent core business value
-- **Run against deployed systems** in staging or production-like environments
-- **Test cross-component behavior** that can't be validated at lower levels
-- **Include accessibility checks** for basic usability requirements
-- **Be maintainable** with clear page objects or similar abstractions
-
-**Good E2E test characteristics:**
-- Small, focused test suite (10-50 tests for most systems)
-- Explicit waits and retry logic to handle timing issues
-- Screenshots and videos on failure for debugging
-- Clear separation from unit and integration test concerns
-
-### CI/CD Execution and Reporting
-
-Automated test execution ensures consistent quality without manual intervention:
-
-| Area | Guideline |
-|------|-----------|
-| **Automation** | Run unit tests on every PR to provide fast feedback; run integration tests on PR and/or merge to catch interface issues; run E2E tests on merge to main and scheduled (nightly) where appropriate to validate full workflows |
-| **Quality gates** | Treat test failures as release blockers for critical services to maintain quality standards; prioritize fixing flaky tests to keep trust in CI and prevent "test blindness" |
-| **Reporting** | Provide a short CI summary (what failed + links to details) in PR comments or status checks; expose detailed reports, logs, and screenshots via artifacts or dashboards (e.g., ReportPortal, Allure) for non-technical stakeholders to understand quality trends |
-| **Tooling** | Prefer standard frameworks that integrate well with CI tooling (e.g., pytest, Robot Framework, Playwright, k6 for performance testing) to reduce maintenance burden and leverage community support |
-| **Performance** | Keep unit test suites fast (under 5 minutes ideally) to maintain developer productivity; parallelize slower integration and E2E tests where possible |
-
-### Test Pyramid Principle
-
-Follow the test pyramid principle:
-many fast unit tests at the base (70-80%), fewer integration tests in the middle (15-20%), and a small number of E2E tests at the top (5-10%). This ensures quick feedback while maintaining comprehensive coverage and keeping test execution time reasonable.
-
-This distribution provides the best balance of:
-- **Speed**: Unit tests provide instant feedback
-- **Confidence**: Integration and E2E tests catch real-world issues
-- **Maintainability**: Most tests are simple units that are easy to update
-- **Cost**: Fast tests can run frequently without infrastructure overhead
-
----
-
-## Using Test Frameworks
-
-Different testing needs require different tools. Choose frameworks based on what you are testing (API vs. UI vs. performance), team skills, and CI/CD integration requirements. Prefer widely adopted tools with strong community support and good reporting.
-
-### Framework selection guide
-
-| Framework | Type | Best for | Key strengths |
+| Tier | Should be | Should avoid | Key checks |
 |---|---|---|---|
-| **Robot Framework** | Keyword-driven acceptance testing | Acceptance tests, API tests readable by non-developers, mixed-skill teams | Human-readable tests, large library ecosystem, rich HTML reports |
-| **k6** | Load / performance testing | Performance validation, scalability checks, capacity planning | JavaScript-based scripting, CI-friendly, realistic load models, strong metrics |
-| **Playwright** | End-to-end (E2E) UI testing | Web UI workflows, cross-browser validation | Reliable automation, auto-waiting, cross-browser, trace viewer |
-| **pytest** | Unit / integration (Python) | Python services and libraries | Fixtures, parametrization, plugin ecosystem |
-| **JUnit** | Unit / integration (Java) | Java services and libraries | Industry standard, excellent IDE support, mature tooling |
-| **Jest** | Unit / integration (JS/TS) | Node/web components | Fast execution, snapshot testing, built-in mocking |
+| Unit | fast, deterministic, isolated | network/database, complex setup | edge cases, boundaries, error handling |
+| Integration | realistic dependencies, contract validation | broad UI coverage, flaky timing | authn/authz, migrations, config wiring, persistence |
+| E2E | few, high‑value journeys | “test everything”, brittle selectors | login, search, view, create/update, permissions |
 
-### Robot Framework (acceptance and API testing)
 
-**When to use**
-- Acceptance tests that domain experts and non-developers need to review.
-- API testing with explicit, documented test cases.
-- Teams with mixed technical backgrounds.
+## The test pyramid (practical target)
 
-**Characteristics**
-- Keyword-driven syntax that is easy to read.
-- Extensive libraries for web/API/database testing.
-- Generates detailed HTML reports.
-- Suitable for “specification by example” workflows.
+A typical healthy distribution:
+- **70–80%** unit tests (fast feedback)
+- **15–20%** integration tests (interfaces and wiring)
+- **5–10%** E2E tests (critical workflows only)
 
-**Practical example (scenario)**
-A metadata API is validated using Robot Framework test cases that curators can review: “Given an object exists, when I query by identifier, then I receive expected fields and licence URI”.
+This balance keeps pipelines fast while still covering real-world failure modes.
 
-### k6 (load and performance testing)
 
-**When to use**
-- Validating performance under load and identifying bottlenecks.
-- Testing scalability before production deployment.
-- Establishing and tracking performance regressions across releases.
+## Contract testing (strongly recommended for APIs/events)
 
-**Characteristics**
-- JavaScript-based scripting (low barrier for many teams).
-- Supports realistic load models (ramp-up, spike, soak).
-- Produces detailed metrics and integrates with CI/CD.
-- Enables threshold-based quality gates (e.g., p95 latency, error rate).
+Interoperability failures are often **behavioural drift** (not compile errors). Contract tests reduce this drift.
 
-**Practical example (scenario)**
-Simulate 1,000 concurrent users searching the CH Cloud metadata catalogue and assert p95 response time remains within an agreed threshold; fail the pipeline if thresholds are exceeded.
+### REST/HTTP APIs
+- validate OpenAPI syntax and style
+- validate responses against schemas
+- enforce error model consistency (status codes + machine‑readable error IDs)
 
-### Playwright (E2E web UI testing)
+### Event-driven contracts
+- version event schemas
+- validate required fields (`event_id`, `event_type`, `timestamp`, `source`, `data`, correlation IDs where used)
+- ensure consumers are **idempotent** (duplicate delivery should not break behaviour)
 
-**When to use**
-- Testing critical user workflows end-to-end through the browser.
-- Verifying cross-browser compatibility.
-- Reducing flakiness compared to legacy UI automation approaches.
 
-**Characteristics**
-- Auto-waiting for UI elements reduces timing-related flakes.
-- Supports Chromium, Firefox, and WebKit.
-- Trace viewer and debugging tooling for failures.
-- Works well with screenshots/videos as CI artifacts.
+## Security and compliance tests (minimum)
 
-**Practical example (scenario)**
-Verify that curators can log in, search for objects, open details, and add annotations through the web interface, using a staging environment with test identities.
+Where a component exposes protected functionality or processes restricted data, include automated checks that verify:
+- TLS/HTTPS enforcement
+- token validation correctness (issuer/audience/signature/expiry)
+- authorisation enforcement for protected routes
+- no secrets committed to repository (secret scanning)
 
-### Language-specific unit/integration frameworks
+These checks can run as:
+- integration tests against a test IdP / OIDC provider
+- pipeline security gates (SAST/SCA/secret scanning)
 
-Use ecosystem-native frameworks for unit and integration testing:
+(See the **Security** and **CI/CD** pages for recommended tooling and gates.)
 
-- **pytest (Python)**: strong fixtures and parametrization; good for API and service tests.
-- **JUnit (Java)**: standardised approach with strong IDE/tooling support.
-- **Jest (JavaScript/TypeScript)**: fast and convenient, especially for frontend and Node services.
 
-### Tooling placement across test tiers
+## Where tests run (pipeline guidance)
 
-| Tier | Recommended tools (examples) | Notes |
-|---|---|---|
-| Unit | pytest, JUnit, Jest | Keep fast and deterministic; avoid network and real services |
-| Integration | pytest + Docker/Testcontainers, Robot Framework, contract tests | Prefer containerised dependencies; validate schemas/contracts |
-| E2E | Playwright, Robot Framework, (Selenium if legacy) | Keep small and focused; treat failures as high-signal |
-| Performance | k6 | Run regularly (nightly) and before major releases; use thresholds |
+- **On every PR**: lint + unit tests + fast integration smoke where feasible
+- **On merge**: broader integration suite; contract checks; packaging
+- **Nightly / scheduled**: E2E tests; longer-running integration suites; performance checks
 
-### Reporting and evidence
+### Evidence outputs (what to keep)
+For onboarding and ongoing assurance, archive:
+- CI job summaries (pass/fail + links)
+- test reports (JUnit XML / Allure / ReportPortal)
+- E2E screenshots/videos on failure
+- coverage reports (where used)
+- contract validation outputs (OpenAPI/AsyncAPI schema checks)
 
-Regardless of framework, tests should produce actionable evidence:
 
-- Machine-readable results (e.g., JUnit XML) for CI dashboards.
-- Human-readable reports (e.g., HTML) for stakeholders.
-- Failure artifacts (logs, screenshots, traces) for rapid debugging.
-- Trend visibility (flaky tests, performance regression) where possible.
+## Performance testing 
+
+For user-facing APIs and critical services, add lightweight load/performance checks:
+- set p95 latency thresholds
+- set error-rate thresholds
+- detect regressions between releases
+
+k6 is commonly used for CI-friendly load tests; keep tests short and reproducible (avoid “freeform” benchmarks).
+
+
+## Related pages
+- [CI/CD](CICD.md)
+- [Deployment, environments, and versioning](deployment-environments-and-versioning.md)
+- [Security](security.md)

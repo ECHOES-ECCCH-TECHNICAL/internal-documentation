@@ -1,18 +1,53 @@
-# Deployment, Environments, and Versioning Management
+# Environments and Infrastructure as Code
 
-In a multi-partner project, deployments must be predictable, repeatable, and easy to troubleshoot. They must also accommodate different infrastructure choices and operational maturity across consortium members. The core principles are consistent across component types: deploy in a controlled way, automate where feasible, and make failures easy to detect and recover from.
+Components should be promoted through environments with increasing blast radius (e.g., dev → test/staging → production). The environment model should be explicit and reproducible.
 
-The intent is to reduce “it worked in one place” outcomes by standardizing *principles and interfaces* (pipelines, artifacts, environments, validation signals), while allowing tool- and platform-specific implementations to evolve over time.
+## Environment baseline
 
-## Scope and minimum expectations
-
-This guidance applies to services, APIs, and deployable components delivered by ECHOES partners (containerized or otherwise).
-
-| Topic | Minimum expectation | Evidence (examples) |
+| Environment | Purpose | Typical properties |
 |---|---|---|
-| Repeatability | Deployments are performed via a pipeline or scripted procedure | CI workflow, deployment playbook, runbook |
-| Promotion discipline | Separation of test/staging and production promotion | Environment definitions, promotion approvals |
-| Rollback readiness | Rollback path exists and is periodically verified | Rollback procedure + evidence of test |
-| Deployment validation | Promotion gates include automated checks | CI job results, smoke test report |
-| Version transparency | Deployed version is observable and traceable | Git tag, artifact digest, `/version` |
-| Artifact immutability | Released artifacts are not overwritten | Registry policies, signed tags/digests |
+| Dev | Rapid iteration | Lower controls, synthetic data, developer-owned |
+| Test/Staging | Production-like validation | Production-like config, controlled test data, promotion gates |
+| Production | Service delivery | Strict change control, observability, backups, incident process |
+
+## Configuration and secrets
+
+- Treat configuration as code where possible (versioned templates, schema validation).
+- **Never commit secrets**; use a secrets manager or environment-specific secret distribution.
+- Prefer explicit configuration schemas and validation to prevent partial/invalid deployments.
+
+## Practical patterns
+
+| Pattern | Why it helps |
+|---|---|
+| Deploy by **digest**, not by mutable tags (e.g., avoid `latest`) | Guarantees the same artifact is running everywhere |
+| Validate configuration via **schema checks** before startup | Prevents partial config from causing runtime failures |
+| Separate config per environment but keep **one config structure** | Reduces surprises during promotion |
+| Store secrets in a manager and inject at runtime | Prevents credential leakage and enables rotation |
+
+
+
+## Infrastructure as Code (IaC)
+
+Managing infrastructure manually is risky and hard to audit. Prefer Infrastructure as Code (IaC) so that environments are reproducible, reviewable, versioned, and shareable across teams.
+
+### Benefits of IaC
+
+- **Consistent environments** across test, staging, and production
+- **Auditable change history** with version control integration
+- **Fast rebuild** in case of failure or disaster recovery
+- **Portable blueprints** across providers (cloud/on-premises)
+
+### Tooling overview
+
+| Tool | Focus | Language | Best for |
+|---|---|---|---|
+| **Terraform** | Infrastructure provisioning | HCL | Cloud resources (VMs, networks, storage) |
+| **Ansible** | Configuration management | YAML | Installing software, managing configurations |
+
+### Lightweight deployment options
+
+Even lightweight deployments benefit from codification:
+
+- **Docker Compose** for small, single-host deployments
+- **Kubernetes manifests/Helm** for orchestrated services

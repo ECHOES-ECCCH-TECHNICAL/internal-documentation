@@ -1,103 +1,80 @@
-# Dataset validation
+# Dataset Validation
 
-This page provides **implementation guidance** for validating datasets against the normative rules in D6.2 Chapter 9 (§9.3.1).
-The authoritative requirements remain the REQ-* statements referenced in the PDF.
+This page provides **living implementation guidance** for validating datasets against the normative rules defined in the **D6.2 deliverable**.
+The authoritative requirements remain the project’s REQ-* statements; this page explains how to collect evidence and run checks consistently.
 
 
 ## Scope
 
 Applies to:
 - datasets registered/exposed in the federation (public or restricted),
-- dataset metadata records (machine-readable),
-- dataset access endpoints where present (download/query/retrieval).
+- dataset metadata records (machine‑readable),
+- dataset access endpoints where present (download/query/retrieval),
+- derived/enriched datasets where provenance must be traceable.
 
 
+## Inputs: evidence package
 
-## Inputs (evidence package)
+### Minimum evidence (must be provided)
+- dataset identifier + dataset version (or immutable release identifier)
+- machine‑readable metadata record location (URL/path)
+- licence / rights statement in metadata (machine‑readable where possible)
+- owner/steward + contact point
+- provenance statement where applicable (especially for derived/enriched outputs)
+- schema/profile references where applicable
+- if L3 claimed: RDF + SHACL shapes + SHACL validation report
 
-Minimum evidence items:
-- dataset identifier + dataset version (or immutable release identifier),
-- machine-readable metadata record location (URL/path),
-- licence/rights statement in metadata,
-- contact/ownership metadata (stewardship),
-- provenance metadata where applicable,
-- schema/profile references where applicable,
-- if L3 claimed: RDF + SHACL shapes + SHACL validation report.
-
-Recommended evidence items:
-- changelog or release notes for versions,
-- checksum(s) for large binaries,
-- persistence statement for identifiers/URLs.
-
+### Recommended evidence
+- changelog or release notes per version
+- checksums for large binaries
+- persistence statement for identifiers/URLs (and redirect policy, if changed)
+- transformation description (if exported/converted from another representation)
 
 
 ## Validation by interoperability level
 
-### L1 static checks (REQ-META-001/002/003)
-
-Checklist:
-- [ ] Metadata exists and is machine-readable (REQ-META-001)
-- [ ] Mandatory metadata fields present (REQ-META-002)
-- [ ] Stable identifier present (REQ-META-003)
-
-Typical evidence:
-- metadata file/record (JSON/JSON-LD/XML) archived as validation artefact
-- screenshot or log of successful schema parse (if schema exists)
+### L1 (baseline) static checks
+Typical checks:
+- metadata exists and is machine‑readable
+- mandatory metadata fields are present (id, title/description, licence, contact)
+- stable identifier is present and consistent across artefacts
 
 Common failure patterns:
-- missing licence/contact
-- “identifier” present but not stable (temporary URL, local path)
+- licence/contact missing or only free text
+- identifier exists but is not stable (temporary URL, local path)
 
-
-
-### L2 static checks (REQ-META-004/005/006, REQ-SEM-001/002/003, REQ-PROV-001/002/003)
-
-Checklist:
-- Identifier stability and version/supersession evidence (REQ-META-004)
-- Schema/profile reference where applicable (REQ-META-005)
-- JSON-LD metadata or deterministic transform output where applicable (REQ-META-006)
-- Controlled vocabulary IDs/mappings where applicable (REQ-SEM-001/002/003)
-- Provenance/lineage for derived/enriched datasets where applicable (REQ-PROV-001/003)
-- Release versioning and change history (REQ-PROV-002)
-
-Typical evidence:
-- version table (version → release date → changes → supersedes)
-- transformation description and deterministic output sample (if transform used)
-- vocabulary references (URI-based) + mapping artefact location (if used)
-- provenance statements including tools/parameters for derived datasets
+### L2  static checks (structure, semantics, provenance where applicable)
+Typical checks:
+- identifier stability and version/supersession evidence (no silent overwrite of releases)
+- schema/profile reference where applicable (and sample validates when a schema exists)
+- semantic representation or deterministic transform where applicable (e.g., JSON‑LD metadata)
+- controlled vocabulary identifiers/mappings where applicable
+- provenance/lineage for derived/enriched datasets (inputs, tools, parameters)
+- release versioning and change history
 
 Common failure patterns:
-- version exists but overwrites previous release
-- vocabulary identifiers are non-resolvable strings with no mapping
-- provenance is narrative only, not machine-actionable
+- version exists but overwrites the previous release without supersession notes
+- controlled terms are non-resolvable strings with no mapping
+- provenance is narrative-only and not tied to artefacts/versions
 
-
-
-### L3 static + operational checks (REQ-SEM-004/005/010, REQ-MON-010)
-
-Checklist:
-- RDF representation available (REQ-SEM-004)
-- SHACL shapes provided and SHACL validation report passes (REQ-SEM-005)
-- URI stability/deprecation discipline evidence (REQ-SEM-010)
-- Semantic drift monitoring evidence where applicable (REQ-MON-010)
-
-Typical evidence:
-- RDF dump or SPARQL endpoint reference + version tag
-- SHACL shapes (versioned) + validation output (pass/fail + error list)
-- URI policy (how deprecation is signalled; no silent disappearance)
-- monitoring outputs (trend reports, drift reports, alert history)
+### L3  static + operational checks (semantic assets and monitoring where declared)
+Typical checks:
+- RDF representation is available where declared
+- SHACL shapes are provided, versioned, accessible, and validation outputs are reproducible
+- URI stability/deprecation discipline exists for published URIs
+- semantic drift monitoring evidence exists where declared/required
 
 Common failure patterns:
-- SHACL shapes provided but not versioned / not accessible
-- SHACL report exists but is not reproducible (no input/version captured)
-- URIs change between releases without deprecation/mapping plan
+- shapes exist but are not versioned or not accessible
+- SHACL report cannot be reproduced (inputs/versions not captured)
+- URIs change without deprecation or mapping plan
 
 
-
-## Output expectations
+## Output: dataset conformance report 
 
 The dataset conformance report should include:
-- dataset id + version
-- claimed level
-- requirement-by-requirement results with evidence pointers
-- validation class used (static/dynamic/operational/manual)
+- dataset id + version and claimed level
+- requirement-by-requirement results (using REQ-* identifiers where applicable)
+- validation classes used (static/dynamic/operational/manual)
+- evidence pointers (archived metadata, schemas, reports, logs)
+- remediation guidance for failed checks

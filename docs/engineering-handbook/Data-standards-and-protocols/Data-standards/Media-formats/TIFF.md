@@ -1,34 +1,48 @@
-# TIFF (Tagged Image File Format)
+# TIFF
 
-TIFF is a high-quality, lossless raster image format commonly used in digitization and preservation workflows. TIFF supports long-term durability and fidelity and can embed rich metadata (EXIF, IPTC, XMP).
+TIFF is a high‑quality, lossless raster image format widely used in digitisation and preservation workflows.
+It supports long‑term durability and can embed rich metadata (EXIF, IPTC, XMP).
 
+This page provides practical, non‑normative guidance for using TIFF in CH Cloud workflows.
 
 ## When to use TIFF
 
-- Preservation masters for long-term storage.
-- Digitization workflows requiring high fidelity (lossless capture).
-- As a source master from which IIIF services generate access derivatives.
+- preservation masters for long‑term storage
+- digitisation workflows requiring high fidelity (lossless capture)
+- as a source master for generating access derivatives or IIIF tiles
 
 ## When not to use TIFF
 
-- Web/API delivery at scale (TIFF files are typically too large).
-- Situations with strict storage constraints unless supported by tiered storage.
+- direct web or API delivery at scale (file sizes are typically too large)
+- scenarios with strict storage constraints unless tiered storage and lifecycle policies exist
 
+## Interoperability considerations
 
-## Relevance to Cultural Heritage (CH Cloud)
+### Compression and bit depth
 
-- Likely accepted as a preservation-grade input format.
-- TIFF masters are commonly converted to IIIF-compatible tiles/derivatives for access and interoperability.
+- prefer lossless compression (LZW, ZIP) where appropriate
+- avoid lossy compression for masters
+- document bit depth and colour space as part of technical metadata
 
+### Metadata extraction and preservation
 
-## Technical considerations
+- extract EXIF, IPTC, XMP and preserve them in the repository metadata model or sidecars
+- do not rely on embedded metadata alone for governance or rights assertions
 
-- Prefer lossless compression options (e.g., LZW/ZIP) where appropriate.
-- Ensure consistent metadata extraction and preservation during ingestion.
-- Plan storage and transfer strategies for large file sizes.
+### Identifier and versioning discipline
 
+- link every TIFF master to a stable asset identifier
+- if masters are replaced (re‑scan, re‑process), publish a supersession relationship rather than silently overwriting
 
-## References (informative)
+## Validation checks
 
-- TIFF (Adobe, historical spec): https://www.adobe.io/open/standards/TIFF.html
+- file readability in standard tooling
+- technical metadata extraction success (dimensions, bit depth, colour profile)
+- checksums computed and recorded (integrity)
+- consistency between embedded metadata and repository record where relevant
+
+## References
+
+- TIFF (Adobe historical spec): https://www.adobe.io/open/standards/TIFF.html
+- Library of Congress FDD (TIFF): https://www.loc.gov/preservation/digital/formats/fdd/fdd000022.shtml
 - IPTC Photo Metadata: https://www.iptc.org/standards/photo-metadata/

@@ -1,86 +1,71 @@
-# Images: Formats, Metadata Preservation, and IIIF
+# Images in the CH Cloud
 
-This page provides **practical, non-normative** guidance and examples to support **D6.2 §4.2.2.5 (Images)**. It is intended to help providers handle image assets consistently across preservation, access delivery, and interoperability services (including IIIF).
+This page provides practical, non‑normative guidance for handling image assets in a federated environment:
 
+- choosing formats for preservation masters and access delivery
+- preserving and exposing technical and rights metadata consistently
+- generating deterministic derivatives (thumbnails, web images, tiles)
+- publishing interoperable access via IIIF when appropriate
 
+It complements project deliverables by focusing on implementation decisions and reproducible workflows.
 
-## Recommended image formats
+## Recommended format strategy
+
+Use a two‑tier approach wherever feasible.
 
 | Purpose | Recommended formats | Notes |
 |---|---|---|
-| Preservation master | **TIFF** (lossless) | Prefer lossless compression (LZW/ZIP) if needed; avoid lossy recompression |
-| Access / web delivery | **JPEG**, **PNG**, **WebP** | Select format based on content type (photos vs. line art), licensing, and delivery needs |
-| Interoperable image delivery (L2+) | **IIIF Image API** derivatives | Enables tiled access, deep zoom, and standardized integration |
+| Preservation master | TIFF (lossless) | Prefer lossless compression (LZW/ZIP) if needed; avoid lossy recompression |
+| Access and web delivery | JPEG, PNG, WebP | Choose by content type (photos vs line art), licensing, and delivery needs |
+| Interoperable tiled delivery | IIIF Image API derivatives | Enables deep zoom, regions, standard viewers, and consistent integration |
 
+Rule of thumb: treat the preservation master as the reference source; publish access derivatives and IIIF tiles as derived outputs with recorded parameters.
 
-
-## Metadata handling (ingestion and derivatives)
+## Metadata preservation and privacy
 
 ### What to preserve
-During ingestion, metadata should be **extractable and preserved**, including (where available):
 
-- Technical metadata: dimensions, bit depth, color profile, compression, checksums
-- Descriptive/rights metadata: creator, rights statement, licence URI, source, capture date
-- Embedded fields: EXIF / IPTC / XMP (as provided)
+Extract and preserve, at minimum:
+
+- technical metadata: dimensions, bit depth, colour profile, compression, checksums
+- descriptive and rights metadata: creator, rights statement, licence URI, source, capture date
+- embedded metadata if present: EXIF, IPTC, XMP
 
 ### Practical rules
-- Treat the **preservation master** as the metadata source of record where possible.
-- If you generate derivatives, ensure you preserve metadata **at least in the repository**, even if you remove embedded metadata from public derivatives for privacy or size reasons.
-- Prefer a deterministic mapping into your repository metadata model (e.g., store extracted metadata as JSON/XMP sidecar, and link it to the asset identifier).
+
+- Treat the master as the metadata source of record.
+- If derivatives are produced, preserve metadata at least in the repository record (or sidecar JSON/XMP), even if you strip embedded metadata from public derivatives.
+- Be explicit about privacy:
+
+  - do not leak sensitive EXIF fields (for example GPS) where it is inappropriate
+  - ensure published rights and licence statements match institutional policy
+  - avoid embedding internal operator names or emails in public derivatives
+
+## Derivative generation
+
+If you generate derivatives, record:
+
+- tool and version (for example ImageMagick version)
+- conversion parameters (resize rules, quality, colour conversion)
+- naming convention and mapping to the master asset id
+- checksums for published outputs (recommended for distribution integrity)
 
 
-## Scenario: Museum digitizing a painting collection
+## IIIF integration
 
-This scenario shows one common workflow: capture a preservation master, generate access derivatives, and publish via IIIF.
+IIIF is a strong choice when:
 
-### Step 1: Capture (preservation master)
+- you need deep zoom and tiled access
+- you want to reuse standard viewers and tools across providers
+- you want a standard manifest structure for compound objects and annotation workflows
 
-Recommended capture characteristics depend on institutional digitisation policy and equipment; typical high-quality capture settings:
+### What to publish
 
-- Format: **TIFF** (uncompressed or lossless compression: LZW/ZIP)
-- Resolution: expressed as **pixel dimensions** and/or **PPI at target size** (avoid relying on “DPI” alone)
-- Color space: Adobe RGB or ProPhoto RGB (institutional policy-dependent)
-- Bit depth: **16-bit per channel** for high-quality originals
-- Embedded metadata: EXIF, IPTC, XMP (as provided)
-- Integrity: compute and store checksums (e.g., SHA-256)
+- IIIF Image API endpoint(s) for image services
+- IIIF Presentation manifests describing objects, canvases, and metadata
+- optional Change Discovery feeds for incremental synchronisation
 
-Example file:
-- `obj-12345_preservation_master.tif` (e.g., 150 MB)
-
-### Step 2: Generate access derivatives (web)
-
-Below uses ImageMagick (illustrative). Prefer deterministic naming and store derivative parameters in build logs.
-
-#### 2a) Web access JPEG (keep metadata unless you have a reason to strip)
-
-```bash
-magick obj-12345_preservation_master.tif \
-  -quality 85 \
-  -resize 2000x2000\> \
-  -sampling-factor 4:2:0 \
-  obj-12345_access.jpg
-```
-
-#### 2b) Thumbnail
-
-```bash
-magick obj-12345_preservation_master.tif \
-  -quality 85 \
-  -resize 400x400\> \
-  obj-12345_thumbnail.jpg
-```
-
-
-Key point: if you strip, ensure metadata is preserved elsewhere (repository record, sidecar, manifest).
-
-### Step 3: IIIF integration (L2+)
-
-At L2+, ensure IIIF compatibility for interoperable delivery.
-
-- Use **IIIF Presentation API** for manifests (object/canvas/annotations)
-- Use **IIIF Image API** for image services (tiling, region requests, sizes)
-
-#### Minimal IIIF Presentation 3 manifest 
+### Minimal Presentation 3 manifest
 
 ```json
 {
@@ -89,62 +74,29 @@ At L2+, ensure IIIF compatibility for interoperable delivery.
   "type": "Manifest",
   "label": { "en": ["Portrait of a Nobleman"] },
   "rights": "https://creativecommons.org/licenses/by/4.0/",
-  "metadata": [
-    { "label": { "en": ["Artist"] }, "value": { "en": ["Hans Holbein the Younger"] } },
-    { "label": { "en": ["Date"] }, "value": { "en": ["c. 1540"] } }
-  ],
   "items": [
     {
       "id": "https://museum.example.org/iiif/obj-12345/canvas/1",
       "type": "Canvas",
       "height": 4000,
-      "width": 3000,
-      "items": [
-        {
-          "id": "https://museum.example.org/iiif/obj-12345/page/1",
-          "type": "AnnotationPage",
-          "items": [
-            {
-              "id": "https://museum.example.org/iiif/obj-12345/annotation/1",
-              "type": "Annotation",
-              "motivation": "painting",
-              "body": {
-                "id": "https://iiif.museum.example.org/obj-12345/full/max/0/default.jpg",
-                "type": "Image",
-                "format": "image/jpeg",
-                "height": 4000,
-                "width": 3000,
-                "service": [
-                  {
-                    "id": "https://iiif.museum.example.org/obj-12345",
-                    "type": "ImageService3",
-                    "profile": "level2"
-                  }
-                ]
-              },
-              "target": "https://museum.example.org/iiif/obj-12345/canvas/1"
-            }
-          ]
-        }
-      ]
+      "width": 3000
     }
   ]
 }
 ```
 
-
-## Common pitfalls 
+## Common pitfalls
 
 | Pitfall | Why it matters | Safer pattern |
 |---|---|---|
-| Using only local IDs (e.g., `12345`) | Not globally resolvable | Use stable HTTPS identifiers and link them consistently |
-| Recompressing masters as lossy | Irreversible quality loss | Keep a lossless preservation master; derive access images separately |
-| Stripping metadata without retaining it | Loses provenance/rights/technical context | Extract/store metadata in repository records or sidecars |
-| Undocumented derivative parameters | Hard to reproduce and audit | Record conversion settings in pipeline logs or configuration |
-| Publishing “latest” without immutability | Breaks traceability | Publish versioned assets or immutable digests and record them |
+| Using only local IDs (for example `12345`) | Not globally resolvable | Use stable HTTPS identifiers and keep them consistent |
+| Lossy recompression of masters | Irreversible quality loss | Keep a lossless master; derive access outputs separately |
+| Stripping metadata without retaining it | Loses provenance and rights context | Extract and store metadata in records or sidecars |
+| Undocumented derivative parameters | Not reproducible; hard to audit | Record conversion settings and tool versions |
+| Publishing only “latest” | Breaks traceability | Publish versioned artefacts or immutable digests |
 
+## References
 
-
-## References 
 - IIIF Presentation API 3.0: https://iiif.io/api/presentation/3.0/
 - IIIF Image API 3.0: https://iiif.io/api/image/3.0/
+- IPTC Photo Metadata: https://www.iptc.org/standards/photo-metadata/

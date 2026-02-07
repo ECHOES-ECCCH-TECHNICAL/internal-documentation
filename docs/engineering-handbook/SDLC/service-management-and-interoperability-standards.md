@@ -1,150 +1,111 @@
 # Service Management and Interoperability Standards
 
-Beyond writing code, ECHOES components must be managed as services that are maintained, monitored, and evolved over time. This page provides practical guidance on adopting lightweight service management frameworks, managing dependencies and APIs for reliability and interoperability, and using event-driven architecture and standardized messaging patterns for loosely coupled workflows.
+Beyond writing code, CH Cloud components must be managed as **long-lived services**: deployed predictably, monitored continuously, and evolved without breaking consumers. This page provides pragmatic guidance for reliable service management and interoperability-friendly architecture patterns.
 
 
+## Scope and audience
 
-## Event-Driven Architecture and Standardized Messaging Protocols
+Applies to:
 
-For complex workflows and loosely coupled systems, event-driven architecture provides flexibility and scalability. Instead of services calling each other directly, they emit and respond to events.
+- APIs and services (catalogues, registries, processing services)
+- workflow services and orchestrations
+- message-driven and event-driven components
 
-### Benefits of Event-Driven Architecture
+Audience:
 
-| Benefit | Description | Impact |
-|---------|-------------|--------|
-| **Loose coupling** | Services do not need to know about each other's existence or location | Easier to add, remove, or modify services independently |
-| **Scalability** | Events processed asynchronously, allowing independent scaling | Handle traffic spikes by adding more event consumers |
-| **Resilience** | Temporary failures do not block the entire workflow | System continues operating even when individual services fail |
-| **Auditability** | Event logs provide complete history of all changes | Full traceability for compliance and debugging |
+- component owners (developers)
+- operators (deployment + observability)
+- validators (evidence for interoperability maturity)
 
-### Messaging Patterns
 
-#### Publish–Subscribe
+## Service management baseline (what “good” looks like)
 
-Services publish events to topics; interested services subscribe.
+A service should provide, at minimum:
 
-![Publish-subscribe pattern](../../internal-assets/pub-sub.svg)
+- clear purpose and supported interfaces (API/event contracts)
+- version transparency (released version is observable)
+- health/readiness signalling (`/health`, `/ready` where applicable)
+- stable configuration and secrets handling
+- monitoring signals (logs/metrics/traces) suitable for federation-level observability
+- clear change/deprecation policy for interfaces
 
-**When to use:**
 
-- Multiple services need to react to the same event
-- Services should remain unaware of each other
-- New subscribers can be added without modifying publishers
+## Event-driven architecture and standardized messaging
 
-**Example scenario:** When a cultural heritage object is updated, the indexing service updates the search index, the notification service alerts curators, and the analytics service records the change—without the metadata service needing to know about these consumers.
+Event-driven patterns reduce coupling and improve resilience by replacing synchronous dependency chains with publish/consume flows.
 
-#### Message Queues
+### Benefits
 
-Work items are placed in queues and processed by workers.
+| Benefit | What it enables |
+|---|---|
+| Loose coupling | services evolve independently |
+| Scalability | scale producers/consumers separately |
+| Resilience | partial failures do not stall workflows |
+| Auditability | event logs provide traceability |
 
-![Message queue pattern](../../internal-assets/msg-que.svg)
+### Messaging patterns (when to use them)
 
-**When to use:**
+#### Publish–subscribe
+Use when multiple consumers react to the same event (indexing, analytics, notifications).
 
-- Tasks need guaranteed processing (at-least-once delivery)
-- Work should be distributed across multiple workers
-- Processing can be asynchronous (not real-time)
+#### Queues (work distribution)
+Use when tasks must be processed reliably and in parallel (pipelines, conversions).
 
-**Example scenario:** Digitization pipeline where image processing tasks are queued and distributed across multiple worker nodes for parallel processing.
+#### Event sourcing (selective use)
+Use when you need an auditable timeline of state changes or reproducible past states.
+Keep it intentional-event sourcing increases conceptual and operational complexity.
 
-#### Event Sourcing
 
-All changes are stored as a sequence of events rather than just current state, providing complete audit trail and ability to reconstruct state at any point in time.
+## Event schema governance (recommended)
 
-**Example event store:**
+Interoperability depends on predictable event shapes.
 
-- Event 1: Object created: `obj-12345`
-- Event 2: Title updated: `"Medieval Manuscript"`
-- Event 3: Metadata enriched: added date field
-- Event 4: Access rights changed: public → restricted
-- Event 5: Annotation added by curator
+Minimum recommended fields:
+- `event_id` (unique)
+- `event_type` (stable semantic name, e.g., `object.created`)
+- `timestamp` (ISO 8601 UTC)
+- `source` (service identifier)
+- `data` (event payload)
+- `correlation_id` (recommended for tracing multi-step flows)
 
-**When to use:**
+Versioning rules:
+- breaking changes → new major schema version or new event type
+- keep old schemas available during a deprecation window
+- document consumers impacted by changes
 
-- Complete audit history is required
-- Need to reconstruct past states
-- Temporal queries ("what did this object look like in 2023?")
-- Compliance and provenance tracking
+Operational rules:
+- consumers must be **idempotent**
+- define retry policy + dead-letter strategy for failures
+- avoid broadcasting sensitive data via events unless strictly required
 
-!!! info "Why It Matters for Cultural Heritage"
-Tracking the complete history of object metadata changes is often essential for scholarly research and institutional accountability.
 
-### Recommended Technologies
+## Reliability patterns (practical)
 
-| Technology | Use Case | Protocol |
-|------------|----------|----------|
-| **RabbitMQ** | General message queuing | AMQP |
-| **Apache Kafka** | High-throughput event streaming | Kafka protocol |
-| **Redis Pub/Sub** | Lightweight messaging | Redis protocol |
-| **MQTT** | IoT and lightweight messaging | MQTT |
+### Timeouts and retries
+- apply timeouts on all outbound calls
+- use bounded retries with jitter/backoff
+- avoid “retry storms” by centralizing retry logic and rate limits
 
-### Event Schema Standards
+### Graceful degradation
+Services should fail in ways that preserve core workflows where possible:
+- partial features can degrade without breaking the whole system
+- optional integrations should not become hard blockers
 
-Define clear, consistent schemas for all events to ensure interoperability.
+### Backward compatibility discipline
+- document default behaviours and error semantics
+- treat changes to error codes, pagination, filtering rules as compatibility-sensitive
 
-#### Required Fields for All Events
 
-- **`event_id`**: Unique identifier for this event
-- **`event_type`**: Categorized event name (e.g., `object.created`, `metadata.updated`)
-- **`timestamp`**: When the event occurred (ISO 8601 format)
-- **`source`**: Which service generated the event
-- **`data`**: Event-specific payload
+## Interoperability-friendly API design
 
-#### Example Event Structure
-```json
-{
-  "event_id": "evt-abc123",
-  "event_type": "object.created",
-  "timestamp": "2024-01-15T14:30:00Z",
-  "source": "metadata-service",
-  "data": {
-    "object_id": "obj-12345",
-    "collection": "medieval-manuscripts",
-    "metadata_url": "https://api.echoes.eu/objects/obj-12345"
-  }
-}
-```
+- publish machine-readable specs (OpenAPI/AsyncAPI) and keep them versioned
+- use predictable error formats (status code + error identifier)
+- document pagination/filtering for collection endpoints
+- enforce semantic versioning for breaking changes
+- provide changelog and migration notes for major changes
 
-### Event-Driven Architecture Best Practices
 
-#### Schema Governance
-
-- **Document all event types in a shared registry** to maintain consistency across services
-- **Version event schemas when making breaking changes** to prevent consumer disruption
-- **Use semantic event names** following the `verb.noun` pattern (e.g., `object.created`, `metadata.updated`)
-- **Include correlation IDs** to trace related events across services and enable end-to-end request tracking
-
-#### Event Design Best Practices
-
-- **Keep events small and focused** following the single responsibility principle
-- **Include sufficient information** for consumers to act without requiring additional queries to other services
-- **Avoid including sensitive data** in events that are broadcast to multiple subscribers
-- **Use standard timestamp formats** (ISO 8601) and timezone (UTC) for consistency
-
-#### Implementation Considerations
-
-**Ordering and Idempotency**
-
-Events may arrive out of order or be delivered multiple times in distributed systems. To handle this:
-
-- **Design consumers to be idempotent** so that processing the same event twice produces the same result
-- **Use sequence numbers or timestamps** when event order is critical to business logic
-
-**Error Handling**
-
-Implement robust error handling to ensure reliability:
-
-- **Ensure failed event processing does not lose messages** through proper retry mechanisms
-- **Implement dead-letter queues** for events that repeatedly fail processing after exhausting retries
-- **Log processing failures with sufficient context** including event details, error messages, and stack traces for effective debugging
-
-**Monitoring**
-
-Establish comprehensive monitoring to maintain system health:
-
-- **Track event publication rates and consumption lag** to identify performance issues
-- **Alert on growing backlogs** when consumers are falling behind producers
-- **Monitor dead-letter queues** for systematic processing failures that may indicate code bugs or infrastructure problems
-
-!!! tip "Start Simple"
-Begin with basic pub-sub patterns before implementing complex event sourcing. Event-driven architecture can be adopted incrementally as your needs grow.
+## Related pages
+- [Protocols](Protocols.md)
+- [CI/CD](CICD.md)
+- [Continuous monitoring and feedback loops](continuous-monitoring-and-feedback-loops.md)

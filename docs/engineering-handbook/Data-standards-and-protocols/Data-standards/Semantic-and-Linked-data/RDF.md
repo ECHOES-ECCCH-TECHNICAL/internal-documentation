@@ -1,104 +1,129 @@
-# RDF (Resource Description Framework)
+# RDF
 
-RDF is a W3C standard graph data model for representing information as **triples**:
+RDF is a W3C standard data model for representing information as a **graph** of statements (triples):
 
-- **subject** → **predicate** → **object**
+- subject → predicate → object
 
-Example (informal):
+RDF is the backbone of semantic interoperability.
+It enables linking entities (objects, people, places, concepts) across providers without forcing a single rigid schema.
+In CH Cloud contexts, RDF supports cross‑collection discovery, enrichment, and knowledge‑graph integration.
 
-> *Mona Lisa* → *was created by* → *Leonardo da Vinci*
+This page provides **practical, non‑normative** guidance for adopting RDF in interoperable metadata and semantic pipelines.
 
-RDF is a foundation for semantic interoperability: it supports linking datasets, annotations, vocabularies, and schemas across institutions into a queryable **knowledge graph**. Unlike table-based models, RDF allows flexible connection of heterogeneous entities (objects, people, places, concepts) without requiring a single rigid schema.
+## What RDF is good for
 
+Use RDF when you need:
 
-## When to use RDF
+- integration of heterogeneous metadata into a shared knowledge graph
+- explicit relationships (events, actors, places, concepts) that span datasets
+- consistent linking to shared vocabularies (SKOS) and ontologies (OWL, CIDOC CRM)
+- graph‑native validation (SHACL) and graph querying (SPARQL)
+- cross‑provider semantic alignment at higher interoperability maturity
 
-Use RDF when you need to express and query **semantic relationships** across systems:
+## When RDF is not the best choice
 
-- Express relationships between entities (artworks, people, places, concepts).
-- Integrate heterogeneous datasets into a shared knowledge graph.
-- Publish rich metadata intended for cross-system querying and enrichment.
-- Align with cultural heritage ontologies (e.g., CIDOC CRM).
-- Support multi-institution interoperability (especially L2/L3 scenarios).
+RDF is often unnecessary when:
 
-## When not to use RDF
+- only simple flat listings are required (CSV or JSON without semantics is enough)
+- the team has no semantic pipeline plan and cannot maintain URI and namespace governance
+- the primary workload is large binary delivery (RDF should describe binaries, not carry them)
 
-RDF is often unnecessary or inefficient in these cases:
+A common safe approach is phased adoption:
 
-- Only simple, flat metadata is needed (basic listings, internal spreadsheets).
-- Graph processing is not supported and no conversion pipeline is planned.
-- Managing large binary payloads (images, video, 3D): RDF should describe **metadata**, not carry binaries.
-- Immediate delivery is required but there is no RDF expertise; a phased approach is usually safer.
+- baseline discovery metadata first
+- then semantic enrichment and graph alignment as capacity grows
 
+## Serialisations
 
-## Relevance to Cultural Heritage (CH Cloud)
+RDF is a model; serialisations are the file formats.
 
-- Highly relevant for **Level 2 and Level 3** interoperability.
-- Enables semantic alignment needed to query diverse cultural heritage datasets together.
-- Widely used in European infrastructures (e.g., Europeana), making it a strong candidate for shared knowledge representation in CH Cloud contexts.
-
-
-## Technical considerations
-
-### Serializations
-
-| Serialization | File extension | Notes |
+| Serialisation | Typical extension | Notes |
 |---|---|---|
-| Turtle | `.ttl` | Compact and human-readable |
-| RDF/XML | `.rdf` | XML-based; verbose but widely supported |
-| N-Triples | `.nt` | Simple; suitable for streaming and tooling |
-| JSON-LD | `.jsonld` | JSON-based; integrates well with web APIs |
+| Turtle | `.ttl` | Compact and human‑readable |
+| N‑Triples / N‑Quads | `.nt` / `.nq` | Simple; good for streaming and pipelines |
+| RDF/XML | `.rdf` | Verbose; legacy but widely supported |
+| JSON‑LD | `.jsonld` | Web‑friendly; useful for APIs and exchange |
 
-### Validation
+Recommendation:
 
-Validate RDF graphs against expected structures using:
-- **SHACL** (Shapes Constraint Language), or
-- **ShEx** (Shape Expressions)
+- use Turtle for human review
+- use N‑Triples or N‑Quads for bulk pipelines
+- use JSON‑LD for web APIs where semantic payloads are required
 
-### Querying
+## URI and namespace governance
 
-Use **SPARQL 1.1** for expressive queries, including federated querying across multiple RDF endpoints.
+Interoperability depends on stable identifiers.
 
-### Tools (examples)
+Recommended practice:
 
-Common RDF tooling includes: Apache Jena, RDF4J, GraphDB, Virtuoso.  
-(Actual adoption depends on local implementation choices and CH Cloud architecture decisions.)
+- define a provider namespace policy (base URI patterns, what IDs mean, stability guarantees)
+- treat published URIs as persistent identifiers (avoid renaming)
+- when change is unavoidable, provide redirects and deprecation or supersession notes
+- avoid minting new URIs for the same entity without an explicit equivalence policy
 
-### Namespaces and URI management
+For vocabularies and labels, prefer reusing authoritative URIs (Getty, Wikidata, VIAF, and similar) where appropriate.
 
-RDF requires careful governance of:
-- namespaces,
-- persistent URI patterns,
-- collision avoidance,
-- stability over time.
+## Validation strategy
 
+Graph validation is typically done using SHACL:
 
-## Example: Publishing an object as RDF
+- enforce required properties and datatypes
+- enforce cardinalities
+- enforce controlled vocabulary constraints
+- validate profile conformance for published graphs
 
-A museum publishes data about a ceramic vase using RDF triples:
+Operational guidance:
+
+- store validation outputs as evidence
+- version shapes and publish change notes
+- re‑run SHACL validation after releases or pipeline changes
+
+## Querying and access patterns
+
+### RDF dumps (batch)
+
+Publish versioned dumps for ingestion pipelines.
+Provide checksums and basic dataset metadata.
+
+### SPARQL endpoints (interactive)
+
+SPARQL enables expressive queries and federation patterns, but increases operational complexity.
+
+If you publish SPARQL:
+
+- document supported query envelope (timeouts, limits)
+- provide a small set of sentinel queries for monitoring
+- keep endpoint behaviour stable across upgrades (avoid silent changes in namespace mappings)
+
+### Content negotiation
+
+Where you publish dereferenceable URIs, you may support content negotiation (HTML vs RDF) for usability.
+
+## Minimal example
 
 ```turtle
 @prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
-@prefix dc:  <http://purl.org/dc/elements/1.1/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 
-<vase/12345> rdf:type crm:E22_Human-Made_Object .
-<vase/12345> crm:P108i_was_produced_by <production/event789> .
-<vase/12345> dc:title "Attic Red-Figure Kylix"@en .
-
-<production/event789> crm:P14_carried_out_by <artist/Euphronios> .
-<production/event789> crm:P4_has_time-span <timespan/500BCE> .
+<https://museum.example.org/object/12345>
+  a crm:E22_Human-Made_Object ;
+  dcterms:title "Attic Red-Figure Kylix"@en .
 ```
 
-This enables queries such as:
-- “Find all objects produced by Euphronios.”
-- “Which objects were produced in the 5th century BCE?”
+## Common pitfalls
 
+| Pitfall | Why it hurts | Better pattern |
+|---|---|---|
+| Unstable URIs | Breaks links and downstream graphs | Publish URI policy; avoid renames; use redirects |
+| Mixing object‑level and catalogue‑level modelling | Confuses rights and access semantics | Separate dataset and service records from item descriptions |
+| No constraints or validation | Silent data drift | Use SHACL profiles and re‑run validation |
+| Publishing a SPARQL endpoint without limits | Operational risk | Document limits; implement timeouts; monitor with sentinels |
+| Storing binaries inside RDF | Inefficient and non‑standard | Use RDF to describe binaries; store binaries separately |
 
-## References (informative)
+## References
 
-- RDF 1.1 Concepts and Abstract Syntax (W3C): https://www.w3.org/TR/rdf11-concepts/
+- RDF 1.1 Concepts (W3C): https://www.w3.org/TR/rdf11-concepts/
 - Turtle (W3C): https://www.w3.org/TR/turtle/
-- SPARQL 1.1 Query Language (W3C): https://www.w3.org/TR/sparql11-query/
+- SPARQL 1.1 Query (W3C): https://www.w3.org/TR/sparql11-query/
 - SHACL (W3C): https://www.w3.org/TR/shacl/
 - CIDOC CRM: https://www.cidoc-crm.org/

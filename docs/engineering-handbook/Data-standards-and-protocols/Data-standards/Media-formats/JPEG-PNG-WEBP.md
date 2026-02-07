@@ -1,50 +1,54 @@
-# DCAT (Data Catalog Vocabulary)
+# JPEG / PNG / WebP (Access Images)
 
-DCAT is a W3C vocabulary for describing datasets, data services, and distributions in catalogues. It describes a dataset’s **existence, access points, formats, and basic properties** (not the internal content of the dataset).
+JPEG, PNG, and WebP are common formats for **access delivery** of images in web applications and APIs.
+They are typically produced as derivatives from preservation masters (e.g., TIFF) and optimised for browsing, portals, and tool integration.
 
-DCAT is widely used for open data portals and interoperable dataset catalogues. It enables:
-- exchange of catalogue records between portals,
-- harvesting and re-exposure of catalogue entries,
-- consistent discovery of datasets and services.
+This page provides **practical, non‑normative** guidance for selecting and producing access images.
 
+## When to use each format
 
-## When to use DCAT
+Rule of thumb:
 
-- Describing datasets, APIs, and data services in a catalogue.
-- When CH Cloud needs to expose or ingest dataset descriptions compatible with other portals and EOSC-related infrastructures.
-- Level 1 and Level 2 onboarding workflows where datasets/services must be registered in a central catalogue.
+| Format | Best for | Notes |
+|---|---|---|
+| **JPEG** | Photographic content | Lossy compression; tune quality; avoid repeated recompression |
+| **PNG** | Line art, diagrams, UI captures, transparency | Lossless; typically larger than JPEG for photographs |
+| **WebP** | Web delivery where supported | Often smaller than JPEG/PNG; supports lossy/lossless and alpha |
 
-## When not to use DCAT
+## When not to use these as masters
 
-- Detailed object-level or item-level description (individual artworks/documents).
-- As a replacement for domain models like CIDOC CRM or EDM.
-- Internal technical logs or private operational configuration content.
+- Do not use JPEG/WebP (lossy) as the sole preservation master when fidelity is required.
+- PNG can be preservation‑worthy for some born‑digital artefacts, but is not a universal archival master format.
 
+## Interoperability considerations
 
-## Relevance to Cultural Heritage (CH Cloud)
+### 1) Deterministic derivatives
 
-- Natural choice for a dataset catalogue layer and interoperability with wider European data catalogue ecosystems.
-- DCAT profiles can harmonize how datasets and services are exposed to external platforms.
+If you publish access images, document:
 
+- conversion settings (quality, resizing rules),
+- naming conventions and mapping to the master identifier,
+- whether embedded metadata is preserved or stripped.
 
-## Technical considerations
+### 2) Metadata and privacy
 
-### Core classes
-- `dcat:Dataset` — a dataset as a conceptual entity
-- `dcat:Distribution` — an accessible form of the dataset (file, API, etc.)
-- `dcat:DataService` — a service that provides access to data
+- Ensure rights/licence information is present in the repository record (and, if suitable, in embedded metadata).
+- Consider stripping sensitive embedded metadata (e.g., GPS) from public derivatives while preserving it internally where justified.
 
-### Serializations
-- RDF/Turtle
-- JSON-LD
+### 3) Performance and caching
 
-### Validation and profiles
-- SHACL shapes can define DCAT application profiles (required fields, constraints).
-- In EU contexts, **DCAT-AP** is a common profile baseline.
+- Use cache headers appropriate to immutability (versioned URLs allow long cache lifetimes).
+- Prefer pre-generated thumbnails for portal UIs to avoid repeated on‑the‑fly resizing.
 
+## Validation checks
 
-## References (informative)
+- Confirm dimensions/thumbnail sizes match documented rules.
+- Confirm derivatives are generated from the intended master version.
+- Confirm rights/licence metadata is preserved in the repository record.
+- Spot-check colour profile handling to avoid unexpected shifts.
 
-- DCAT v3 (W3C Recommendation): https://www.w3.org/TR/vocab-dcat-3/
-- DCAT-AP (EU profile): https://semiceu.github.io/DCAT-AP/releases/
-- SHACL (W3C): https://www.w3.org/TR/shacl/
+## References
+
+- JPEG overview (Library of Congress): https://www.loc.gov/preservation/digital/formats/fdd/fdd000017.shtml
+- PNG specification (W3C): https://www.w3.org/TR/png/
+- WebP: https://developers.google.com/speed/webp

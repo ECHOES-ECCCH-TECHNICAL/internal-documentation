@@ -1,103 +1,148 @@
-# API Styles and Query Protocols: REST, GraphQL, and SPARQL
+# API Styles and Query Protocols 
 
-This page provides **practical, non-normative** guidance on common API styles and query protocols used in CH Cloud service interoperability: **REST**, **GraphQL**, and **SPARQL**.
+This page provides **practical, non-normative** guidance on common API styles and query protocols used for CH Cloud service interoperability:
+**REST**, **GraphQL**, and **SPARQL**.
+
+It is intended for service providers and integrators who need to choose an API approach and implement it in a way that is:
+- understandable by partners with different technical capacities,
+- contract-driven and testable,
+- compatible with federation (authentication/authorisation, operational monitoring),
+- amenable to evolution without breaking consumers.
+
+> **Relationship to the deliverable:** The normative requirements and conformance rules live in **D6.2** (interoperability requirements, evaluation/monitoring, validation).
+> This page explains *how to implement typical API approaches well* and *how to choose between them*.
+
+
+
+## Cross-cutting guidance (applies to all API styles)
+
+Regardless of protocol, interoperable services tend to share the same operational and design foundations:
+
+### 1) Contract-first design
+- Publish a machine-readable contract (OpenAPI, GraphQL schema, SHACL/VoID/service descriptions for SPARQL where applicable).
+- Make the contract the basis for validation and regression testing.
+- Prefer *backward-compatible* evolution (additive changes) and explicit deprecation for breaking changes.
+
+### 2) Stable identifiers and predictable behaviour
+- Keep identifiers stable across versions and releases.
+- Use consistent semantics for status codes / error types / “not found” behaviour.
+- Avoid “silent” changes (fields disappearing, meaning shifting, undocumented filtering rules).
+
+### 3) Security and federation readiness
+- Use TLS (HTTPS) for externally reachable endpoints.
+- For protected endpoints, integrate with the project’s federated AAI where applicable (OIDC-based flows) and enforce authorisation consistently.
+- Ensure that security controls apply at the same granularity as the API’s data model (e.g., field-level enforcement for GraphQL where required).
+
+### 4) Operational characteristics
+- Define timeouts, rate limits, and pagination/limits for large collections.
+- Provide predictable response envelopes and correlation identifiers where possible.
+- Produce sufficient logs/metrics to support incident response and drift detection (how telemetry is shared is defined elsewhere in the wiki).
+
 
 
 ## REST APIs
 
-REST (Representational State Transfer) is the dominant architectural style for web APIs. REST services use standard HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) and typically exchange **JSON** or **JSON-LD**.
+REST (Representational State Transfer) is the dominant architectural style for web APIs. REST services use standard HTTP methods
+(`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) and typically exchange **JSON** or **JSON-LD**.
 
-For CH Cloud components (catalog APIs, validation services, pipelines, visualization tools), REST provides:
-- a widely supported integration mechanism,
-- easy adoption by partners with varying technical capacity,
-- compatibility with modern application development,
-- clear contract definitions via **OpenAPI**.
+In CH Cloud components (catalog APIs, validation services, pipelines, visualisation tools), REST provides:
+- broad partner adoption and tooling support,
+- straightforward integration for web and backend clients,
+- clear contract definitions via **OpenAPI**,
+- natural alignment with resource-oriented models (datasets, records, jobs, runs, results).
 
-### When to use REST
-- Exposing dataset metadata, records, validation results, or service functionality.
-- Supporting front-end applications that rely on structured data over HTTP.
-- Interoperability at Level 1 and Level 2 for API-based access.
+### When REST is a good fit
+- Exposing dataset metadata, records, validation results, or service functionality over HTTP.
+- Supporting front-end applications that consume structured resources.
+- Providing interoperability-compatible APIs where consumers need predictable behaviour and versioning.
 
-### When not to use REST
-- Querying RDF graphs and semantic metadata directly (**SPARQL** is more appropriate).
-- Complex nested retrieval where clients need precise control (**GraphQL** may be more efficient).
-- Extremely large resources requiring streaming/tiling protocols (use specialized transfer protocols).
+### When REST is not the best fit
+- Querying RDF graphs directly (use **SPARQL**).
+- Deeply nested retrieval where clients need precise field selection (consider **GraphQL**).
+- Very large binary/streaming delivery patterns (use specialised delivery mechanisms).
 
-### Relevance to Cultural Heritage (CH Cloud)
-- REST is expected to underpin many CH Cloud services and onboarding interfaces.
-- Works well with **JSON-LD**, enabling lightweight semantic integration.
+### Recommended REST practices (interoperability-friendly)
+- **Contracts:** publish OpenAPI 3.x; keep it versioned and test it in CI.
+- **Versioning:** make version semantics explicit (e.g., major versions for breaking changes).
+- **Pagination/limits:** for collections, define default limits, maximum limits, and pagination semantics.
+- **Errors:** return meaningful HTTP status codes and a structured error payload (e.g., problem-details style).
+- **Consistency:** keep naming, filtering, and sorting conventions consistent across endpoints.
+- **JSON-LD (when used):** document contexts and term mappings; ensure contexts are resolvable and stable.
 
-### Technical considerations
-- Document contracts with **OpenAPI/Swagger**.
-- Validate request/response payloads with **JSON Schema**.
-- Use explicit API versioning (path, header, or media-type strategies).
-- Provide predictable error models (status codes + structured error payload).
+
 
 ## GraphQL
 
-GraphQL is a query language for APIs that allows clients to request exactly the data they need from a single endpoint. Because CH data is often complex, hierarchical, and interconnected, GraphQL can:
+GraphQL is a query language for APIs that allows clients to request exactly the data they need from a single endpoint.
+Because CH data is often complex, hierarchical, and interconnected, GraphQL can:
 - reduce over-fetching and under-fetching common in REST,
-- enable nested data retrieval in a single call,
-- expose complex data structures in a flexible way.
+- enable nested retrieval in a single call,
+- expose a coherent domain model to multiple clients.
 
-### When to use GraphQL
-- Client applications require precise control over which fields to retrieve.
+### When GraphQL is a good fit
 - Portals and tools need nested object graphs (e.g., object → events → actors → places).
-- Level 2 APIs that expose richer, composable data structures.
+- Client applications need fine-grained control over which fields are retrieved.
+- You want a single, strongly-typed API surface that composes multiple backend sources.
 
-### When not to use GraphQL
-- Simple/flat metadata where REST is simpler to implement and operate.
-- Direct querying of RDF knowledge graphs (SPARQL is the native mechanism).
-- Streaming or large binary transfers (use dedicated delivery mechanisms).
+### When GraphQL is not the best fit
+- Simple/flat resources where REST is cheaper to implement and operate.
+- Native RDF querying and federation (use **SPARQL** for RDF graphs).
+- Large binary or streaming transfer patterns.
 
-### Relevance to Cultural Heritage (CH Cloud)
-- Useful when user-facing portals require configurable views over complex data.
-- Can be combined with JSON-LD representations for lightweight semantics, but requires governance.
+### Recommended GraphQL practices (interoperability-friendly)
+- **Schema governance:** treat the schema as the contract; version it and use deprecations instead of breaking changes.
+- **Performance controls:** enforce query depth/complexity limits; use caching/persisted queries where possible.
+- **Authorisation:** apply access control consistently at resolver level; do not rely on “client won’t ask for it.”
+- **Error semantics:** provide stable error codes/messages that clients can act on.
+- **Observability:** record query characteristics (complexity, execution time) to detect regressions.
 
-### Technical considerations
-- Requires a formal **GraphQL schema** and resolvers for each field.
-- Schema evolution must be managed carefully (deprecation strategy, field lifecycle).
-- Introduce performance controls (query complexity limits, depth limits, caching).
-- Security: enforce authorization consistently at resolver level; avoid exposing sensitive fields by default.
+
 
 ## SPARQL Protocol
 
-SPARQL is a W3C standard query language and HTTP protocol for retrieving and manipulating **RDF** data. In CH Cloud contexts where RDF-based semantic representations are adopted (Levels 2–3), SPARQL supports:
-- querying distributed knowledge graphs,
-- accessing ontological metadata,
+SPARQL is a W3C standard query language and HTTP protocol for retrieving and manipulating **RDF** data.
+Where RDF-based semantic representations are adopted, SPARQL supports:
+- querying knowledge graphs,
 - semantic search and reasoning workflows,
-- federated cross-institution queries.
+- federated cross-provider queries (where enabled and governed).
 
-### When to use SPARQL
-- Querying RDF data or knowledge graphs.
-- Semantic metadata retrieval and cross-institution federated queries.
+### When SPARQL is a good fit
+- Querying RDF graphs and semantic metadata.
+- Cross-institution semantic search or linking workflows.
 - Integrating data aligned with CIDOC CRM, SKOS, and related ontologies.
 
-### When not to use SPARQL
-- Datasets that are not RDF-based.
-- Simple key-value or tabular access patterns where REST/SQL is sufficient.
+### When SPARQL is not the best fit
+- Resources that are not RDF-based.
+- Simple key-value or tabular access patterns where REST is sufficient.
 
-### Relevance to Cultural Heritage (CH Cloud)
-- High relevance for Level 3 semantic integration.
-- Enables semantic search, contextual navigation, and inference-driven exploration.
+### Recommended SPARQL practices (interoperability-friendly)
+- **Endpoint behaviour:** document supported query features; define timeouts and result limits.
+- **Service description:** publish dataset/service descriptions and namespace expectations.
+- **Namespace stability:** keep URI patterns stable; version ontologies/vocabularies explicitly.
+- **Operational safety:** apply rate limits and safeguards against expensive queries; monitor slow queries.
+- **Security:** if protected, integrate federated AAI and define clear authorisation rules (named graphs, dataset partitions, query policies).
 
-### Technical considerations
-- Prefer **SPARQL 1.1** features where supported (federation, aggregates, property paths).
-- Results can be returned as JSON, XML, CSV/TSV.
-- Requires stable URI patterns and consistent ontology use across providers.
-- Operationally: manage endpoint performance (timeouts, pagination/limits), and protect endpoints (rate limits, auth).
 
-## Quick selection guide
+
+## Choosing between REST, GraphQL, and SPARQL
+
+Use the simplest approach that meets the use case and can be operated reliably.
 
 | Need | Prefer | Why |
-|---|---|---|
-| Simple CRUD-style API, broad partner adoption | **REST** | Ubiquitous tooling; straightforward contracts |
-| Client-controlled selection of nested fields | **GraphQL** | Minimizes over/under-fetching; nested retrieval |
-| Querying RDF graphs across providers | **SPARQL** | Native graph querying; federation support |
+||||
+| Broad partner adoption; simple resource operations | **REST** | ubiquitous tooling; easy contracts with OpenAPI |
+| Client-controlled selection of nested fields | **GraphQL** | field selection and nested retrieval in one call |
+| Native RDF querying; semantic federation | **SPARQL** | standard graph querying; RDF-native semantics |
+
+### Typical combinations (common in practice)
+- **REST + JSON-LD** for resource access + lightweight semantics.
+- **GraphQL** for portal-facing composition over multiple REST backends.
+- **SPARQL** for RDF graph access, alongside REST/GraphQL for operational APIs.
 
 
-## References 
-- REST (architectural style): https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+
+## References (primary sources)
+- REST architectural style (Fielding dissertation): https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
 - OpenAPI Specification: https://spec.openapis.org/oas/latest.html
 - JSON Schema: https://json-schema.org/
 - GraphQL Specification: https://spec.graphql.org/

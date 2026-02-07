@@ -1,39 +1,59 @@
-# WAV / FLAC / MP3 / AAC (Audio Formats)
+# Audio Formats
 
-Common audio formats for preservation (WAV, FLAC) and dissemination (MP3, AAC).
+Audio assets in cultural heritage contexts commonly include oral histories, interviews, music recordings, and sound archives.
 
-- WAV/FLAC preserve uncompressed or lossless audio.
-- MP3/AAC provide efficient delivery for web applications.
+A typical interoperability pattern is:
 
+- keep a **preservation master** in a lossless format (WAV/FLAC), and
+- publish **access derivatives** in efficient delivery formats (MP3/AAC).
 
+This page provides **practical, non-normative** guidance for CH Cloud workflows.
 
-## When to use WAV / FLAC / MP3 / AAC
+## When to use WAV, FLAC, MP3, AAC
 
-- WAV/FLAC for preservation masters where fidelity matters.
-- MP3/AAC for web playback and lightweight delivery.
-- Collections including oral histories, interviews, and sound archives.
+### Preservation masters
 
-## When not to use WAV / FLAC / MP3 / AAC
+- **WAV**: uncompressed PCM; broadly supported; large files.
+- **FLAC**: lossless compression; reduces storage while preserving fidelity.
 
-- WAV/FLAC for large-scale streaming without appropriate delivery infrastructure (large file sizes).
-- MP3/AAC as long-term high-fidelity preservation masters.
+### Access delivery
 
-## Relevance to Cultural Heritage (CH Cloud)
+- **MP3**: very broad compatibility; suitable for web playback.
+- **AAC**: strong quality/bitrate trade-off; common in MP4/M4A ecosystems.
 
-- Audio collections may be onboarded in master or dissemination form.
-- Metadata should include creator, date, rights, format, and duration.
-- Accessibility may require transcripts where applicable.
+## When not to use them
 
+- Avoid MP3/AAC as the *only* long-term master when high-fidelity preservation is required.
+- Avoid distributing WAV/FLAC directly for web streaming at scale unless your delivery infrastructure supports large transfers efficiently.
 
-## Technical considerations
+## Interoperability considerations
 
-- Extract and preserve embedded tags where present (e.g., ID3).
-- Consider transcription/captioning workflows for accessibility and discovery.
+### Metadata and rights
 
+Capture and publish (at least):
 
-## References (informative)
+- creator
+- date
+- rights/licence (prefer URIs)
+- source
+- language (for spoken-word content)
+- duration
+- technical metadata: codec, sample rate, bit depth, channels
 
-- WAV (Library of Congress): https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml
-- FLAC: https://xiph.org/flac/
-- MP3 (Library of Congress): https://www.loc.gov/preservation/digital/formats/fdd/fdd000105.shtml
-- AAC (Library of Congress): https://www.loc.gov/preservation/digital/formats/fdd/fdd000031.shtml
+If embedded tags exist (e.g., ID3, Vorbis comments), extract and preserve them in repository records and/or the metadata store you expose for exchange.
+
+### Accessibility
+
+For spoken-word content, consider transcripts and/or captions where feasible to support:
+
+- accessibility
+- discovery (search)
+- downstream NLP workflows
+
+## Validation checks
+
+- File readability and codec identification.
+- Duration and sample rate checks (sanity vs. expected).
+- Rights/licence present in the metadata record.
+- If derivatives exist: confirm mapping to the master version and record conversion parameters.
+

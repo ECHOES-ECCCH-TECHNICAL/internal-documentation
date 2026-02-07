@@ -1,164 +1,145 @@
 # Security and Data Privacy
 
-This page provides implementation guidance, configuration examples, and tooling
-recommendations supporting the security requirements defined in **D6.2 Section 2.4**.
+This page provides **living, practical guidance** and configuration examples for implementing security and privacy controls in CH Cloud services and applications.
+It complements the normative requirements in the **D6.2 deliverable** (security/AAI integration, governance and compliance, validation and conformance testing) by focusing on *how to implement controls*, *what to log*, and *what evidence to retain*.
+
+**Audience:** service providers, application developers, platform operators, validators.
+
+> This page is **non‑normative**: it offers recommended patterns and examples. Providers may adopt different tooling as long as the outcomes satisfy the project’s requirements and validation expectations.
 
 
-## Authentication Integration
+## 1) Authentication integration (EGI Check‑in / OIDC)
 
-### Supported EGI Check-in Flows
+### Supported flows (typical)
 
-| Flow | Use Case | Implementation Priority |
-|------|----------|------------------------|
-| Authorization Code | Interactive web portals | **Required for L2+** |
-| Client Credentials | Service-to-service automation | Required for workflows |
+| Flow | Use case | Implementation priority |
+|---|---|---|
+| Authorization Code | Interactive web portals and browser-based apps | **Required for L2+ user-facing apps** |
+| Client Credentials | Service-to-service automation | Required for workflows / backend jobs |
 | Device Authorization | CLI tools | Optional |
-| Refresh Tokens | Long-running sessions | Recommended |
+| Refresh Tokens | Long-running sessions | Recommended (where appropriate) |
 
-### JWT Validation Implementation
+### OIDC discovery (recommended)
+Avoid hardcoding issuer or JWKS URLs. Prefer OIDC discovery and cache results:
 
-**Minimum validation checks:**
+- Discovery document: `…/.well-known/openid-configuration`
+- Derive `issuer`, `jwks_uri`, and `userinfo_endpoint` from discovery metadata
+- Refresh cached discovery metadata periodically
+
+### JWT validation (minimum checks)
+**Always validate signature first**, then claims. Typical checks include:
+
+- signature verification against JWKS (with caching)
+- `iss` matches expected issuer
+- `aud` includes your client/service audience (and optionally `azp` for some setups)
+- `exp` not expired (use a small leeway for clock skew)
+- `nbf` (if present) and other time-based constraints
+- token type / scopes (where applicable)
+
 ```python
-# Python example (pseudocode)
-def validate_token(token):
-    # 1. Decode header to get key ID
+import requests
+import jwt
+
+DISCOVERY_URL = "https://aai.egi.eu/auth/realms/egi/.well-known/openid-configuration"
+
+def load_oidc_config():
+    return requests.get(DISCOVERY_URL, timeout=10).json()
+
+def load_jwks(jwks_uri: str):
+    return requests.get(jwks_uri, timeout=10).json()
+
+def validate_token(token: str, expected_audience: str):
+    # 1) Load OIDC config (cached in production)
+    oidc = load_oidc_config()
+    issuer = oidc["issuer"]
+    jwks_uri = oidc["jwks_uri"]
+
+    # 2) Fetch key set (cached in production)
+    jwks = load_jwks(jwks_uri)
+
+    # 3) Resolve signing key from KID
     header = jwt.get_unverified_header(token)
-    
-    # 2. Fetch JWKS from EGI Check-in
-    jwks = requests.get("https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/certs")
-    
-    # 3. Verify signature
-    public_key = jwks.get_key(header['kid'])
-    
-    # 4. Decode and validate claims
+    kid = header.get("kid")
+    key = next(k for k in jwks["keys"] if k["kid"] == kid)
+
+    # 4) Verify signature + claims
     claims = jwt.decode(
         token,
-        public_key,
-        algorithms=['RS256'],
-        audience='your-client-id',
-        issuer='https://aai.egi.eu/auth/realms/egi'
+        key=jwt.algorithms.RSAAlgorithm.from_jwk(key),
+        algorithms=["RS256"],
+        audience=expected_audience,
+        issuer=issuer,
+        leeway=60,  # clock skew tolerance (seconds)
     )
-    
-    # 5. Check expiry (exp) and not-before (nbf)
-    # Already handled by jwt.decode with validation
-    
     return claims
 ```
 
-**Response codes:**
+**Response code guidance (typical):**
 ```
-Missing token          → 401 Unauthorized
-Invalid signature      → 401 Unauthorized  
-Expired token         → 401 Unauthorized
-Valid token, no perms → 403 Forbidden
+Missing token           → 401 Unauthorized
+Invalid signature       → 401 Unauthorized
+Expired token           → 401 Unauthorized
+Valid token, no perms   → 403 Forbidden
 ```
 
-### Framework-Specific Examples
+### Framework examples
 
 === "FastAPI (Python)"
 ```python
-    from fastapi import Depends, HTTPException, status
-    from fastapi.security import HTTPBearer
-    
-    security = HTTPBearer()
-    
-    async def validate_egi_token(credentials = Depends(security)):
-        token = credentials.credentials
-        try:
-            claims = validate_token(token)  # From above
-            return claims
-        except JWTError:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid authentication token"
-            )
-```
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer
 
-=== "Express (Node.js)"
-```javascript
-    const jwt = require('jsonwebtoken');
-    const jwksClient = require('jwks-rsa');
-    
-    const client = jwksClient({
-      jwksUri: 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/certs'
-    });
-    
-    function getKey(header, callback) {
-      client.getSigningKey(header.kid, (err, key) => {
-        callback(null, key.publicKey || key.rsaPublicKey);
-      });
-    }
-    
-    function validateToken(req, res, next) {
-      const token = req.headers.authorization?.split(' ')[1];
-      
-      jwt.verify(token, getKey, {
-        audience: 'your-client-id',
-        issuer: 'https://aai.egi.eu/auth/realms/egi',
-        algorithms: ['RS256']
-      }, (err, decoded) => {
-        if (err) return res.status(401).json({ error: 'Invalid token' });
-        req.user = decoded;
-        next();
-      });
-    }
+security = HTTPBearer()
+
+async def validate_egi_token(credentials=Depends(security)):
+    token = credentials.credentials
+    try:
+        claims = validate_token(token, expected_audience="your-client-id")
+        return claims
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication token"
+        )
 ```
 
 
-## Authorization Patterns
+## 2) Authorization patterns (RBAC/ABAC)
 
-### Entitlement Structure
+### Entitlements and group/role claims
+EGI Check‑in deployments commonly express group/role membership via entitlement-style claims such as:
 
-EGI Check-in provides entitlements in this format:
 ```
 urn:mace:egi.eu:group:<vo>:<subgroup>:role=<role>#aai.egi.eu
-
-Examples:
-urn:mace:egi.eu:group:vo.chcloud.eu:role=member#aai.egi.eu
-urn:mace:egi.eu:group:vo.chcloud.eu:datasets:role=curator#aai.egi.eu
-urn:mace:egi.eu:group:vo.chcloud.eu:admin:role=admin#aai.egi.eu
 ```
 
-## Fetching entitlements (groups/roles) from EGI Check-in
+Examples:
+- `urn:mace:egi.eu:group:vo.chcloud.eu:role=member#aai.egi.eu`
+- `urn:mace:egi.eu:group:vo.chcloud.eu:datasets:role=curator#aai.egi.eu`
+- `urn:mace:egi.eu:group:vo.chcloud.eu:admin:role=admin#aai.egi.eu`
 
-EGI Check-in can expose group/role information as OIDC claims. In practice, entitlements should be treated as **optional unless explicitly requested via scopes**, and implementations should include a **robust fallback**:
+**Important:** entitlements may be **absent** unless requested via scopes, and some clients may receive them via **UserInfo** rather than in the access token.
 
-1) Prefer reading entitlements directly from validated JWT claims (ID token or access token), if present.
-2) Otherwise call the OIDC **UserInfo** endpoint and read them from the UserInfo response.
-
-### Scopes to request
-
-Request only what is required (least privilege). For entitlements, request one (or both) of:
-
+### Requesting scopes (least privilege)
+Request only what is necessary. For entitlements/group information, request one (or both) of:
 - `eduperson_entitlement`
 - `entitlements`
 
 Typical baseline scopes for user-facing services:
-- `openid profile email` (+ one of the entitlement scopes above)
+- `openid profile email` (+ one entitlement scope as needed)
 
-### Where entitlements appear
+### UserInfo fallback (recommended)
+Use UserInfo when:
+- the access token is opaque to the client, or
+- entitlements are not present in the token, or
+- you need a consistent attribute retrieval mechanism.
 
-Entitlements may appear as:
-- `eduperson_entitlement` (common in research/AAI setups)
-- `entitlements` (alternative claim name)
-
-### UserInfo fallback
-
-UserInfo should be used when:
-- the access token is not locally interpretable (e.g., opaque to the client), or
-- the token does not carry entitlements, or
-- a consistent mechanism is required to fetch user attributes.
-
-
-**cURL example:**
 ```bash
 ACCESS_TOKEN="…"
-curl -s \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-  "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo"
+curl -s   -H "Authorization: Bearer ${ACCESS_TOKEN}"   "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo"
+```
 
-
-### RBAC Mapping Example
+### RBAC mapping (example)
 ```yaml
 roles:
   viewer:
@@ -167,7 +148,7 @@ roles:
       - read:metadata
     entitlements:
       - "urn:mace:egi.eu:group:vo.chcloud.eu:role=member"
-      
+
   editor:
     permissions:
       - read:datasets
@@ -176,7 +157,7 @@ roles:
       - write:metadata
     entitlements:
       - "urn:mace:egi.eu:group:vo.chcloud.eu:role=editor"
-      
+
   admin:
     permissions:
       - "*"
@@ -184,60 +165,57 @@ roles:
       - "urn:mace:egi.eu:group:vo.chcloud.eu:role=admin"
 ```
 
-### ABAC (Attribute-Based) Example
+### ABAC (attribute-based) example
+Use ABAC when decisions depend on resource attributes (embargo/sensitivity) or user attributes (affiliation).
+
 ```python
+from datetime import datetime
+
 def check_access(user_claims, resource):
-    # RBAC check
-    if not has_role(user_claims, 'viewer'):
+    # RBAC baseline (example)
+    if not has_role(user_claims, "viewer"):
         return False
-    
-    # ABAC checks
-    if resource.embargo_until > datetime.now():
-        # Embargoed - only curators
-        return has_role(user_claims, 'curator')
-    
-    if resource.sensitivity == 'high':
-        # Sensitive - check affiliation
-        return user_claims.get('affiliation') in resource.allowed_affiliations
-    
-    # Public resource with viewer role
+
+    # Embargo rule (example)
+    if resource.embargo_until and resource.embargo_until > datetime.utcnow():
+        return has_role(user_claims, "curator")
+
+    # Sensitivity rule (example)
+    if resource.sensitivity == "high":
+        return user_claims.get("affiliation") in resource.allowed_affiliations
+
     return True
 ```
 
+**Security rule of thumb:** authorisation must **fail closed** when policy cannot be evaluated (missing claims, missing policy, backend unavailable).
 
-## API Security
 
-### TLS/HTTPS Configuration
+## 3) Transport and API security
+
+### TLS/HTTPS configuration
 
 **NGINX example:**
 ```nginx
 server {
     listen 443 ssl http2;
     server_name api.example.org;
-    
-    # TLS configuration
+
     ssl_certificate /path/to/cert.pem;
     ssl_certificate_key /path/to/key.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
-    ssl_prefer_server_ciphers on;
-    
-    # Security headers
+
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-Frame-Options "DENY" always;
     add_header Content-Security-Policy "default-src 'self'" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    
-    # Disable plain HTTP (redirect handled separately)
-    
+
     location / {
         proxy_pass http://backend:8000;
         proxy_set_header X-Forwarded-Proto https;
     }
 }
 
-# Redirect HTTP to HTTPS
 server {
     listen 80;
     server_name api.example.org;
@@ -277,120 +255,118 @@ spec:
 ```
 
 
-## Privacy and Logging
+## 4) Privacy-aware logging and data minimisation
 
-### Privacy-Aware Logging Pattern
+### Logging principles (recommended)
+- Do **not** log raw access tokens, refresh tokens, or client secrets.
+- Avoid logging PII unless strictly necessary; prefer **pseudonymous identifiers**.
+- Record **request ids**, timestamps, endpoint/action, and outcome for auditability.
+- Redact sensitive fields consistently.
+- Align retention and access to logs with the project’s governance process.
+
+### Privacy-aware logging pattern (example)
 ```python
 import logging
 import json
 from datetime import datetime
 
 class PrivacyAwareLogger:
-    SENSITIVE_FIELDS = ['password', 'token', 'access_token', 'refresh_token', 
-                       'authorization', 'api_key', 'secret']
-    
-    def log_request(self, user_id, operation, resource_id, outcome, **metadata):
+    SENSITIVE_FIELDS = {
+        "password", "token", "access_token", "refresh_token",
+        "authorization", "api_key", "secret"
+    }
+
+    def log_request(self, subject_id, operation, resource_id, outcome, **metadata):
         log_entry = {
-            'timestamp': datetime.utcnow().isoformat(),
-            'user_id': user_id,  # pseudonymized ID from token
-            'operation': operation,
-            'resource_id': resource_id,
-            'outcome': outcome,  # success/denied/error
-            'metadata': self._redact_sensitive(metadata)
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "subject_id": subject_id,           # pseudonymous id (see below)
+            "operation": operation,
+            "resource_id": resource_id,
+            "outcome": outcome,                 # success/denied/error
+            "metadata": self._redact_sensitive(metadata),
         }
         logging.info(json.dumps(log_entry))
-    
+
     def _redact_sensitive(self, data):
         if isinstance(data, dict):
             return {
-                k: '***REDACTED***' if k.lower() in self.SENSITIVE_FIELDS else v
+                k: "***REDACTED***" if k.lower() in self.SENSITIVE_FIELDS else v
                 for k, v in data.items()
             }
         return data
 ```
 
-### Pseudonymization Example
+### Pseudonymous identity (recommended)
+For authenticated users, prefer the **OIDC `sub`** claim (subject identifier) as the stable pseudonymous key.
+To reduce cross-system correlation, you may hash it before storing/logging.
+
 ```python
 import hashlib
 
-def pseudonymize_user_id(email, salt='stable-project-salt'):
-    """Create stable pseudonym for internal use"""
-    return hashlib.sha256(f"{email}{salt}".encode()).hexdigest()[:16]
-
-# Usage in logs
-logger.log_request(
-    user_id=pseudonymize_user_id(user.email),
-    operation='download_dataset',
-    resource_id='dataset-12345',
-    outcome='success'
-)
+def pseudonymous_subject(sub: str, salt: str) -> str:
+    # Stable within the project, not reversible without the salt
+    return hashlib.sha256(f"{sub}:{salt}".encode("utf-8")).hexdigest()[:16]
 ```
 
+**Guest users:** avoid persistent identifiers unless a use case and legal basis exist. Prefer anonymous, session-scoped identifiers.
 
-## Deployment Security
+---
 
-### Secret Management Examples
+## 5) Evaluation data collection (feedback mechanisms)
+
+Where applications integrate **user feedback capture** (e.g., in-app surveys), implement the following privacy controls:
+
+- **Informed consent** is shown before any data capture:
+    - purpose of collection,
+    - retention period,
+    - use of pseudonymous identifiers for authenticated users,
+    - confirmation that guests remain anonymous (where applicable).
+- **Pseudonymous profiling** for authenticated users:
+    - include a pseudonymous identifier derived from OIDC `sub` (not email/name).
+- **Guest submissions** contain no persistent user identifier.
+- **Data minimisation:** collect only what is required by the evaluation framework.
+- **Secure transport:** transmit data only over HTTPS; do not embed secrets in client code.
+- **Logging:** do not log full payloads where they contain user-provided free text; store only what is necessary for debugging and audit.
+
+
+## 6) Deployment security
+
+### Secret management (examples)
 
 === "Kubernetes Secrets"
 ```yaml
-    apiVersion: v1
-    kind: Secret
-    metadata:
-      name: api-secrets
-    type: Opaque
-    stringData:
-      DATABASE_URL: "postgresql://user:pass@db:5432/chcloud"
-      OIDC_CLIENT_SECRET: "your-secret-here"
-    
-    ---
-    apiVersion: apps/v1
-    kind: Deployment
-    spec:
-      template:
-        spec:
-          containers:
-          - name: api
-            env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: api-secrets
-                  key: DATABASE_URL
-            - name: OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: api-secrets
-                  key: OIDC_CLIENT_SECRET
+apiVersion: v1
+kind: Secret
+metadata:
+  name: api-secrets
+type: Opaque
+stringData:
+  DATABASE_URL: "postgresql://user:pass@db:5432/chcloud"
+  OIDC_CLIENT_SECRET: "your-secret-here"
 ```
 
 === "HashiCorp Vault"
 ```bash
-    # Store secret
-    vault kv put secret/chcloud/api \
-      db_password="secure-password" \
-      oidc_secret="client-secret"
-    
-    # Retrieve in application
-    vault kv get -field=db_password secret/chcloud/api
+vault kv put secret/chcloud/api   db_password="secure-password"   oidc_secret="client-secret"
+
+vault kv get -field=db_password secret/chcloud/api
 ```
 
 === "GitHub Actions"
 ```yaml
-    # .github/workflows/deploy.yml
-    jobs:
-      deploy:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Deploy
-            env:
-              DATABASE_URL: ${{ secrets.DATABASE_URL }}
-              OIDC_SECRET: ${{ secrets.OIDC_CLIENT_SECRET }}
-            run: |
-              # Secrets are automatically masked in logs
-              echo "Deploying with secured credentials"
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OIDC_SECRET: ${{ secrets.OIDC_CLIENT_SECRET }}
+        run: |
+          echo "Deploying with secured credentials"
 ```
 
-### Container Security Scanning
+### Container security scanning (example)
 ```yaml
 # .gitlab-ci.yml example
 container_scanning:
@@ -400,98 +376,105 @@ container_scanning:
     - docker:dind
   script:
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
-    - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-        aquasec/trivy image --severity HIGH,CRITICAL \
-        $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock         aquasec/trivy image --severity HIGH,CRITICAL         $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   only:
     - merge_requests
     - main
 ```
 
 
-## Rights Enforcement
+## 7) Rights and policy enforcement
 
-### Metadata-Driven Access Control
+### Metadata-driven access control (example)
 ```python
+from datetime import datetime
+
 class RightsEnforcer:
     def check_download_permission(self, resource, user_claims):
-        license_uri = resource.metadata.get('license')
-        
+        license_uri = resource.metadata.get("license")
+
         # Public domain - always allow
-        if license_uri in ['http://creativecommons.org/publicdomain/zero/1.0/', 
-                          'https://creativecommons.org/publicdomain/mark/1.0/']:
-            return True, 'full'
-        
-        # CC BY - require attribution tracking
-        if 'creativecommons.org/licenses/by' in license_uri:
-            return True, 'full_with_attribution'
-        
-        # Restricted - check permissions
-        if resource.access_level == 'restricted':
+        if license_uri in [
+            "http://creativecommons.org/publicdomain/zero/1.0/",
+            "https://creativecommons.org/publicdomain/mark/1.0/"
+        ]:
+            return True, "full"
+
+        # CC BY - allow, but ensure attribution obligations are visible to the user
+        if license_uri and "creativecommons.org/licenses/by" in license_uri:
+            return True, "full_with_attribution"
+
+        # Restricted - enforce group/role membership
+        if resource.access_level == "restricted":
             if not self._has_access_role(user_claims, resource):
                 return False, None
-            return True, 'preview'  # Allow preview only
-        
-        # Embargoed - check date
-        if resource.embargo_until and resource.embargo_until > datetime.now():
+            return True, "preview"
+
+        # Embargoed - enforce time-based access
+        if resource.embargo_until and resource.embargo_until > datetime.utcnow():
             if not self._is_curator(user_claims):
                 return False, None
-        
-        return True, 'full'
-    
+
+        return True, "full"
+
     def _has_access_role(self, claims, resource):
-        required_group = resource.metadata.get('access_group')
-        user_groups = claims.get('eduperson_entitlement', [])
+        required_group = resource.metadata.get("access_group")
+        user_groups = claims.get("eduperson_entitlement", []) or claims.get("entitlements", [])
         return any(required_group in g for g in user_groups)
+
+    def _is_curator(self, claims):
+        groups = claims.get("eduperson_entitlement", []) or claims.get("entitlements", [])
+        return any("role=curator" in g for g in groups)
 ```
 
 
+## 8) Security testing checklist (pre-onboarding)
 
-## Security Testing Checklist
-
-### Pre-Onboarding Validation
 ```bash
 #!/bin/bash
-# security-check.sh
+set -euo pipefail
 
-# 1. TLS check
-curl -sI https://api.example.org | grep -i "strict-transport-security" || echo "Missing HSTS header"
+BASE_URL="https://api.example.org"
 
-# 2. Token validation
-response=$(curl -s -o /dev/null -w "%{http_code}" https://api.example.org/protected)
-[ "$response" == "401" ] && echo "✓ Unauthenticated access blocked" || echo "Auth not enforced"
+echo "1) TLS check"
+curl -sI "${BASE_URL}" | grep -i "strict-transport-security" >/dev/null || echo "Missing HSTS header"
 
-# 3. Security headers
-curl -sI https://api.example.org | grep -i "x-content-type-options" || echo "Missing security headers"
+echo "2) Unauthenticated access blocked (restricted endpoint example)"
+status=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/protected" || true)
+[ "$status" = "401" ] && echo "✓ Unauthenticated access blocked" || echo "Auth not enforced (expected 401)"
 
-# 4. Secret scanning
+echo "3) Security headers"
+curl -sI "${BASE_URL}" | grep -i "x-content-type-options" >/dev/null || echo "Missing X-Content-Type-Options header"
+
+echo "4) Secrets scanning (repo)"
 gitleaks detect --source . --verbose || echo "Secrets detected in repo"
 ```
 
 
-## Common Implementation Mistakes
+## 9) Common implementation mistakes
 
 | Mistake | Impact | Fix |
-|---------|--------|-----|
-| Logging full JWT tokens | Token leakage | Log only claims (sub, iss) |
-| Validating only `exp`, not signature | Token forgery possible | Always verify signature first |
-| Hardcoded client secrets | Credential exposure | Use environment variables/vault |
-| Not checking `aud` claim | Token reuse across services | Validate audience matches your service |
-| Using HTTP for token exchange | MITM attacks | Enforce HTTPS everywhere |
-| Not implementing token refresh | Poor UX (frequent re-login) | Support refresh token flow |
+|---|---|---|
+| Logging full JWT tokens | Token leakage | Log only minimal claims (e.g., hashed `sub`, `iss`) |
+| Validating only `exp`, not signature | Token forgery | Verify signature first and validate `iss`/`aud` |
+| Hardcoded client secrets | Credential exposure | Use secret managers / environment injection |
+| Not checking `aud` | Token reuse across services | Validate audience matches your service |
+| Using HTTP in token exchanges | MITM risk | Enforce HTTPS everywhere |
+| Treating entitlements as always present | Authz bypass or false denies | Request scopes + use UserInfo fallback |
+| Persisting guest identifiers by default | Privacy risk | Keep guests anonymous unless justified and consented |
 
 
 ## References
 
-**EGI Check-in:**
+**EGI Check‑in**
 - Documentation: https://docs.egi.eu/users/aai/check-in/
-- OIDC endpoints: https://aai.egi.eu/auth/realms/egi/.well-known/openid-configuration
+- OIDC discovery: https://aai.egi.eu/auth/realms/egi/.well-known/openid-configuration
 
-**Standards:**
+**Standards**
 - OpenID Connect: https://openid.net/specs/openid-connect-core-1_0.html
 - OAuth 2.0: https://datatracker.ietf.org/doc/html/rfc6749
 - JWT: https://datatracker.ietf.org/doc/html/rfc7519
 
-**Security Resources:**
+**Security resources**
 - OWASP API Security Top 10: https://owasp.org/API-Security/
 - OWASP ASVS: https://owasp.org/www-project-application-security-verification-standard/

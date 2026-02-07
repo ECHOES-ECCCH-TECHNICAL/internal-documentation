@@ -1,31 +1,61 @@
-# GeoJSON / WKT (Geospatial Vector Encodings)
+# GeoJSON and WKT
 
-GeoJSON and WKT are standard encodings for geospatial vector features. GeoJSON is JSON-based and widely used in web mapping; WKT is a textual geometry encoding commonly used in GIS databases. They are useful for archaeological sites, footprints, georeferenced points, and bounding boxes.
+GeoJSON and WKT are standard encodings for geospatial vector geometries, including points, lines, and polygons.
+They are commonly used to represent archaeological sites, footprints, bounding boxes, tracks, and spatial extents in cultural heritage datasets.
 
-## When to use GeoJSON / WKT
+This page provides practical, non‑normative guidance for using GeoJSON and WKT in CH Cloud interoperability workflows.
 
-- Representing points, lines, polygons for geospatial metadata.
-- Level 1 or Level 2 onboarding of location-based features.
-- Integration with web GIS frameworks and spatial indexing.
+## When to use GeoJSON and WKT
 
-## When not to use GeoJSON / WKT
+Use GeoJSON and or WKT when you need:
 
-- Raster geospatial data (e.g., GeoTIFF imagery).
-- Complex geodetic transformations requiring specialized GIS formats/workflows.
+- spatial metadata for discovery (map search, bounding box filters)
+- exchange of vector features (points, lines, polygons) between institutions
+- storage of geometries in GIS databases (WKT is common in database contexts)
+- lightweight delivery to web mapping clients (GeoJSON)
 
-## Relevance to Cultural Heritage (CH Cloud)
+## When not to use GeoJSON and WKT
 
-- Important for services that support spatial search, map interfaces, and archaeological datasets.
+GeoJSON and WKT are not suitable as the primary format when:
 
+- you are working with raster geospatial data (use GeoTIFF or COG)
+- you require complex geodetic workflows and transformations as preserved artefacts (use dedicated GIS workflows)
+- you need dense 3D geometry or point clouds (use appropriate 3D formats)
 
-## Technical considerations
+## Recommended conventions
 
-- GeoJSON assumes WGS 84 longitude/latitude (EPSG:4326) per RFC 7946.
-- For WKT in databases, document SRID and coordinate ordering.
-- Validate geometry types and coordinate validity to avoid ingestion errors.
+### 1) Coordinate reference system
 
+- GeoJSON assumes WGS84 longitude and latitude (EPSG:4326) per RFC 7946.
+- WKT should be accompanied by an explicit SRID or CRS declaration (for example an EPSG code) and an explicit coordinate ordering rule.
 
-## References (informative)
+If you use a local CRS (projected coordinates), document transformation assumptions and publish both:
 
-- GeoJSON (RFC 7946): https://www.rfc-editor.org/rfc/rfc7946
+- the original geometry (WKT with SRID), and
+- a WGS84 representation (GeoJSON) where feasible for portal mapping
+
+### 2) Geometry validity
+
+Validate:
+
+- polygon closure and ring ordering where relevant
+- coordinate bounds (avoid invalid longitude and latitude ranges)
+- geometry type correctness (Point, LineString, Polygon, Multi*)
+- self‑intersections where required by downstream tooling
+
+### 3) Feature identity and attribution
+
+- provide stable identifiers for features (for example `feature_id`)
+- include provenance fields (source, capture date, method, precision)
+- document uncertainty if the geometry is approximate (bounding box versus surveyed outline)
+
+## Interoperability patterns
+
+- discovery layer: store bounding boxes or points as GeoJSON for map UI
+- exchange layer: provide WKT with SRID for GIS‑native ingestion
+- semantic layer: link geometry to entities using URIs and publish mappings to controlled place vocabularies where relevant
+
+## References
+
+- GeoJSON specification (RFC 7946): https://www.rfc-editor.org/rfc/rfc7946
 - OGC Simple Features (WKT context): https://www.ogc.org/standards/sfa
