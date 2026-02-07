@@ -28,6 +28,7 @@ The key principle is **evidence-based validation**: every PASS result must be ba
 
 ### Submission inputs (evidence package)
 A minimal submission includes:
+
 - resource identifier + version
 - declared interoperability level
 - machine-readable metadata record location
@@ -37,6 +38,7 @@ A minimal submission includes:
 
 ### Validation outputs
 Every run should produce:
+
 - a conformance report (requirement-by-requirement)
 - raw validator outputs (lint logs, validation reports, probe results)
 - pointers to stored evidence (with timestamps/checksums where possible)
@@ -45,6 +47,7 @@ Every run should produce:
 ## Continuous evaluation and observability
 
 Where required by the interoperability level/type, validation may also cover:
+
 - **feedback capture integration** for applications (visible trigger, consent, pseudonymous/anonymous handling, proof of submission)
 - **telemetry accessibility** for services/applications (queryable observability interface or delegated access to existing telemetry streams)
 
