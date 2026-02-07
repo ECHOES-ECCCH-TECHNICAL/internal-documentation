@@ -1,7 +1,7 @@
 # KPI Catalogue
 
 This page defines the **living KPI catalogue** used by ECHOES to evaluate and monitor interoperability across CH Cloud resources.
-It complements **D6.2 Evaluation and monitoring interoperability Chapter** by providing a practical, operator-friendly set of indicators and worked examples that can be maintained and evolved without expanding the deliverable.
+It complements the interoperability requirements and evaluation/monitoring chapters of **D6.2** by providing a practical, operator-friendly set of indicators and worked examples that can be maintained and evolved without expanding the deliverable.
 
 KPIs are derived from interoperability obligations (documentation and evidence, API contracts and behaviour, security/AAI integration, metadata quality, semantic conformance, operations and governance). They are used for:
 
@@ -11,7 +11,7 @@ KPIs are derived from interoperability obligations (documentation and evidence, 
 
 ## How to use this page
 
-1. **Identify resource type(s)** (dataset, API/service, workflow, semantic artefact).
+1. **Identify resource type(s)** (dataset, API/service, workflow, semantic artefact, application).
 2. **Select applicable KPIs** using the “Applies” and “Level” columns below.
 3. **Collect evidence** (automated test output where possible; otherwise documented manual checks).
 4. **Assign / confirm the interoperability level** based on KPI results and the level-gating rules.
@@ -53,7 +53,7 @@ A KPI MUST NOT be marked PASS without evidence. If level-required evidence is mi
 | KPI-DOC-02 | Machine-readable API specification | OpenAPI 3.x is provided and syntactically valid | APIs/services | L2+ | Mandatory | OpenAPI file + validator output |
 | KPI-DOC-03 | Machine-readable schemas/shapes | JSON Schema / XSD / SHACL artefacts are present where applicable and reachable | Datasets/APIs/Semantic | L2+ (when applicable) | Mandatory (when applicable) | schema/shapes artefacts + validation output |
 
-**Measurement guidance:** Documentation/specification KPIs are typically **PASS/FAIL** .
+**Measurement guidance:** Documentation/specification KPIs are typically **PASS/FAIL**.
 
 ### Security and AAI KPIs
 
@@ -105,6 +105,13 @@ A KPI MUST NOT be marked PASS without evidence. If level-required evidence is mi
 | KPI-OPS-02 | Response time | Latency remains within declared thresholds (where thresholds exist) | APIs/services | L2+ | Mandatory (where thresholds exist) | p95 latency series; SLO statement; incident history |
 | KPI-OPS-03 | Error rate | Error rate remains within declared thresholds (where thresholds exist) | APIs/services | L2+ | Mandatory (where thresholds exist) | 4xx/5xx rate metrics; alerts; ticket summaries |
 | KPI-OPS-04 | Dependency resilience | Timeouts/retries prevent cascading failures | Services/workflows | L2+ | Recommended | retry policy; circuit breaker config; failure-injection evidence |
+| KPI-OPS-05 | Telemetry accessibility | A queryable observability interface is available to the ECHOES analytics collector (endpoint or secure access to existing OTLP/API telemetry streams). Baseline L2+ signals are provided using agreed naming. | APIs/services/applications | L2+ | Mandatory | endpoint URL + auth method; sample query and response; collector access confirmation |
+
+**Notes on KPI-OPS-05 (telemetry accessibility):**
+- Providers are **not** required to duplicate telemetry if the same data is already accessible via standard CH Cloud APIs or OTLP interfaces and ECHOES is granted secure access.
+- Telemetry SHOULD use OpenTelemetry conventions where feasible. If a JSON interface is used, it SHALL be documented and versioned.
+
+**Baseline L2+ telemetry signal set (reference):** response_time, throughput, error_rate, system_uptime, active_users (pseudonymous/aggregate), auth_success_rate (for protected resources), access_frequency (dataset/HDT usage), licensing_compliance.
 
 ### Governance KPIs
 
@@ -113,8 +120,9 @@ A KPI MUST NOT be marked PASS without evidence. If level-required evidence is mi
 | KPI-GOV-01 | Ownership declared | Owner and steward are explicitly defined and reachable | All resources | L1+ | Mandatory | owner/steward metadata; escalation contact |
 | KPI-GOV-02 | Policy enforcement consistency | Declared access policy matches technical enforcement | Restricted resources | L2+ | Mandatory | policy statement; authz tests; enforcement evidence |
 | KPI-GOV-03 | Change transparency | Breaking changes are announced, versioned, and traceable | All resources | L2+ | Mandatory | changelog; release notes; deprecation notices |
+| KPI-GOV-04 | Evaluation readiness | User feedback capture is integrated (visible trigger + consent + correct identity/anonymous handling) **and** evaluation/monitoring telemetry is accessible to the ECHOES analytics framework. | Applications (and app-like services) | L2+ | Mandatory | UI walkthrough evidence; consent text; HAR/network trace to survey endpoint; telemetry endpoint sample response |
 
-## Level assignment and scoring 
+## Level assignment and scoring
 
 1. **Blocking KPIs:** If a blocking KPI fails, the resource SHALL NOT be onboarded (or SHALL be downgraded), as applicable.
 2. **Highest achievable level:** The assignable level is the highest level for which all **mandatory applicable KPIs** pass.
@@ -136,3 +144,6 @@ A KPI MUST NOT be marked PASS without evidence. If level-required evidence is mi
 - Expected PASS where declared: KPI-DOC-03, KPI-SEM-03, KPI-SEM-04.
 - Outcome: L3 is assignable only if declared RDF/SHACL assets are stable, accessible, and validate reproducibly.
 
+### D) Application integrated into the evaluation framework (target L2)
+- Expected PASS at minimum: KPI-SEC-01, KPI-DATA-03, KPI-GOV-04, KPI-OPS-05.
+- Outcome: L2 is assignable only if the application provides a functional feedback mechanism with consent and supports telemetry accessibility for the analytics collector, with evidence recorded.
