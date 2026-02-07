@@ -107,4 +107,3 @@ This handbook improves when partners share working solutions.
 - keep examples minimal but runnable/parsable,
 - update related pages when requirements or KPIs change.
 
-If you are unsure where a change belongs, add it to the most relevant page and include a short note explaining the intent-maintainers can help place it correctly.

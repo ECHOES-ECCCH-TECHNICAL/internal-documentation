@@ -80,7 +80,6 @@ Common patterns:
   - a machine-readable representation (RDF/JSON-LD/Turtle).
 - **Content negotiation** to serve HTML vs RDF depending on the `Accept` header.
 
-**Rule of thumb:** if you claim dereferenceability, treat broken resolution as a monitoring/incident issue, not “best effort”.
 
 
 ## Versioning and provenance without changing identifiers
