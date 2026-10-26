@@ -20,4 +20,8 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css  
+  - stylesheets/extra.css
+
+# Publish downloadable evidence files without adding them to the site navigation.
+not_in_nav: |
+  /engineering-handbook/Validation/examples/assets/

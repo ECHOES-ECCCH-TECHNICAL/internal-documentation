@@ -74,3 +74,7 @@ The semantic conformance report should include:
 - validation outputs (SHACL reports, context expansion checks)
 - drift monitoring evidence (if required by claimed level)
 - remediation guidance and versioning/deprecation actions
+
+## Worked HDT example
+
+The [HDT RDF and SHACL example](examples/hdt-semantic-validation.md) provides a concrete graph, HDTO-based shape, SPARQL query and commands to generate a validation report.

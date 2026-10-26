@@ -1,0 +1,6 @@
+image:
+  repository: ghcr.io/zammad/zammad
+redis:
+  image:
+    registry: registry.example.org
+    repository: base/redis

@@ -52,3 +52,7 @@ Where required by the interoperability level/type, validation may also cover:
 - **telemetry accessibility** for services/applications (queryable observability interface or delegated access to existing telemetry streams)
 
 These checks are implemented as operational validations and must be supported by archived evidence.
+
+## Practical examples
+
+The [provider validation examples](examples/index.md) include reusable evidence templates, an HDTO RDF/SHACL check and deployment verification excerpts.

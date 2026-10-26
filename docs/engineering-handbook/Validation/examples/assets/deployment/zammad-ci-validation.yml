@@ -1,0 +1,10 @@
+validate:helm:
+  stage: validate
+  image:
+    name: alpine/helm:3.15.4
+    entrypoint: [""]
+  script:
+    - apk add --no-cache bash
+    - chmod +x scripts/*.sh
+    - ./scripts/render.sh staging
+    - ./scripts/render.sh production

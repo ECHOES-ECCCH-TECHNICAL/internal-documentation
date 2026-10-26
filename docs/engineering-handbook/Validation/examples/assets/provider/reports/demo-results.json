@@ -1,0 +1,60 @@
+{
+  "scope": "Synthetic static checks. No conformance level is assigned.",
+  "checks": [
+    {
+      "id": "metadata_schema_positive",
+      "status": "Pass",
+      "requirement_ids": [
+        "REQ-META-001",
+        "REQ-META-002"
+      ],
+      "notes": "Checks the schema and JSON-LD syntax. Rights, identifier permanence and runtime behaviour require separate checks."
+    },
+    {
+      "id": "metadata_schema_negative",
+      "status": "Pass",
+      "requirement_ids": [
+        "REQ-META-002"
+      ],
+      "notes": "Expected rejection of deliberately incomplete record.",
+      "errors": [
+        "'identifier' is a required property",
+        "'license' is a required property"
+      ]
+    },
+    {
+      "id": "openapi_parse_structure",
+      "status": "Pass",
+      "requirement_ids": [
+        "REQ-API-002"
+      ],
+      "notes": "Checks selected YAML fields. Full OpenAPI lint and runtime contract testing are separate."
+    },
+    {
+      "id": "semantic_context_versioning",
+      "status": "Not run",
+      "requirement_ids": [
+        "REQ-SEM-009"
+      ],
+      "notes": "Uses an illustrative inline context. An external versioned context has not been checked."
+    },
+    {
+      "id": "shacl",
+      "status": "Not run",
+      "requirement_ids": [
+        "REQ-SEM-005"
+      ],
+      "notes": "Run pySHACL separately when SHACL validation applies."
+    },
+    {
+      "id": "dynamic_api_contract",
+      "status": "Not run",
+      "requirement_ids": [
+        "REQ-API-003",
+        "REQ-API-007"
+      ],
+      "notes": "Requires a deployed endpoint, credentials and recorded observed responses."
+    }
+  ],
+  "level_assignment": "Not assessed"
+}

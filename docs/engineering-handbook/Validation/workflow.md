@@ -71,3 +71,7 @@ Every validation run should produce:
     - schema/profile/policy changes,
     - dependency upgrades that affect behaviour,
     - persistent monitoring failures (drift, availability, auth failures).
+
+## Worked examples
+
+See [provider validation examples](examples/index.md) for test inputs, downloadable templates and evidence records covering metadata, RDF and deployment.

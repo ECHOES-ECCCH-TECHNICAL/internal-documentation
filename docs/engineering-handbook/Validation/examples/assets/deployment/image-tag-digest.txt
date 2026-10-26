@@ -1,0 +1,3 @@
+Repository: ghcr.io/echoes-eccch-technical/platform-api
+Tag: b5e809251eb2cdf90ed3f45eac988ea3b0a7de14
+Digest: sha256:23bd8abcad257c3b76388404acc73443f8c756925d97e9a5c81475d10fc4d974

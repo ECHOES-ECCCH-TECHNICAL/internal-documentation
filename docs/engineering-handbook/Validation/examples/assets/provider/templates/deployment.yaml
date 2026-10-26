@@ -1,0 +1,40 @@
+# Replace example image, namespace and configuration; render and validate before use.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-example
+  labels: {app: provider-example}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: provider-example}
+  template:
+    metadata:
+      labels: {app: provider-example}
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/example/provider-example@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          ports:
+            - {name: http, containerPort: 8080}
+          envFrom:
+            - configMapRef: {name: provider-example-config}
+            - secretRef: {name: provider-example-secrets}
+          readinessProbe:
+            httpGet: {path: /ready, port: http}
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: '1', memory: 512Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: provider-example
+spec:
+  selector: {app: provider-example}
+  ports:
+    - {port: 80, targetPort: http}
+# Rollback: revert the GitOps image digest to the last accepted release;
+# confirm Argo CD sync/health and perform application smoke tests.

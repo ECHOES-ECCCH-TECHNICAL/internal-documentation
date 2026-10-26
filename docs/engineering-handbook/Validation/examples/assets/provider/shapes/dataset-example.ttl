@@ -1,0 +1,7 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix schema: <https://schema.org/> .
+@prefix ex: <https://example.org/shapes/> .
+ex:DatasetShape a sh:NodeShape ;
+  sh:targetClass schema:Dataset ;
+  sh:property [ sh:path schema:name ; sh:minCount 1 ] ;
+  sh:property [ sh:path schema:license ; sh:minCount 1 ] .

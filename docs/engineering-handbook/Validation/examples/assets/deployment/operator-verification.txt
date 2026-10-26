@@ -1,0 +1,10 @@
+# From the Platform-Deployments repository root:
+kubectl kustomize apps/platform-core/overlays/staging > rendered.yaml
+kubectl apply --dry-run=server -f rendered.yaml
+# Requires access to the relevant Argo CD and workload namespaces:
+kubectl -n example-argocd get application platform-core-staging
+kubectl -n example-staging rollout status deployment/platform-core
+kubectl -n example-staging get deployment platform-core \
+  -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
+kubectl -n example-staging get pods -l app.kubernetes.io/name=platform-core \
+  -o custom-columns=NAME:.metadata.name,IMAGE_ID:.status.containerStatuses[0].imageID

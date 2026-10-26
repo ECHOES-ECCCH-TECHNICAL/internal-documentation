@@ -1,0 +1,83 @@
+@prefix crmdig: <http://www.cidoc-crm.org/extensions/crmdig/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix hdto: <http://isl.ics.forth.gr/ontology/echoes/> .
+@prefix ns1: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://example.org/echoes/examples/heritage-twin/activities/maintenance-01> hdto:HP19_has_composed <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    hdto:HP30_added_content <https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-01> ;
+    ns1:P14i_was_carried_out_by <https://example.org/echoes/examples/heritage-twin/actors/operator-01> ;
+    ns1:P4_has_time-span <https://example.org/echoes/examples/heritage-twin/timespans/maintenance-01> .
+
+<https://example.org/echoes/examples/heritage-twin/activities/maintenance-02> hdto:HP19_has_composed <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    hdto:HP30_added_content <https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-02> ;
+    ns1:P14i_was_carried_out_by <https://example.org/echoes/examples/heritage-twin/actors/operator-01> ;
+    ns1:P4_has_time-span <https://example.org/echoes/examples/heritage-twin/timespans/maintenance-02> .
+
+<https://example.org/echoes/examples/heritage-twin/activities/maintenance-03> hdto:HP19_has_composed <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    hdto:HP30_added_content <https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-03> ;
+    ns1:P14i_was_carried_out_by <https://example.org/echoes/examples/heritage-twin/actors/operator-01> ;
+    ns1:P4_has_time-span <https://example.org/echoes/examples/heritage-twin/timespans/maintenance-03> .
+
+<https://example.org/echoes/examples/heritage-twin/activities/maintenance-uuid-01> a hdto:HC11_Digital_Twin_Maintenance ;
+    hdto:HP19_has_composed <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    hdto:HP30_added_content <https://example.org/echoes/examples/heritage-twin/proposition-sets/set-04> .
+
+<https://example.org/echoes/examples/heritage-twin/activities/maintenance-uuid-02> a hdto:HC11_Digital_Twin_Maintenance ;
+    hdto:HP19_has_composed <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    hdto:HP30_added_content <https://example.org/echoes/examples/heritage-twin/proposition-sets/set-05> .
+
+<https://example.org/echoes/examples/heritage-twin/activities/maintenance-uuid-03> a hdto:HC11_Digital_Twin_Maintenance ;
+    hdto:HP19_has_composed <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    hdto:HP30_added_content <https://example.org/echoes/examples/heritage-twin/proposition-sets/set-06> .
+
+<https://example.org/echoes/examples/heritage-twin/activities/registration> hdto:HP18_has_documented <https://example.org/echoes/examples/heritage-twin/sources/iiif-manifest-01> ;
+    hdto:HP19_has_composed <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    hdto:HP20_was_carried_out_under <https://example.org/echoes/examples/heritage-twin/projects/pilot-01> ;
+    ns1:P4_has_time-span <https://example.org/echoes/examples/heritage-twin/timespans/registration> .
+
+<https://example.org/echoes/examples/heritage-twin/assets/object-01> a crmdig:D1_Digital_Object ;
+    dcterms:format "text/html" .
+
+<https://example.org/echoes/examples/heritage-twin/assets/object-02> a crmdig:D1_Digital_Object ;
+    dcterms:format "text/html" .
+
+<https://example.org/echoes/examples/heritage-twin/assets/object-03> a crmdig:D1_Digital_Object ;
+    dcterms:format "text/html" .
+
+<https://example.org/echoes/examples/heritage-twin/projects/pilot-01> rdfs:label "Demonstration project" .
+
+<https://example.org/echoes/examples/heritage-twin/timespans/maintenance-01> ns1:P82_at_some_time_within "2026-10-01T11:00:00Z" .
+
+<https://example.org/echoes/examples/heritage-twin/timespans/maintenance-02> ns1:P82_at_some_time_within "2026-10-01T12:00:00Z" .
+
+<https://example.org/echoes/examples/heritage-twin/timespans/maintenance-03> ns1:P82_at_some_time_within "2026-10-01T13:00:00Z" .
+
+<https://example.org/echoes/examples/heritage-twin/timespans/registration> ns1:P82_at_some_time_within "2026-10-01T10:00:00Z" .
+
+<https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-01> a hdto:HC16_Heritage_Proposition_Set ;
+    hdto:HP33i_is_proposition_set_of <https://example.org/echoes/examples/heritage-twin/hdt/703> .
+
+<https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-02> a hdto:HC16_Heritage_Proposition_Set ;
+    hdto:HP33i_is_proposition_set_of <https://example.org/echoes/examples/heritage-twin/hdt/703> .
+
+<https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-03> a hdto:HC16_Heritage_Proposition_Set ;
+    hdto:HP33i_is_proposition_set_of <https://example.org/echoes/examples/heritage-twin/hdt/703> .
+
+<https://example.org/echoes/examples/heritage-twin/proposition-sets/set-04> a hdto:HC16_Heritage_Proposition_Set .
+
+<https://example.org/echoes/examples/heritage-twin/proposition-sets/set-05> a hdto:HC16_Heritage_Proposition_Set .
+
+<https://example.org/echoes/examples/heritage-twin/proposition-sets/set-06> a hdto:HC16_Heritage_Proposition_Set .
+
+<https://example.org/echoes/examples/heritage-twin/hdt/703> a hdto:HC2_Heritage_Digital_Twin ;
+    rdfs:label "Demonstration cultural heritage transcription" ;
+    hdto:HP29_has_digital_object_part <https://example.org/echoes/examples/heritage-twin/assets/object-01>,
+        <https://example.org/echoes/examples/heritage-twin/assets/object-02>,
+        <https://example.org/echoes/examples/heritage-twin/assets/object-03> ;
+    hdto:HP33_contains <https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-01>,
+        <https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-02>,
+        <https://example.org/echoes/examples/heritage-twin/proposition-sets/graph-03>,
+        <https://example.org/echoes/examples/heritage-twin/proposition-sets/set-04>,
+        <https://example.org/echoes/examples/heritage-twin/proposition-sets/set-05>,
+        <https://example.org/echoes/examples/heritage-twin/proposition-sets/set-06> .
