@@ -10,6 +10,7 @@
     "title",
     "description",
     "provider",
+    "contact",
     "license",
     "version",
     "modified",
@@ -60,6 +61,11 @@
         "restricted",
         "internal"
       ]
+    },
+    "contact": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
     }
   }
 }

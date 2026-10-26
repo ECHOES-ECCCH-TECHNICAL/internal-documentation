@@ -6,7 +6,7 @@ These templates cover the main information needed to describe a resource and doc
 
 | Artefact | Main content | Download |
 |---|---|---|
-| Resource metadata | Identifier, provider, licence, version and access conditions | [resource-metadata.jsonld](assets/provider/templates/resource-metadata.jsonld) |
+| Resource metadata | Identifier, provider contact, licence, version and access conditions | [resource-metadata.jsonld](assets/provider/templates/resource-metadata.jsonld) |
 | API contract | OpenAPI 3.x operations, bearer authentication, errors and health endpoints | [api.openapi.yaml](assets/provider/templates/api.openapi.yaml) |
 | Deployment | Runtime configuration, image reference and readiness checks | [deployment.yaml](assets/provider/templates/deployment.yaml) |
 | Security | Endpoint classification, token handling and access-control tests | [security.yaml](assets/provider/templates/security.yaml) |
@@ -26,7 +26,7 @@ python3 -m pip install 'jsonschema>=4,<5' 'PyYAML>=6,<7' 'rdflib>=7,<8'
 python3 scripts/validate_demo.py
 ```
 
-The result is written to [`reports/demo-results.json`](assets/provider/reports/demo-results.json). It includes a valid metadata case, an intentionally invalid case and a basic API structure check. Review the individual outcomes and their scope. Passing these checks does not verify reuse permissions or runtime API behaviour.
+The result is written to [`reports/demo-results.json`](assets/provider/reports/demo-results.json). It includes a valid metadata case, an intentionally invalid case, a negative check for the required provider contact and a basic API structure check. Review the individual outcomes and their scope. Passing these checks does not verify rights-holder approval, the long-term stability of identifiers or runtime API behaviour.
 
 For RDF validation, see the [HDT SHACL example](hdt-semantic-validation.md). A small [dataset metadata shape](assets/provider/shapes/dataset-example.ttl) provides a separate example of SHACL property constraints.
 

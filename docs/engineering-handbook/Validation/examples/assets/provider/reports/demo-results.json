@@ -19,8 +19,17 @@
       "notes": "Expected rejection of deliberately incomplete record.",
       "errors": [
         "'identifier' is a required property",
+        "'contact' is a required property",
         "'license' is a required property"
       ]
+    },
+    {
+      "id": "metadata_contact_required",
+      "status": "Pass",
+      "requirement_ids": [
+        "REQ-META-002"
+      ],
+      "notes": "The demo schema rejects a metadata record without a provider contact."
     },
     {
       "id": "openapi_parse_structure",
