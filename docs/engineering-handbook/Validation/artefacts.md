@@ -130,3 +130,7 @@ Every validation run should produce:
 - a conformance report (requirement-by-requirement)
 - raw tool outputs (logs, lint reports, validation reports)
 - a minimal evidence index (where artefacts are stored, checksums, timestamps)
+
+## Example artefacts
+
+See [provider evidence templates](examples/provider-templates.md) for downloadable records and schemas, and [HDT RDF and SHACL validation](examples/hdt-semantic-validation.md) for a reproducible semantic example.

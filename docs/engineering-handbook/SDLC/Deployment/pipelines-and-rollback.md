@@ -95,3 +95,7 @@ See **Deployment validation and versioning** for a reference validation suite st
 - validation suite outputs (smoke/health/security checks)
 - rollback test evidence (periodic)
 - incident notes for material rollbacks
+
+## Example release evidence
+
+See [deployment and release evidence](../../Validation/examples/deployment-evidence.md) for CI, image traceability, GitOps and Helm excerpts with guidance on retaining runtime results.

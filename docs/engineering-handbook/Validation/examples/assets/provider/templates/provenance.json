@@ -1,0 +1,19 @@
+{
+  "recordId": "https://example.org/provenance/run-001",
+  "version": "0.1.0",
+  "input": [
+    {"id": "https://example.org/resources/source-001", "version": "1.0.0"}
+  ],
+  "output": [
+    {"id": "https://example.org/resources/derived-001", "version": "1.0.0"}
+  ],
+  "activity": {
+    "type": "illustrative-transformation",
+    "tool": "REPLACE_WITH_TOOL_NAME",
+    "toolVersion": "REPLACE_WITH_VERSION",
+    "time": "2026-10-22T10:00:00Z"
+  },
+  "responsibleActor": "REPLACE_WITH_ORGANISATION_OR_SERVICE",
+  "evidence": "REPLACE_WITH_EXECUTION_RECORD",
+  "requirement_ids": ["REQ-PROV-001", "REQ-PROV-002", "REQ-PROV-003"]
+}

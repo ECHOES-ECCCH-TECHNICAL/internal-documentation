@@ -65,3 +65,7 @@ Recommended practice:
 - Keep a “known issues” section per validator (common errors and fixes).
 - Provide example command lines for local runs.
 - Use staged environments for dynamic tests to avoid disrupting production.
+
+## Downloadable examples
+
+The [provider validation examples](examples/index.md) include static metadata checks, an HDTO SHACL run and release evidence excerpts that can be adapted to provider pipelines.

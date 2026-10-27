@@ -1,0 +1,29 @@
+{
+  "@context": {
+    "schema": "https://schema.org/",
+    "id": "@id",
+    "type": "@type",
+    "title": "schema:name",
+    "description": "schema:description",
+    "identifier": "schema:identifier",
+    "license": {
+      "@id": "schema:license",
+      "@type": "@id"
+    },
+    "provider": {
+      "@id": "schema:provider",
+      "@type": "@id"
+    },
+    "version": "schema:version",
+    "modified": "schema:dateModified",
+    "accessConditions": "schema:conditionsOfAccess"
+  },
+  "id": "https://example.org/resources/collection-001",
+  "type": "schema:Dataset",
+  "title": "Illustrative cultural heritage collection",
+  "description": "Synthetic record for metadata checks; not an ECHOES-registered dataset.",
+  "provider": "https://example.org/institutions/example",
+  "version": "1.0.0",
+  "modified": "2026-10-22",
+  "accessConditions": "public"
+}

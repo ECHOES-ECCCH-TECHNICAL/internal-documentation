@@ -1,0 +1,22 @@
+# Run against a SPARQL dataset loaded with data.ttl; example identifiers do not resolve in a live ECHOES KBMS.
+PREFIX hdto: <http://isl.ics.forth.gr/ontology/echoes/>
+
+# HDT triples + direct HP29/HP33 target-resource triples.
+# Each UNION branch binds its own variables to avoid BIND push-down
+# problems that may arise in some federated query interfaces.
+CONSTRUCT {
+  <https://example.org/echoes/examples/heritage-twin/hdt/703> ?hdtP ?hdtO .
+  ?related ?relatedP ?relatedO .
+}
+WHERE {
+  {
+    <https://example.org/echoes/examples/heritage-twin/hdt/703>
+      ?hdtP ?hdtO .
+  }
+  UNION
+  {
+    <https://example.org/echoes/examples/heritage-twin/hdt/703>
+      (hdto:HP29_has_digital_object_part|hdto:HP33_contains) ?related .
+    ?related ?relatedP ?relatedO .
+  }
+}

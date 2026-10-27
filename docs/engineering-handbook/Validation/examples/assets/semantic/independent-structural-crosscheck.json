@@ -1,0 +1,17 @@
+{
+  "review_month": "October 2026",
+  "data_origin": "Illustrative, pseudonymized graph derived from a provider-supplied 56-triple example; instance IRIs have been replaced.",
+  "check_method": "Explicit RDFLib structural checks for the accompanying example graph; not a SHACL execution.",
+  "data_triples": 56,
+  "shapes_triples": 14,
+  "digital_objects_HP29": 3,
+  "proposition_sets_HP33": 6,
+  "checks": {
+    "HDT rdf:type HC2": true,
+    "HP29 resources all IRIs and D1": true,
+    "HP33 minimum one": true,
+    "HP33 resources all IRIs and HC16": true
+  },
+  "provider_report_scope": "The source-provider SHACL report concerns the original graph and is not distributed as validation of the pseudonymized example.",
+  "all_checks_pass": true
+}

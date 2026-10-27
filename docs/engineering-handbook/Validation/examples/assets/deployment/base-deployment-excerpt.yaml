@@ -1,0 +1,16 @@
+      serviceAccountName: image-puller
+      containers:
+      - name: platform-core
+        image: registry.example.org/echoes/platform-core:develop
+        envFrom:
+        - configMapRef:
+            name: platform-core-config
+        - secretRef:
+            name: platform-core-secrets
+        ports:
+        - name: management
+          containerPort: 9090
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: management

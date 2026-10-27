@@ -1,0 +1,8 @@
+requirement_id,validation_class,status,reason_or_gap,evidence_id
+REQ-META-001,Static,Pass (pilot),Machine-readable JSON record attached to reviewer artefacts; catalogue registration pending,EV-VTL-01
+REQ-META-002,Static,Fail (formal evidence missing),Rights-holder-authorised licence/reuse statement missing; no exact whole-application release identity,EV-VTL-01
+REQ-META-003,Static/manual,Pass (pilot),Active provider-selected canonical URI; future stability entrusted to provider,EV-VTL-01 / EV-VTL-08
+SEC-01,Dynamic,Pass (operator observation),6/6 reported public Routes edge TLS; valid curl certificate verification; HTTP 302 to HTTPS,EV-VTL-08
+SEC-03,Static/dynamic,Pass (pilot classification),Provider-approved PUBLIC/RESTRICTED/INTERNAL groups documented; separate resource authZ testing pending,EV-VTL-08
+REQ-MON-001,Static/manual,Pass (provider evidence),PCSS and two operator/incident contacts stated,EV-VTL-01
+REQ-DEP-011,Static/dynamic,Fail (scope/evidence incomplete),portal-bl query logging regression passed; no full application-wide no-secrets evidence,EV-VTL-09
