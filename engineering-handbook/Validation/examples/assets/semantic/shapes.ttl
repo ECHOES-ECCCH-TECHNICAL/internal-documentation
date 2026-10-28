@@ -1,0 +1,30 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix hdto: <http://isl.ics.forth.gr/ontology/echoes/> .
+@prefix crmdig: <http://www.cidoc-crm.org/extensions/crmdig/> .
+@prefix ex: <https://example.org/echoes-validation/> .
+
+# Proof-of-concept profile derived from HDTO v1.1 for an illustrative HDT graph.
+# Not an official ECHOES conformance profile.
+ex:ExampleHeritageTwinShape
+    a sh:NodeShape ;
+    sh:targetNode
+      <https://example.org/echoes/examples/heritage-twin/hdt/703> ;
+    sh:class hdto:HC2_Heritage_Digital_Twin ;
+
+    # HP29: domain HC14 (HC2 is a subclass); range crmdig:D1;
+    # HDTO does NOT mandate at least one HP29 link.
+    sh:property [
+        sh:path hdto:HP29_has_digital_object_part ;
+        sh:nodeKind sh:IRI ;
+        sh:class crmdig:D1_Digital_Object ;
+        sh:message "Each HP29 value must identify a D1 Digital Object." ;
+    ] ;
+
+    # HP33: domain HC2; range HC16; at least one content set for an HDT.
+    sh:property [
+        sh:path hdto:HP33_contains ;
+        sh:minCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:class hdto:HC16_Heritage_Proposition_Set ;
+        sh:message "The HDT must contain a HC16 Heritage Proposition Set." ;
+    ] .

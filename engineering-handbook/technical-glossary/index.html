@@ -1,0 +1,4489 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://www.echoes-eccch.eu/engineering-handbook/technical-glossary/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../Data-standards-and-protocols/data-architecture-standards%28to-remove%29/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>ECCCH Technical Glossary - Interoperability Wiki</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#eccch-technical-glossary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Interoperability Wiki" class="md-header__button md-logo" aria-label="Interoperability Wiki" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Interoperability Wiki
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ECCCH Technical Glossary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Interoperability Wiki" class="md-nav__button md-logo" aria-label="Interoperability Wiki" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Interoperability Wiki
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECHOES Engineering Handbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering handbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering handbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECCCH Technical Glossary
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECCCH Technical Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture, services and responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access and platform coordination
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-data-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge, data and storage components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-semantic-technologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data and semantic technologies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution components and applications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interfaces-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces and integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hosting-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosting, runtime and resource allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delivery-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery and software configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-continuity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and continuity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data standards and protocols
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data standards and protocols
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/data-architecture-standards%28to-remove%29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data architecture- standards and formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data standards
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data standards
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Metadata-practises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_2" id="__nav_2_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotation formats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Annotation formats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Annotation-formats/OAI-ORE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OAI-ORE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Annotation-formats/WEB-annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Annotation Data Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_3" id="__nav_2_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identifiers and URIs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Identifiers and URIs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Identifiers-and_URIs/uri-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identifier and URI Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_4" id="__nav_2_2_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media formats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Media formats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Media-formats/AUDIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Media-formats/GLTF-GLB-3D/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    glTF / GLB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Media-formats/JPEG-PNG-WEBP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JPEG / PNG / WebP (Access Images)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Media-formats/OBJ/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OBJ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Media-formats/TIFF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TIFF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Media-formats/VIDEO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MP4 Video Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Media-formats/media-images/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Images in the CH Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_5" id="__nav_2_2_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata vocab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Metadata vocab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Metadata-vocab/DCAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DCAT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Metadata-vocab/Dublin-Core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DC &amp; DCTERMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Metadata-vocab/EDM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EDM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_6" id="__nav_2_2_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packaging
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Packaging
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Packaging/bagit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BagIt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Packaging/ro-crate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RO‑Crate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_7" id="__nav_2_2_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic and Linked data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Semantic and Linked data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Semantic-and-Linked-data/JSON-LD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON‑LD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Semantic-and-Linked-data/OWL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OWL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Semantic-and-Linked-data/RDF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/Semantic-and-Linked-data/SKOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKOS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2_8" id="__nav_2_2_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured formats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Structured formats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/structured-formats/CSV/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV and TSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/structured-formats/E57/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    E57
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/structured-formats/GEOJSON/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GeoJSON and WKT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/Data-standards/structured-formats/XML-Structured/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Data-standards-and-protocols/protocols/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocols
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Protocols
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/protocols/Decentralised-data-protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decentralised Data Protocols
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/protocols/IIIF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IIIF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/protocols/OAI-PMH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OAI-PMH
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Data-standards-and-protocols/protocols/Protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Styles and Query Protocols
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Federation nodes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Federation nodes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Federation-nodes/conformance-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node conformance evidence package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Federation-nodes/nodes-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Federation and Node Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Federation-nodes/runtime-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node runtime models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Federation-nodes/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Governance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Governance/change-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Governance/compliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compliance, audits and onboarding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Governance/governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance and roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interoperability evaluation and KPI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Interoperability evaluation and KPI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Interoperability-evaluation-and-KPI/kpis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KPI Catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Interoperability-evaluation-and-KPI/semantic-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interoperability requirements
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Interoperability requirements
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Interoperability-requirements/provider-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interoperability requirements for providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDLC
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    SDLC
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/CICD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/code-reviews/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Reviews
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/code-versioning-and-open-source/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Versioning and Open-Source Practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/continuous-monitoring-and-feedback-loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Monitoring and Feedback Loops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/deployment-environments-and-versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment, Environments, and Versioning Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/documentations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Software Documentation and Codification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/iac-process/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code and Process Codification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/service-management-and-interoperability-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Management and Interoperability Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../SDLC/Deployment/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_7_11" id="__nav_2_7_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_7_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/Deployment/environments-and-iac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environments and Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/Deployment/pipelines-and-rollback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Pipelines and Rollback Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDLC/Deployment/validation-and-versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Validation and Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Security/security-and-data-privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security and Data Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Validation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Validation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/apis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/artefacts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation Artefacts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/datasets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dataset Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/semantics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/tooling-ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling and CI Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Validation/examples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_9_8" id="__nav_2_9_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_9_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/examples/deployment-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment and Release Evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/examples/hdt-semantic-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heritage Digital Twin RDF and SHACL Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Validation/examples/provider-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provider Evidence Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture, services and responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access and platform coordination
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-data-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge, data and storage components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-semantic-technologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data and semantic technologies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution components and applications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interfaces-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces and integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hosting-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosting, runtime and resource allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delivery-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery and software configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-continuity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and continuity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="eccch-technical-glossary">ECCCH Technical Glossary<a class="headerlink" href="#eccch-technical-glossary" title="Link to this section">&para;</a></h1>
+<p>This glossary provides definitions of technical terms used across the ECCCH platform and its engineering documentation, covering architecture, access, knowledge and data, integration, infrastructure and operations.</p>
+<p><strong>Jump to:</strong> <a href="#architecture-services">Architecture</a> · <a href="#access-platform">Access</a> · <a href="#knowledge-data-storage">Knowledge &amp; storage</a> · <a href="#data-semantic-technologies">Semantics</a> · <a href="#execution-applications">Execution</a> · <a href="#interfaces-integration">Integration</a> · <a href="#hosting-resources">Hosting</a> · <a href="#delivery-configuration">Delivery</a> · <a href="#monitoring-continuity">Operations</a></p>
+<h2 id="architecture-services">Architecture, services and responsibilities<a class="headerlink" href="#architecture-services" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud component</td>
+<td>A building block of the ECCCH architecture with a defined responsibility, such as managing storage, coordinating processing or providing access to knowledge. That responsibility may be implemented by one software service or several services working together.</td>
+</tr>
+<tr>
+<td>Low-level cloud component</td>
+<td>A technical building block supporting the infrastructure on which applications and platform services run. Examples include container scheduling, networking, storage provisioning and infrastructure monitoring. These functions may be supplied by an existing hosting platform or implemented specifically for ECCCH where required.</td>
+</tr>
+<tr>
+<td>Capability</td>
+<td>A function that a user or integrating application can use, such as shared sign-in, file upload or processing. A capability may depend on several cloud components working together.</td>
+</tr>
+<tr>
+<td>Software implementation</td>
+<td>The software used to fulfil an architectural responsibility, including its code, dependencies and configuration. An implementation name does not necessarily identify an additional architectural component.</td>
+</tr>
+<tr>
+<td>Service</td>
+<td>A software function made available to users or other systems through a defined interface. A service may provide a user interface, an API or both.</td>
+</tr>
+<tr>
+<td>Infrastructure as a Service (IaaS)</td>
+<td>Computing infrastructure provided as a service, including virtual machines, networking and storage. The infrastructure operator maintains the underlying environment. The customer normally maintains the operating system and software installed on its virtual machines.</td>
+</tr>
+<tr>
+<td>Platform as a Service (PaaS)</td>
+<td>A managed environment for deploying and running applications. The platform operator maintains the shared infrastructure and runtime. Application teams maintain their software, deployment configuration and service-specific controls.</td>
+</tr>
+<tr>
+<td>Software as a Service (SaaS)</td>
+<td>Software provided as a hosted service. Users access its functions through a browser or another supported interface without installing or maintaining the underlying application.</td>
+</tr>
+<tr>
+<td>Architectural layer</td>
+<td>A group of components with related responsibilities. For example, an access layer handles entry to services, while an execution layer runs processing tasks. Layers do not necessarily correspond to separate servers or deployments.</td>
+</tr>
+<tr>
+<td>Control plane</td>
+<td>The part of the platform that manages and coordinates requests. It handles functions such as resource registration, operation tracking and the selection of appropriate services or storage destinations.</td>
+</tr>
+<tr>
+<td>Execution plane</td>
+<td>The part of the platform that performs requested work, such as running tools, transforming data or transferring files. It uses assigned resources and reports progress and results.</td>
+</tr>
+<tr>
+<td>Hosting</td>
+<td>Providing the computing environment in which software runs. Hosting includes resources such as servers, virtual machines, container platforms, networking and storage.</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Installing and configuring a particular software version in a hosting environment so that it can run. An application may have separate deployments for development, staging and production.</td>
+</tr>
+<tr>
+<td>Hosting Entity</td>
+<td>The organisation responsible for providing and operating the agreed ECCCH hosting environment. Its infrastructure responsibilities are separate from the responsibility for maintaining each deployed application or component.</td>
+</tr>
+<tr>
+<td>Hosting provider</td>
+<td>An organisation supplying infrastructure or a managed platform on which software runs. Another organisation may maintain the software deployed there.</td>
+</tr>
+<tr>
+<td>Service provider</td>
+<td>The organisation or team responsible for delivering and maintaining a service. It may use its own infrastructure or infrastructure supplied by a hosting provider.</td>
+</tr>
+<tr>
+<td>ECCCH-hosted / ECCCH-managed</td>
+<td>The service runs in the hosting environment arranged for ECCCH and is maintained by the responsible ECCCH service team. The hosting operator and software maintenance team may be different organisations.</td>
+</tr>
+<tr>
+<td>ECCCH-hosted / Provider-managed</td>
+<td>The service runs in the hosting environment arranged for ECCCH, while its provider maintains the application and its configuration. The hosting operator maintains the underlying infrastructure or platform.</td>
+</tr>
+<tr>
+<td>Provider-hosted / Provider-managed</td>
+<td>The provider arranges the service's hosting and maintains the service. It can connect to ECCCH through agreed interfaces while remaining outside central ECCCH hosting.</td>
+</tr>
+<tr>
+<td>Provider-hosted / ECCCH-managed</td>
+<td>The service runs on infrastructure supplied outside central ECCCH hosting, while an ECCCH team maintains the service under an agreed operational arrangement.</td>
+</tr>
+<tr>
+<td>Self-hosted / Self-managed</td>
+<td>From an integrating organisation's perspective, deploying and maintaining its own instance of software. It may run that instance on its own infrastructure or on a platform supplied by another organisation.</td>
+</tr>
+<tr>
+<td>Federation</td>
+<td>Connecting independently operated services, repositories or execution environments through agreed interfaces. Access and trust arrangements depend on the participating systems and the type of integration. Connected organisations retain responsibility for their own resources.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="access-platform">Access and platform coordination<a class="headerlink" href="#access-platform" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud Web UI / Portal (ECCCH cloud component)</td>
+<td>The main browser interface for accessing ECCCH services. It helps users find resources, access workspaces and start supported actions. It presents functions delivered by other components, such as knowledge management, storage and processing.</td>
+</tr>
+<tr>
+<td>Single Entry Point (SEP) (shared ECCCH access capability)</td>
+<td>The shared access capability through which users and applications reach ECCCH services. It is supported by the Portal, API Gateway, AAI and platform integration interfaces. It is broader than any one component and does not require every request to pass through a single application.</td>
+</tr>
+<tr>
+<td>Access Edge / API Gateway (ECCCH cloud component)</td>
+<td>The technical entry point for platform APIs. Its architectural responsibilities include routing, transport protection, token validation and route-level access controls. Receiving services enforce permissions specific to their resources and operations. Apache APISIX is used to implement the gateway role.</td>
+</tr>
+<tr>
+<td>Authentication and Authorisation Infrastructure (AAI) (ECCCH cloud component)</td>
+<td>The services and trust arrangements used to identify users and applications and supply information relevant to access decisions. Connected services combine this information with their own permissions. Shared sign-in does not automatically grant access to every resource.</td>
+</tr>
+<tr>
+<td>EGI Check-in (external AAI service)</td>
+<td>A federated identity service connecting accepted identity providers to research services. It enables supported sign-in methods and supplies identity information to connected applications. Each application configures how that information affects access.</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Establishing the identity of a user, application or service. For example, authentication determines which account is making a request.</td>
+</tr>
+<tr>
+<td>Authorisation</td>
+<td>Deciding whether a user or application may perform a particular action on a resource. For example, a user may be permitted to read a dataset but not edit or publish it.</td>
+</tr>
+<tr>
+<td>Role / Group / Entitlement</td>
+<td>Information that can support access decisions. A role describes a responsibility, such as workspace administrator. A group identifies a set of users. An entitlement expresses a recognised access-related attribute or right. Services define how these values affect permissions.</td>
+</tr>
+<tr>
+<td>Access token</td>
+<td>A credential presented to access a protected API. The relevant gateway or service validates it and applies the applicable access rules. A valid token does not automatically authorise every operation.</td>
+</tr>
+<tr>
+<td>OpenID Connect (OIDC)</td>
+<td>A standard supporting user sign-in and the communication of identity information to applications. It builds on OAuth 2.0.</td>
+</tr>
+<tr>
+<td>OAuth 2.0</td>
+<td>A framework through which applications obtain limited access to protected services using access tokens. The permitted access depends on the granted permissions and the receiving service's rules.</td>
+</tr>
+<tr>
+<td>SEP Integration API / Common Platform API (ECCCH cloud component)</td>
+<td>The integration interface through which authorised applications request selected shared ECCCH functions. It connects supported requests to the responsible platform services. Common Platform API is the implementation name used in MS17, distinguishing this interface from the complete SEP capability.</td>
+</tr>
+<tr>
+<td>Platform Core (implementation name)</td>
+<td>The deployment name for the backend hosting the Common Platform API and Portal Backend for Frontend. These interfaces currently share a codebase and deployment. Platform Core is an implementation name rather than an additional architectural component.</td>
+</tr>
+<tr>
+<td>Backend for Frontend (BFF)</td>
+<td>A backend interface designed for a particular user interface. It prepares the information and operations that the interface needs and may combine responses from several services. The Portal BFF serves this purpose for the ECCCH Portal.</td>
+</tr>
+<tr>
+<td>Access / Entitlement Mapper (AEM) (ECCCH cloud component)</td>
+<td>Resolves the access and operation context for platform-facing requests using trusted identity information and applicable semantic, storage and workspace policy inputs. It does not own those authoritative records or replace the access checks performed by domain services. AEM is not required to act as the central decision point for every request.</td>
+</tr>
+<tr>
+<td>Resource Manager (ECCCH cloud component)</td>
+<td>The component that registers resources such as applications, datasets, tools and workflows, and maintains information needed to discover and use them. It supports visibility and registration status. Its role differs from allocating CPU or memory to workloads.</td>
+</tr>
+<tr>
+<td>Processing Manager (ECCCH cloud component)</td>
+<td>Coordinates and records the progress of managed operations, including selected cross-component lifecycle and execution flows. Execution workers and other services perform the domain-specific work. The Processing Manager tracks the operation state without becoming the owner of semantic content or binary storage.</td>
+</tr>
+<tr>
+<td>Managed operation</td>
+<td>A platform-governed action with a durable identifier and recorded state, used when a lifecycle or execution flow crosses component boundaries or needs coordinated completion. Examples may include save, publish or selected processing flows. Ordinary local CRUD requests do not automatically become managed operations.</td>
+</tr>
+<tr>
+<td>Context resolution</td>
+<td>Determining the information needed to carry out a request, such as the relevant user, workspace, permissions, resource identifiers and storage destination. This provides the responsible services with the context required for the operation.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="knowledge-data-storage">Knowledge, data and storage components<a class="headerlink" href="#knowledge-data-storage" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Heritage Digital Twin (HDT)</td>
+<td>In HDTO v1.1, an HC2 Heritage Digital Twin aggregates sets of formal propositions about an HC1 Heritage Entity, organised as HC16 Heritage Proposition Sets. Its content may include links to digital representations and supporting documentation, and can change through Digital Twin Maintenance actions. An HDT is not the heritage entity itself or a single digital file.</td>
+</tr>
+<tr>
+<td>Heritage Digital Twin Ontology (HDTO)</td>
+<td>The CIDOC CRM-based ECHOES ontology described in D7.1 for representing Heritage Entities (HC1), Heritage Digital Twins (HC2), Heritage Proposition Sets (HC16) and their relationships, including changes to HDT content. HDTO v1.1 specifies the corresponding classes and properties.</td>
+</tr>
+<tr>
+<td>Knowledge Base (KB) (semantic repository managed through ECCCH knowledge services)</td>
+<td>The semantic content made available through ECCCH knowledge services and its underlying repositories. It includes machine-readable descriptions of heritage entities and their relationships, including HDT-related information. The content may be distributed across connected repositories.</td>
+</tr>
+<tr>
+<td>Knowledge Base API / Knowledge API (interface to knowledge services)</td>
+<td>An interface through which applications access knowledge services. Supported functions can include querying registered semantic repositories and retrieving information. Its responsibilities differ from the broader platform functions exposed through the Common Platform API.</td>
+</tr>
+<tr>
+<td>Knowledge Base Management System (KBMS) (ECCCH cloud component)</td>
+<td>The services that provide governed access to and management of the Knowledge Base, including supported semantic queries, graph and workspace operations, enrichment and publication. KBMS manages semantic state and access within its domain.</td>
+</tr>
+<tr>
+<td>Knowledge Graph (KG)</td>
+<td>A semantic network representation of domain knowledge, consisting of entities (nodes) and their interrelationships (edges), typically modeled using standards like RDF (Resource Description Framework) and OWL (Web Ontology Language). It represents information in a machine-readable format that captures context and meaning.</td>
+</tr>
+<tr>
+<td>Knowledge Services</td>
+<td>Platform functions for accessing, querying, managing, enriching and publishing semantic information. In ECCCH these functions are mainly exposed through KBMS and its interfaces and operate on supported semantic repositories.</td>
+</tr>
+<tr>
+<td>Administrative Repository (ECCCH cloud component)</td>
+<td>The authoritative store for semantic governance metadata, including ownership, graph and node assignments, workspace definitions and related registration or publication information. It provides governance information used by KBMS and other platform services, rather than serving as the RDF content repository itself.</td>
+</tr>
+<tr>
+<td>Storage Manager (ECCCH cloud component)</td>
+<td>The file-handling role called Non-Semantic Data &amp; Integration Manager in D6.3. It manages binary upload sessions, transfer or routing to approved storage destinations, stable asset references and relevant storage-side lifecycle transitions. Storage target definitions, availability and policy state are governed separately by the Storage Registry / Data API.</td>
+</tr>
+<tr>
+<td>Storage Registry / Data API (ECCCH cloud component)</td>
+<td>The authoritative register of storage targets, including their technical configuration, availability, policy state, usage and quota information. Platform services use these records to resolve permitted storage destinations. The registry and the file-handling manager have distinct architectural responsibilities, even when implemented together.</td>
+</tr>
+<tr>
+<td>User Personal Space (UPS) (shared ECCCH workspace capability)</td>
+<td>A user's private working context for preparing heritage information and associated files before sharing or publication. It combines semantic information and binary assets through the relevant services. It does not necessarily correspond to one dedicated folder, database or storage bucket.</td>
+</tr>
+<tr>
+<td>Workspace</td>
+<td>A working context grouping related resources, members and permissions. It may support individual preparation or collaboration. Its information and files can be held across several knowledge and storage services.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-semantic-technologies">Data and semantic technologies<a class="headerlink" href="#data-semantic-technologies" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dataset</td>
+<td>An identifiable collection of related data managed as a unit. It may contain structured records, files or a combination of both. Its description should explain its content, structure and conditions of use.</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>Structured information describing a resource, such as its title, creator, format, date, licence or location. Systems use metadata to help identify, discover, manage and reuse resources.</td>
+</tr>
+<tr>
+<td>Paradata</td>
+<td>Information about the methods, decisions and circumstances involved in creating or interpreting digital material. For example, it can explain which assumptions and processing methods were used to produce a digital reconstruction.</td>
+</tr>
+<tr>
+<td>Binary asset</td>
+<td>A file managed as digital content, such as an image, PDF, audio recording or 3D model. Its content is held in file or object storage, while semantic records may refer to it through identifiers.</td>
+</tr>
+<tr>
+<td>Resource identifier</td>
+<td>A value identifying a resource, such as a dataset, HDT, file or operation. It allows systems to reference the resource without relying only on its displayed name.</td>
+</tr>
+<tr>
+<td>Persistent identifier (PID)</td>
+<td>An identifier managed to remain usable over time, including when a resource's location changes. Its persistence depends on the technical and organisational arrangements maintaining it.</td>
+</tr>
+<tr>
+<td>Semantic data</td>
+<td>Data expressed using identified concepts and relationships so that software can interpret connections between entities. For example, a description can explicitly link a heritage object to its creator, production event and place of origin.</td>
+</tr>
+<tr>
+<td>Ontology</td>
+<td>A formal description of concepts and their relationships. It provides a shared structure for representing information, such as the relationship between an object, an event and a person.</td>
+</tr>
+<tr>
+<td>Controlled vocabulary</td>
+<td>An agreed set of terms and identifiers used to describe information consistently. It may include preferred labels, alternative labels and relationships between terms.</td>
+</tr>
+<tr>
+<td>Semantic artefact</td>
+<td>A reusable resource defining or organising meaning, such as an ontology, thesaurus, controlled vocabulary or mapping. Applications use these resources to interpret and exchange information consistently.</td>
+</tr>
+<tr>
+<td>CIDOC Conceptual Reference Model (CIDOC CRM)</td>
+<td>A reference ontology for describing cultural heritage information and connecting descriptions from different sources. It defines concepts for entities, events and relationships that can support more specialised models.</td>
+</tr>
+<tr>
+<td>Resource Description Framework (RDF)</td>
+<td>A standard for expressing information as statements linking entities, properties and values. These statements form graphs that software can store, query and connect.</td>
+</tr>
+<tr>
+<td>RDF triple</td>
+<td>One RDF statement consisting of a subject, predicate and object. For example, it can state that a particular object has a particular creator.</td>
+</tr>
+<tr>
+<td>Named graph</td>
+<td>An identified collection of RDF statements within a repository. It can organise information by source, workspace or another agreed boundary. Access protection depends on the services managing it.</td>
+</tr>
+<tr>
+<td>Semantic repository / Triplestore</td>
+<td>A database designed to store and query RDF graphs. It provides storage and query functions used by knowledge services. A repository is one part of a KBMS rather than the complete management system.</td>
+</tr>
+<tr>
+<td>SPARQL</td>
+<td>A standard language for querying and updating RDF data. Applications use it to retrieve information matching specified entities, properties and relationships.</td>
+</tr>
+<tr>
+<td>SPARQL endpoint</td>
+<td>A network interface accepting SPARQL requests. It exposes the supported query or update functions of a repository or knowledge service.</td>
+</tr>
+<tr>
+<td>Federated semantic query</td>
+<td>A query operation accessing information from several semantic repositories. Implementations may collect separate results or combine information more extensively. Querying multiple endpoints does not by itself demonstrate joins across repositories.</td>
+</tr>
+<tr>
+<td>Data mapping</td>
+<td>Defining how information in one structure or vocabulary corresponds to another. For example, mapping can connect fields in a source catalogue to concepts in the ECCCH data model.</td>
+</tr>
+<tr>
+<td>Data ingestion / Bulk ingestion</td>
+<td>Bringing data into a managed system and applying the required processing. Bulk ingestion handles many records or files together and may require batching, validation, progress tracking and error reporting.</td>
+</tr>
+<tr>
+<td>Data validation</td>
+<td>Checking data against stated rules, such as required properties, permitted values or valid formats. Structural validation does not establish the historical accuracy of every statement.</td>
+</tr>
+<tr>
+<td>Shapes Constraint Language (SHACL)</td>
+<td>A standard for expressing and checking rules for RDF data. It can specify requirements such as which properties must be present and which kinds of values they may contain.</td>
+</tr>
+<tr>
+<td>Provenance / Data lineage</td>
+<td>Information recording where data came from and how it was produced or changed. It can connect a result to source records, processing steps, software versions and responsible agents.</td>
+</tr>
+<tr>
+<td>Version / Revision</td>
+<td>An identified state of software or data. Its identifier allows users and systems to refer to the state they used. Retaining an identifier does not automatically mean that all earlier content remains retrievable.</td>
+</tr>
+<tr>
+<td>Storage target</td>
+<td>A registered destination where files can be stored. Its selection depends on the applicable access rules, storage policies and technical requirements.</td>
+</tr>
+<tr>
+<td>Object storage</td>
+<td>Storage that manages content as individually addressable objects accessed through an API. Each object can include content and associated metadata.</td>
+</tr>
+<tr>
+<td>S3-compatible API</td>
+<td>An interface supporting commonly used Amazon S3-style operations for object storage. It can be provided by systems operated outside Amazon.</td>
+</tr>
+<tr>
+<td>Block storage</td>
+<td>Storage presented as a disk-like volume. It is commonly used by databases and other applications requiring persistent filesystem access.</td>
+</tr>
+<tr>
+<td>Shared file storage</td>
+<td>A filesystem accessible by several authorised workloads. Its sharing and access capabilities depend on the storage configuration.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-applications">Execution components and applications<a class="headerlink" href="#execution-applications" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workflow orchestration substrate (ECCCH cloud component)</td>
+<td>The technical foundation for coordinating multi-step or long-running work. It records progress and dependencies so tasks run in the appropriate order and can resume or retry after interruptions where supported.</td>
+</tr>
+<tr>
+<td>Queue and workload manager (ECCCH cloud component)</td>
+<td>The component controlling when submitted work can run and which processing resources it may use. It can apply priorities, capacity limits and scheduling rules. A messaging service alone does not provide the complete workload management role.</td>
+</tr>
+<tr>
+<td>Execution workers and runtime services (ECCCH cloud component)</td>
+<td>The processes and environments that perform requested work, such as OCR, data transformation, AI inference or file transfer. They use assigned resources and report status and results to the coordinating services.</td>
+</tr>
+<tr>
+<td>Tool Catalogue / Toolbox (ECCCH cloud component)</td>
+<td>The component recording the information needed to run supported tools, including their inputs, outputs, invocation interfaces and runtime requirements. It supports processing services and has a more specific execution role than a general resource discovery catalogue.</td>
+</tr>
+<tr>
+<td>AI-enabled execution (optional ECCCH cloud capability)</td>
+<td>Processing functions using AI models for tasks such as recognition, classification or analysis. They use the applicable access, tool registration and processing arrangements. Their hardware requirements depend on the model and task.</td>
+</tr>
+<tr>
+<td>Application</td>
+<td>Software supporting a user or organisational task through a user interface, an API or both. An application may use shared ECCCH functions while retaining its own backend and data management.</td>
+</tr>
+<tr>
+<td>Vertical Application (VA)</td>
+<td>An application supporting a particular heritage activity or specialist workflow. It can integrate with ECCCH capabilities such as sign-in, knowledge access, storage and processing while remaining a separately maintained application.</td>
+</tr>
+<tr>
+<td>Tool</td>
+<td>Software performing a focused task, such as recognising text, converting a file or validating data. A tool may run independently, be embedded in an interface or form a step in a workflow.</td>
+</tr>
+<tr>
+<td>Domain API / Lightweight tool</td>
+<td>A specialised interface or small software service providing a focused function for applications or users. It can support ECCCH workflows without implementing the broader responsibilities of a shared platform component.</td>
+</tr>
+<tr>
+<td>VA adapter / Application-side connector (integration software)</td>
+<td>Software connecting an application's interfaces and data structures to the ECCCH functions it needs. It can translate requests, identifiers, formats or responses. Depending on the integration, it may be a separate component or a set of endpoints within an existing service.</td>
+</tr>
+<tr>
+<td>External provider or repository</td>
+<td>A service or data source maintained outside central ECCCH hosting and connected through an agreed interface. Its provider retains responsibility for its operation and applicable access conditions.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="interfaces-integration">Interfaces and integration<a class="headerlink" href="#interfaces-integration" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application Programming Interface (API)</td>
+<td>A defined way for software systems to request functions or exchange information. Its documentation explains the supported operations, required inputs, responses and access conditions.</td>
+</tr>
+<tr>
+<td>API endpoint</td>
+<td>A particular operation exposed at an API address. For example, one endpoint may accept an upload request while another returns processing status.</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>An API following a resource-oriented interaction style, commonly using HTTP methods and addresses. Its contract defines the behaviour of each supported operation.</td>
+</tr>
+<tr>
+<td>API contract / OpenAPI specification</td>
+<td>An API contract defines how clients and services communicate. An OpenAPI specification expresses an HTTP API contract in a machine-readable form, describing operations, parameters, requests and responses.</td>
+</tr>
+<tr>
+<td>JSON / JSON-LD</td>
+<td>JSON is a format for exchanging structured data. JSON-LD adds links between data fields and identified concepts, allowing the information to be interpreted as linked data.</td>
+</tr>
+<tr>
+<td>Integration</td>
+<td>Connecting an application, dataset, tool or service to the ECCCH functions it needs. This includes configuring interfaces, identity handling, data formats and the treatment of results and errors.</td>
+</tr>
+<tr>
+<td>Interoperability</td>
+<td>The ability of systems to exchange information and use it correctly through compatible interfaces, formats and agreed meanings. A successful network connection alone does not establish interoperability.</td>
+</tr>
+<tr>
+<td>Integration route</td>
+<td>The technical way a system connects to ECCCH, such as calling the Common Platform API, using a component's own API or connecting through an adapter. The appropriate route depends on the required function and supported interfaces.</td>
+</tr>
+<tr>
+<td>Integration level / Interoperability level</td>
+<td>Separate classifications used for different purposes. Integration levels describe participation in the integration model. D6.2 interoperability levels describe conformance with applicable interoperability requirements. The classifications should not be treated as equivalent.</td>
+</tr>
+<tr>
+<td>Conformance</td>
+<td>Meeting a specified set of technical requirements, such as an API contract or data validation rules. The requirements and checks must be identified to make a conformance claim meaningful.</td>
+</tr>
+<tr>
+<td>Idempotency</td>
+<td>A property allowing a request to be repeated without unintentionally creating additional effects. For example, retrying an idempotent creation request should not create a duplicate resource.</td>
+</tr>
+<tr>
+<td>Asynchronous operation</td>
+<td>An operation continuing after the initial request has been acknowledged. The client obtains progress or results later through a supported mechanism, such as a status endpoint or notification.</td>
+</tr>
+<tr>
+<td>Workflow</td>
+<td>A defined sequence or network of processing steps, including dependencies and the handling of inputs and outputs. A workflow may involve several tools and services.</td>
+</tr>
+<tr>
+<td>Event / Message broker</td>
+<td>An event reports that something has happened, such as completion of an upload. A message broker transports messages between services, allowing them to communicate without requiring a continuous direct connection.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hosting-resources">Hosting, runtime and resource allocation<a class="headerlink" href="#hosting-resources" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container / Container image</td>
+<td>A container runs software in an isolated environment using the host's operating system kernel. A container image packages the software and dependencies used to create that environment.</td>
+</tr>
+<tr>
+<td>Container registry</td>
+<td>A service storing and distributing container images. Deployment systems retrieve the selected image version when starting or updating a workload.</td>
+</tr>
+<tr>
+<td>Kubernetes</td>
+<td>A system for deploying and managing containerised workloads across a group of machines. It handles functions such as workload placement, restarts, networking and resource requirements.</td>
+</tr>
+<tr>
+<td>OpenShift / OKD</td>
+<td>Related Kubernetes-based platforms adding application deployment, access management and operational facilities. OKD is the community distribution used by the PCSS PaaS described in the deployment documentation.</td>
+</tr>
+<tr>
+<td>OpenStack</td>
+<td>A platform providing infrastructure services, including virtual machines, networks and storage. It supports workloads that require VM-based hosting rather than deployment on a container platform.</td>
+</tr>
+<tr>
+<td>Virtual machine (VM)</td>
+<td>A virtual computer with its own operating system and assigned resources. Several VMs can run on the same physical server while remaining separate environments.</td>
+</tr>
+<tr>
+<td>Cluster / Node</td>
+<td>A cluster is a group of machines managed as one computing environment. In Kubernetes, a node is a machine on which workloads can run. A node may be a physical server or a virtual machine.</td>
+</tr>
+<tr>
+<td>Kubernetes namespace / OpenShift project</td>
+<td>A logical area grouping workloads and related resources within a cluster. Access rules and quotas can be applied to it. An OpenShift project builds on a Kubernetes namespace and does not imply dedicated physical hardware.</td>
+</tr>
+<tr>
+<td>Pod / Pod readiness</td>
+<td>A Pod is the smallest deployable workload unit in Kubernetes and runs one or more containers together. Readiness indicates whether it passes configured checks and can receive service traffic. Functional behaviour requires separate testing.</td>
+</tr>
+<tr>
+<td>Kubernetes Deployment / Replica</td>
+<td>A Deployment is a controller maintaining the desired set of application Pods and managing their updates. A replica is one instance of the workload. Multiple replicas improve resilience only when the application and its dependencies support that arrangement.</td>
+</tr>
+<tr>
+<td>StatefulSet</td>
+<td>A Kubernetes controller providing stable workload identities and persistent storage associations. It is commonly used for stateful services but does not automatically configure database replication or recovery.</td>
+</tr>
+<tr>
+<td>Kubernetes Service / Ingress / Route</td>
+<td>A Service provides a stable network destination for selected Pods. An Ingress or OpenShift Route exposes configured HTTP services to clients outside the cluster. These resources differ from the broader meaning of a software service.</td>
+</tr>
+<tr>
+<td>Resource request / Resource limit</td>
+<td>A request declares CPU or memory requirements used for scheduling. A limit sets an enforced ceiling. CPU consumption may be throttled, while exceeding a memory limit can cause a container to be terminated.</td>
+</tr>
+<tr>
+<td>ResourceQuota</td>
+<td>A namespace-level rule limiting resources that workloads may request or allocate, such as CPU, memory, storage or object counts. A quota does not itself reserve dedicated hardware.</td>
+</tr>
+<tr>
+<td>PersistentVolumeClaim (PVC)</td>
+<td>A Kubernetes request for persistent storage. Once bound to a volume, it provides storage that can outlast an individual Pod. Allocated capacity and the quantity of stored data are separate measurements.</td>
+</tr>
+<tr>
+<td>StorageClass</td>
+<td>A Kubernetes definition describing how storage volumes are provisioned and which features they support, such as access arrangements and volume expansion.</td>
+</tr>
+<tr>
+<td>CPU / Memory / GPU</td>
+<td>CPU provides general-purpose processing. Memory holds information actively used by running software. A GPU performs many calculations in parallel and can accelerate suitable AI, imaging and scientific workloads.</td>
+</tr>
+<tr>
+<td>Multi-Instance GPU (MIG)</td>
+<td>A feature of supported NVIDIA GPUs dividing one physical GPU into smaller instances with assigned computing and memory resources. Availability depends on the hardware and platform configuration.</td>
+</tr>
+<tr>
+<td>Scalability / Autoscaling</td>
+<td>Scalability is the ability to adjust service capacity as demand changes. Autoscaling makes selected adjustments automatically using configured rules and measurements. Both depend on application design and available infrastructure.</td>
+</tr>
+<tr>
+<td>Horizontal / Vertical scaling</td>
+<td>Horizontal scaling adds workload instances. Vertical scaling changes resources assigned to an instance, such as CPU or memory. Different applications support these approaches to different degrees.</td>
+</tr>
+<tr>
+<td>HorizontalPodAutoscaler (HPA)</td>
+<td>A Kubernetes controller adjusting the number of workload replicas using configured metrics. It requires suitable settings, available capacity and an application supporting multiple instances.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="delivery-configuration">Delivery and software configuration<a class="headerlink" href="#delivery-configuration" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Development / Staging / Production environment</td>
+<td>Development supports implementation work. Staging supports testing before release under conditions intended to resemble production. Production delivers the operational service to its intended users.</td>
+</tr>
+<tr>
+<td>Source code repository</td>
+<td>A managed location storing software source code and its change history. It supports collaboration, review and the identification of the code used for a particular release.</td>
+</tr>
+<tr>
+<td>Release</td>
+<td>An identified software version made available for use. It should be associated with the relevant code, build artefacts, dependencies and deployment instructions.</td>
+</tr>
+<tr>
+<td>Continuous Integration / Continuous Delivery (CI/CD)</td>
+<td>Automated processes for building, checking, packaging and delivering software changes. Deployment may require approval or proceed automatically, depending on the configured workflow.</td>
+</tr>
+<tr>
+<td>Deployment configuration</td>
+<td>The settings describing how software should run in a target environment, including its image version, resources, network exposure, storage and dependencies.</td>
+</tr>
+<tr>
+<td>Helm / Kustomize</td>
+<td>Tools for managing Kubernetes deployment configuration. Helm packages applications with configurable settings. Kustomize adapts configuration for different environments.</td>
+</tr>
+<tr>
+<td>GitOps / Argo CD</td>
+<td>GitOps uses version-controlled configuration to describe the intended deployed state. Argo CD compares Kubernetes environments with that configuration and can apply the required changes.</td>
+</tr>
+<tr>
+<td>Configuration secret</td>
+<td>Sensitive configuration, such as a password, token or private key, supplied to software through a controlled mechanism. Its protection depends on storage, access and operational settings.</td>
+</tr>
+<tr>
+<td>MkDocs</td>
+<td>A tool for publishing documentation as a website from Markdown files. It supports a structured, version-controlled documentation source that teams can update alongside software development.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring-continuity">Monitoring and continuity<a class="headerlink" href="#monitoring-continuity" title="Link to this section">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monitoring / Observability</td>
+<td>Monitoring tracks selected health and performance signals. Observability uses information such as metrics, logs and traces to help operators understand system behaviour and investigate problems.</td>
+</tr>
+<tr>
+<td>Metric / Log / Trace</td>
+<td>A metric is a numerical measurement over time. A log records events or messages. A trace follows the steps of a request across services. Together, they help explain how a system behaves.</td>
+</tr>
+<tr>
+<td>Health check / Alert</td>
+<td>A health check tests a configured aspect of service behaviour. An alert notifies a responsible team when a specified condition occurs. Their effectiveness depends on what is checked and how responses are organised.</td>
+</tr>
+<tr>
+<td>Observed utilisation</td>
+<td>Measured use of resources such as CPU, memory or storage during a stated period. It differs from configured requests, limits and allocated capacity.</td>
+</tr>
+<tr>
+<td>Latency / Throughput / Error rate</td>
+<td>Latency measures how long an operation takes. Throughput measures work completed in a period. Error rate measures the proportion or frequency of unsuccessful operations.</td>
+</tr>
+<tr>
+<td>High availability (HA)</td>
+<td>A design intended to keep a service available during specified failures or maintenance activities. It requires suitable redundancy, failure handling and tested recovery across the service and its dependencies.</td>
+</tr>
+<tr>
+<td>Pod anti-affinity</td>
+<td>A Kubernetes placement rule keeping selected Pods apart across nodes or other defined locations. Its effectiveness depends on suitable capacity and scheduling configuration.</td>
+</tr>
+<tr>
+<td>PodDisruptionBudget (PDB)</td>
+<td>A Kubernetes rule limiting how many selected Pods may be unavailable during supported voluntary disruptions, such as node maintenance. It does not prevent every type of outage.</td>
+</tr>
+<tr>
+<td>Replication / Failover</td>
+<td>Replication maintains additional copies of data or service state. Failover transfers service to another suitable instance following a failure. Both require application-specific configuration.</td>
+</tr>
+<tr>
+<td>Backup / Restore</td>
+<td>A backup is a retained copy of data or configuration intended for recovery. Restore is the process of recovering from that copy. Successful backup execution and successful restoration are separate checks.</td>
+</tr>
+<tr>
+<td>Disaster recovery</td>
+<td>The arrangements for restoring services after a major disruption. They cover the required data, infrastructure, configuration, responsibilities and recovery procedures.</td>
+</tr>
+<tr>
+<td>Recovery Point Objective (RPO) / Recovery Time Objective (RTO)</td>
+<td>RPO expresses acceptable data loss in time. RTO expresses the target time for restoring service. Achieving these objectives depends on implemented and tested recovery arrangements.</td>
+</tr>
+<tr>
+<td>Operational evidence</td>
+<td>A dated configuration record, measurement or test result supporting a specific technical claim. Its meaning depends on the environment, time and functions covered.</td>
+</tr>
+<tr>
+<td>Service Desk (ECCCH support service)</td>
+<td>The support service through which users report problems and request assistance. Tickets record requests, progress and escalation to responsible teams. Zammad is the software implementation selected for the ECCCH Service Desk.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-reference">Related reference<a class="headerlink" href="#related-reference" title="Link to this section">&para;</a></h2>
+<p><a href="https://github.com/ECHOES-ECCCH-TECHNICAL/ECHOES-Glossary">ECHOES Glossary</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "navigation.instant", "navigation.top", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

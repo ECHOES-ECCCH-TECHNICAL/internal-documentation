@@ -1,0 +1,19 @@
+- name: Build image
+  run: |
+    docker build --file Dockerfile \
+      --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+      --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+      --tag "${IMAGE}:${GITHUB_SHA}" .
+- name: Scan image
+  run: |
+    mkdir -p "$RUNNER_TEMP/trivy"
+    docker run --rm \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v "$RUNNER_TEMP/trivy:/reports" \
+      aquasec/trivy:0.72.0 image --no-progress --scanners vuln \
+      --severity HIGH,CRITICAL --format json --output /reports/trivy-report.json \
+      "${IMAGE}:${GITHUB_SHA}"
+    docker run --rm \
+      -v "$RUNNER_TEMP/trivy:/reports:ro" \
+      aquasec/trivy:0.72.0 convert --format table --severity CRITICAL \
+      --exit-code 1 /reports/trivy-report.json

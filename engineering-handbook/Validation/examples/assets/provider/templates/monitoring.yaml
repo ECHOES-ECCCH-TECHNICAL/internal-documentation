@@ -1,0 +1,21 @@
+resource: provider-example
+version: 0.1.0
+owner: REPLACE_WITH_SERVICE_OWNER
+incident_contact: REPLACE_WITH_OPERATIONS_CONTACT
+signals:
+  - name: service_availability
+    source: readiness_endpoint
+  - name: request_errors
+    source: sanitized_http_status_metrics
+  - name: request_latency
+    source: http_server_duration
+alerts:
+  - signal: service_availability
+    trigger: readiness_unavailable_for_5m
+    target: REPLACE_WITH_ALERT_CHANNEL
+privacy:
+  never_log: [access_tokens, refresh_tokens, secret_values]
+evidence:
+  dashboards: REPLACE_WITH_URL
+  alert_test: REPLACE_WITH_EXECUTION_RECORD
+requirement_ids: [REQ-MON-001, REQ-MON-002, REQ-MON-004]

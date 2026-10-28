@@ -1,0 +1,9 @@
+namespace: example-staging
+configMapGenerator:
+  - name: platform-core-config
+    envs:
+      - config.env
+images:
+  - name: registry.example.org/echoes/platform-core
+    newName: ghcr.io/echoes-eccch-technical/platform-api
+    newTag: b5e809251eb2cdf90ed3f45eac988ea3b0a7de14

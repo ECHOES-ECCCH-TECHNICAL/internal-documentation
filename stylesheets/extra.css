@@ -1,0 +1,11 @@
+.md-grid {
+  max-width: 95%;
+}
+
+.md-header--shadow{
+  background: linear-gradient(90deg, #ffffff 15%, #1e40af 95%);
+
+}
+.md-header__title {
+  color:#507FAB
+}

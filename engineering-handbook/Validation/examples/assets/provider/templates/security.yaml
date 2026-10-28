@@ -1,0 +1,28 @@
+resource: provider-example
+version: 0.1.0
+owner: REPLACE_WITH_CONTACT
+endpoints:
+  - path: /v1/resources/{resourceId}
+    classification: restricted
+    authentication: bearer-token
+    required_authorization: ownership-or-entitlement-check
+  - path: /health
+    classification: public
+    authentication: none
+  - path: /ready
+    classification: internal
+    authentication: network-restriction
+transport:
+  tls_required_for_external_endpoints: true
+token_validation:
+  issuer: REPLACE_WITH_APPROVED_ISSUER
+  audience: REPLACE_WITH_EXPECTED_AUDIENCE
+  checks: [signature, expiry, issuer, audience]
+  deny_on_failed_verification: true
+secrets:
+  source: external-kubernetes-secret
+  no_secrets_in_image_or_repository: true
+security_evidence:
+  negative_authorization_tests: REPLACE_WITH_EVIDENCE_LINK
+  tls_verification: REPLACE_WITH_EVIDENCE_LINK
+requirement_ids: [SEC-01, SEC-03, SEC-04, SEC-07, SEC-09]

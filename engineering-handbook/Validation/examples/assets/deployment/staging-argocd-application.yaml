@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-core-staging
+  namespace: example-argocd
+spec:
+  project: example-platform
+  source:
+    repoURL: https://github.com/example-org/platform-deployments.git
+    targetRevision: main
+    path: apps/platform-core/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: example-staging
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
+      - RespectIgnoreDifferences=true

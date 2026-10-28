@@ -1,0 +1,104 @@
+openapi: 3.0.3
+info:
+  title: Provider resource API (illustrative skeleton)
+  version: 0.1.0
+  description: Replace example endpoints and security semantics for the actual resource.
+servers:
+  - url: https://api.example.org
+paths:
+  /health:
+    get:
+      summary: Liveness signal
+      security: []
+      responses:
+        '200':
+          description: Process is alive
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+  /ready:
+    get:
+      summary: Readiness signal
+      security: []
+      responses:
+        '200':
+          description: Ready to serve requests
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+        '503':
+          description: Unavailable dependencies
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /v1/resources/{resourceId}:
+    get:
+      summary: Retrieve resource metadata
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Metadata
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Resource' }
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Actual issuer, audience and scopes must be agreed and tested.
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status: {type: string, enum: [UP, DOWN]}
+    Resource:
+      type: object
+      required: [id, title]
+      properties:
+        id: {type: string}
+        title: {type: string}
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: {type: string}
+        message: {type: string}
+        correlationId: {type: string}
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Authorisation denied
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    ServerError:
+      description: Unexpected failure
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

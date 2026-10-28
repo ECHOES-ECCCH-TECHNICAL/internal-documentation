@@ -1,0 +1,6 @@
+# Requires a Harbor project and a CLI Secret or robot credential.
+docker login registry.example.org
+docker build -t registry.example.org/<project>/<image>:<sha> .
+docker push registry.example.org/<project>/<image>:<sha>
+# On OpenShift, once an image-pull Secret has been provisioned:
+oc -n <namespace> secrets link image-puller <pull-secret> --for=pull
