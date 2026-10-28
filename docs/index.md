@@ -30,6 +30,9 @@ Use the entry points below depending on what you are doing today.
 
 ## What’s inside
 
+### Technical glossary
+A reference for ECCCH architecture, platform integration, infrastructure, delivery and operations terminology. [Browse the ECCCH Technical Glossary](engineering-handbook/technical-glossary.md).
+
 ### Interoperability requirements
 The baseline obligations and maturity expectations for onboarding and operation.  
 Includes interoperability levels, mandatory requirements, and what evidence is expected.

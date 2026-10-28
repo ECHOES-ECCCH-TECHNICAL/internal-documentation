@@ -15,9 +15,16 @@ theme:
     - navigation.sections
     - navigation.indexes
     - navigation.instant
+    - navigation.top
     - content.code.copy
     - search.suggest
     - search.highlight
+
+markdown_extensions:
+  - attr_list
+  - toc:
+      permalink: true
+      permalink_title: "Link to this section"
 
 extra_css:
   - stylesheets/extra.css
